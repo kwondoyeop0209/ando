@@ -5,10 +5,10 @@
       검색 :
         <select id="selectGu" @change="changeGu(), showMain()">
           <option selected>전체</option>
-          <option>강남구</option>
-          <option>광진구</option>
-          <option>송파구</option>
-          <option>관악구</option>
+          <option value="강남구">강남구</option>
+          <option value="광진구">광진구</option>
+          <option value="송파구">송파구</option>
+          <option value="관악구">관악구</option>
         </select>
       </div>
       <div class="charts" v-show="isMain">
@@ -36,7 +36,7 @@
       </div>
       </div>
       <div class="guCharts" v-show="isGu">
-        <img src="@/assets/gangnam.png" class="gangnam-map" />
+        <img src="@/assets/강남구.png" class="gangnam-map" />
         <!-- <modal v-if="showModal" @close="showModal = false">
         <h3 slot="header">custom header</h3>
         </modal> -->
@@ -47,6 +47,7 @@
               <div>
                 <br/>
                   <span class = "mid">범죄 현황</span>
+                  <button type='button' id="detail_btn" @click="onClick"> > 예측분석</button>
                 <br/><br/>
                   <span class = "rateTitle">💡 범죄율 </span>
               </div>
@@ -54,6 +55,13 @@
               <highcharts :options="chartArrest"></highcharts>
           </div>
           <div>화살표를만들라고</div>
+          <div class="modal_wrap_detail">
+              <div class="modal_close" @click="offClick"><a href="#">close</a></div>
+              <div>
+                <br/>
+                  <span class = "mid"> 강남구 범죄예측분석333</span>
+              </div>
+          </div>
         </div>
       </div>
     </div>
@@ -73,6 +81,7 @@ export default {
     return {
       isMain: true,
       isGu: false,
+      isChecked:'',
       chartArrest: {
         title: {
           text: "",
@@ -290,14 +299,17 @@ export default {
       const guSelect = document.getElementById("selectGu");
       
       const selectedText = guSelect.options[guSelect.selectedIndex].text;
-      console.log(selectedText);
+      //console.log(selectedText);
       this.isGu=true
+      this.isChecked=selectedText;
+      console.log(this.isChecked);
       document.querySelector('.modal_wrap').style.display ='block';
-      //document.querySelector('.black_bg').style.display ='block';
+    },
+    onClick() {
+        document.querySelector('.modal_wrap_detail').style.display ='block';
     },
     offClick() {
-        document.querySelector('.modal_wrap').style.display ='none';
-        //sdocument.querySelector('.black_bg').style.display ='none';
+        document.querySelector('.modal_wrap_detail').style.display ='none';
     }    
   }
 };
@@ -383,6 +395,27 @@ export default {
   border-radius: 5px;
   box-shadow: 0px 0px 20px #000;
 }
+#detail_btn{
+  margin-left: 120px;
+  padding: 10px 6px 10px 6px;
+  background-color: #454D5E;
+  border-radius: 5px;
+  border: 1px solid white;
+  width: 130px;
+  font-size: 16px;
+}
+.modal_wrap_detail{
+  display: none;
+  position: absolute;
+  top: 110px;
+  right: 35px;
+  z-index: 888;
+  width: 400px;
+  height: 300px;
+  background:#454D5E;
+  border-radius: 5px;
+  box-shadow: 0px 0px 20px #000;
+}
 .modal_wrap::-webkit-scrollbar {
     width: 10px;
 }
@@ -412,13 +445,14 @@ export default {
     width: 26px;
     height: 26px;
     position: absolute;
-    top: -30px;
-    right: 0;
+    top: 10px;
+    right: 10px;
 }
 .modal_close> a{
     display: block;
     width: 100%;
     height: 100%;
+    /* background-image: url("../../assets/ic-close.png"); */
     background:url(https://img.icons8.com/metro/26/000000/close-window.png);
     text-indent: -9999px;
 }
