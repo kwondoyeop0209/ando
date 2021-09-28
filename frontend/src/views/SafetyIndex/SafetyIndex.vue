@@ -2,9 +2,65 @@
   <div class="safety-index">
     <!-- left -->
     <div class="info">
-      안전지수
+      <table class="pop_table">
+    <caption>안전지수</caption>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <th scope="row">신대방동</th>
+            <td>8.2점</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <th scope="row">역삼동</th>
+            <td>8.1점</td>
+        </tr>
+        <tr>
+            <td>3</td>
+            <th scope="row">상도3동</th>
+            <td>7.6점</td>
+        </tr>
+        <tr>
+            <td>4</td>
+            <th scope="row">이촌동</th>
+            <td>7.3점</td>
+        </tr>
+        <tr>
+            <td>5</td>
+            <th scope="row">신길1동</th>
+            <td>7.1점</td>
+        </tr>
+        <tr>
+            <td>6</td>
+            <th scope="row">역삼동</th>
+            <td>6.6점</td>
+        </tr>
+        <tr>
+            <td>7</td>
+            <th scope="row">삼성동</th>
+            <td>6.4점</td>
+        </tr>
+        <tr>
+            <td>8</td>
+            <th scope="row">규동</th>
+            <td>5.2점</td>
+        </tr>
+        <tr>
+            <td>9</td>
+            <th scope="row">사당4동</th>
+            <td>5.0점</td>
+        </tr>
+        <tr>
+            <td>10</td>
+            <th scope="row">잠실4동</th>
+            <td>4.3점</td>
+        </tr>
+    </tbody>
+</table>
+
     </div>
     <!-- right -->
+    
      <div id="map"></div>
     <div class="button-group">
       <button @click="changeSize(800)" style="color:black;">안전 지수</button>
@@ -13,7 +69,9 @@
       <button @click="displayInfoWindow" style="color:black;">infowindow띄우기</button>
     </div>
   </div>
+  
 </template>
+
 <script>
 export default {
   name: "SafetyIndex",
@@ -34,9 +92,12 @@ export default {
     };
   },
   mounted() {
+    console.log("여기는 mounted속임")
     if (window.kakao && window.kakao.maps) {
+      console.log("여기는 mounted속 if문 돌고있는거임")
       this.initMap();
     } else {
+      console.log("여기는 mounted속 if문 안돌때임")
       const script = document.createElement("script");
       script.type = 'text/javascript'
       /* global kakao */
@@ -46,6 +107,9 @@ export default {
       document.head.appendChild(script);
     }
   },
+  updated(){
+        this.initMap();
+    },
   methods: {
     initMap() {
       const container = document.getElementById("map"); //지도 표시할 div
@@ -184,5 +248,60 @@ export default {
   color: blue;
 }
 
-
+.pop_table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: none;
+    border-bottom:5px solid #000;
+    color:#000;
+    margin: auto;
+}
+ 
+.pop_table caption{
+    height: 60px;
+    font-size: 1.2em;
+    font-weight: bold;
+    text-align: center;
+    line-height: 52px;
+    border-bottom: 5px solid #FFF;
+    -webkit-border-radius: 8px 8px 0 0;
+    -moz-border-radius: 8px 8px 0 0;
+    border-radius: 8px 8px 0 0;
+    background: #F94E5B;
+}
+ 
+.pop_table caption:before {
+    content: '';
+    display: block;
+    height: 8px;
+    -webkit-border-radius: 8px 8px 0 0;
+    -moz-border-radius: 8px 8px 0 0;
+    border-radius: 8px 8px 0 0;
+    background-color: #000;
+    
+}
+ 
+.pop_table th {
+    padding: 15px;
+    border: none;
+    border-bottom: 2px solid #FFF;
+    background: #507cda;
+    font-weight: bold;
+    text-align: center;
+    vertical-align: middle;
+}
+ 
+.pop_table td {
+    padding: 15px;
+    border: none;
+    border-bottom: 2px solid #000;
+    text-align: center;
+    vertical-align: baseline;
+}
+ 
+.pop_table tr:last-child th,
+.pop_table tr:last-child td {
+    border-bottom: none;
+}
 </style>
