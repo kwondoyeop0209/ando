@@ -49,6 +49,9 @@ input:focus {
 .dark-blue {
   color: #6a7daf;
 }
+.white-blue {
+  color: #a4b5e2;
+}
 /* dark-blue */
 .light-red {
   color: #f57272;
