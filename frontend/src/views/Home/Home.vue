@@ -93,7 +93,7 @@ export default {
 
 <style scoped>
 .main {
-  width: 1200px;
+  min-width: 1200px;
   margin: 0 auto;
   position: relative;
   padding: 72px 0;
