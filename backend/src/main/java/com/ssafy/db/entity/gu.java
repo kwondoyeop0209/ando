@@ -9,5 +9,5 @@ import lombok.Setter;
 @Setter
 public class gu extends BaseEntity{
     String gu;
-    int area;
+    double area;
 }
