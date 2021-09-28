@@ -77,18 +77,24 @@
         </div>
       </div>
     </div>
+    <home-footer />
   </div>
 </template>
 
 <script>
+import HomeFooter from "./components/HomeFooter.vue";
 export default {
   name: "Home",
+  components: {
+    HomeFooter,
+  },
 };
 </script>
 
 <style scoped>
 .main {
-  min-width: 1200px;
+  width: 1200px;
+  margin: 0 auto;
   position: relative;
   padding: 72px 0;
 }
@@ -98,18 +104,18 @@ export default {
 .main-content {
   position: absolute;
   top: 180px;
-  left: 140px;
+  left: 100px;
   z-index: 888;
 }
 .main-title {
-  font-size: 42px;
+  font-size: 36px;
 }
 .highlight {
   font-size: 56px;
   font-weight: 600;
 }
 .main-subtitle {
-  font-size: 18px;
+  font-size: 16px;
   margin-top: 68px;
 }
 .btn-go {
@@ -117,7 +123,7 @@ export default {
   border-radius: 16px;
   padding: 12px 56px;
   background-color: #6a7daf;
-  font-size: 18px;
+  font-size: 16px;
   margin-top: 56px;
 }
 .blank {

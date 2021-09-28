@@ -25,7 +25,6 @@ export default {
 
 <style scoped>
 .header {
-  min-width: 1200px;
   display: flex;
   align-items: center;
   height: 59px;
