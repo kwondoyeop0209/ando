@@ -13,7 +13,7 @@ import lombok.Setter;
 public class crime_day extends BaseEntity{
 
     @ManyToOne
-    @JoinColumn(name = "crime_id", foreignKey=@ForeignKey(name = "crime_rate_fk_crime_id"))
+    @JoinColumn(name = "crime_id")
     crime_type crime_type;
 
     String type;

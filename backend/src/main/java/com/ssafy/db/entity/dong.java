@@ -13,7 +13,7 @@ import lombok.Setter;
 public class dong extends BaseEntity{
 
     @ManyToOne
-    @JoinColumn(name = "gu_id", foreignKey=@ForeignKey(name = "dong_fk_gu_id"))
+    @JoinColumn(name = "gu_id")
     gu siGunGu;
 
     String dong;

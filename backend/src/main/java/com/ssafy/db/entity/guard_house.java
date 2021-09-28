@@ -13,7 +13,7 @@ import lombok.Setter;
 public class guard_house extends BaseEntity{
 
     @ManyToOne
-    @JoinColumn(name = "dong_id", foreignKey=@ForeignKey(name = "guard_house_fk_dong_id"))
+    @JoinColumn(name = "dong_id")
     com.ssafy.db.entity.dong dong;
 
     String address;

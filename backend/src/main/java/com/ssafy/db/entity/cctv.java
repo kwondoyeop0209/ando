@@ -13,7 +13,7 @@ import lombok.Setter;
 public class cctv extends BaseEntity{
 
     @ManyToOne
-    @JoinColumn(name = "dong_id", foreignKey=@ForeignKey(name = "guard_house_fk_dong_id"))
+    @JoinColumn(name = "dong_id")
     dong dong;
 
     String address;
