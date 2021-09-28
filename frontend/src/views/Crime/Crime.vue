@@ -14,14 +14,11 @@
       <div class="charts" v-show="isMain">
         <img src="@/assets/seoul-map.png" class="seoul-map" />
       <div class="left-content">
-        <br /><br />
         <p class="mid">최근 3년간 서울시 범죄 발생
           <br /><span class="white highlight">296,177건</span>
         </p>
-        <br />
         <p class="mid" align = "center"><b>검거율</b>이 높은 지역 (건수)</p>
         <highcharts :options="chartArrest"></highcharts>
-        <br />
         <p class="mid" align = "center"><b>범죄율</b>이 높은 지역 (건수)</p>
         <highcharts :options="chartCrime"></highcharts>
       </div>
@@ -43,13 +40,21 @@
         <!-- <modal v-if="showModal" @close="showModal = false">
         <h3 slot="header">custom header</h3>
         </modal> -->
-        <div class="black_bg"></div>
-        <div class="modal_wrap">
-            <div class="modal_close" @click="offClick"><a href="#">close</a></div>
-            <div>
-                <span style="color:black">모달창</span>
-            </div>
-        </div> 
+        <!-- <div class="black_bg"></div> -->
+        <div>
+          <div class="modal_wrap" style="overflow:auto; width:400px; height:700px;"> 
+              <!-- <div class="modal_close" @click="offClick"><a href="#">close</a></div> -->
+              <div>
+                <br/>
+                  <span class = "mid">범죄 현황</span>
+                <br/><br/>
+                  <span class = "rateTitle">💡 범죄율 </span>
+              </div>
+              <highcharts :options="chartArrest"></highcharts>
+              <highcharts :options="chartArrest"></highcharts>
+          </div>
+          <div>화살표를만들라고</div>
+        </div>
       </div>
     </div>
     <!-- 구 선택시 화면 -->
@@ -58,6 +63,7 @@
 </template>
 <script>
 import {Chart} from "highcharts-vue";
+
 export default {
   name: "Crime",
   components: {
@@ -287,11 +293,11 @@ export default {
       console.log(selectedText);
       this.isGu=true
       document.querySelector('.modal_wrap').style.display ='block';
-      document.querySelector('.black_bg').style.display ='block';
+      //document.querySelector('.black_bg').style.display ='block';
     },
     offClick() {
         document.querySelector('.modal_wrap').style.display ='none';
-        document.querySelector('.black_bg').style.display ='none';
+        //sdocument.querySelector('.black_bg').style.display ='none';
     }    
   }
 };
@@ -317,7 +323,7 @@ export default {
 }
 .left-content{
   position: absolute;
-  top: 50px;
+  top: 70px;
   left: 20px;
   z-index: 888;
   width: 400px;
@@ -331,12 +337,16 @@ export default {
 }
 .mid{
   font-size: 25px;
-  padding: 10px 10px;
+  padding: 20px 20px;
 }
 .highlight {
   font-size: 45px;
   font-weight: 600;
   padding: 20px 0px 0px 0px;
+}
+.rateTitle{
+  font-size: 20px;
+  padding: 10px 0px 0px 20px;
 }
 #selectGu{
   padding: 10px 6px 10px 6px;
@@ -362,39 +372,55 @@ export default {
   margin-top: 20px;
 }
 .modal_wrap{
-        display: none;
-        width: 500px;
-        height: 500px;
-        position: absolute;
-        top:50%;
-        left: 50%;
-        margin: -250px 0 0 -250px;
-        background:#eee;
-        z-index: 2;
-    }
-    .black_bg{
-        display: none;
-        position: absolute;
-        content: "";
-        width: 100%;
-        height: 100%;
-        background-color:rgba(0, 0,0, 0.5);
-        top:0;
-        left: 0;
-        z-index: 1;
-    }
-    .modal_close{
-        width: 26px;
-        height: 26px;
-        position: absolute;
-        top: -30px;
-        right: 0;
-    }
-    .modal_close> a{
-        display: block;
-        width: 100%;
-        height: 100%;
-        background:url(https://img.icons8.com/metro/26/000000/close-window.png);
-        text-indent: -9999px;
-    }
+  display: none;
+  position: absolute;
+  top: 110px;
+  left: 35px;
+  z-index: 888;
+  width: 400px;
+  height: 700px;
+  background:#454D5E;
+  border-radius: 5px;
+  box-shadow: 0px 0px 20px #000;
+}
+.modal_wrap::-webkit-scrollbar {
+    width: 10px;
+}
+.modal_wrap::-webkit-scrollbar-thumb {
+    background-color: darkgray;
+    border-radius: 10px;
+    background-clip: padding-box;
+    border: 2px solid transparent;
+}
+.modal_wrap::-webkit-scrollbar-track {
+  background-color: #454D5E;
+  border-radius: 10px;
+  /* box-shadow: inset 0px 0px 5px white; */
+}
+.black_bg{
+    display: none;
+    position: absolute;
+    content: "";
+    width: 100%;
+    height: 100%;
+    background-color:rgba(0, 0, 0, 0);
+    top:0;
+    left: 0;
+    z-index: 1;
+}
+.modal_close{
+    width: 26px;
+    height: 26px;
+    position: absolute;
+    top: -30px;
+    right: 0;
+}
+.modal_close> a{
+    display: block;
+    width: 100%;
+    height: 100%;
+    background:url(https://img.icons8.com/metro/26/000000/close-window.png);
+    text-indent: -9999px;
+}
+
 </style>
