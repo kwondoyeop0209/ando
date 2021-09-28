@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @Api(value = "ando")
 public class MainController {
 
-    @ApiOperation(value = "test", notes = "추천하는 shorts 리스트 4개 반환", response = List.class)
+    @ApiOperation(value = "test", notes = "test", response = List.class)
     @GetMapping("/shorts")
     public ResponseEntity<String> topShorts() {
         try {
