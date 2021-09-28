@@ -17,9 +17,9 @@ public class dong extends BaseEntity{
     gu siGunGu;
 
     String dong;
-    String dong_code;
-    int area;
-    int safety_index;
+
+    double area;
+    double safety_index;
     int guard_house_cnt;
     int police_cnt;
     int cctv_cnt;
