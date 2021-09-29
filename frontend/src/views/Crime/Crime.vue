@@ -3,7 +3,7 @@
     <div class="main">
       <img :src="require(`@/assets/${selectGu}.png`)" class="map" />
       <div class="main-content">
-        <div style="width: 1450px; margin: 0 auto;">
+        <div style="width: 1450px; margin: 0 auto">
           <!-- 검색 -->
           <div>
             검색 :
@@ -21,68 +21,87 @@
           <!-- 전체 범죄 현황 차트 및 내용 -->
           <div class="charts" v-show="isMain" style="display: flex">
             <div class="left-content">
-              <p class="mid">최근 3년간 서울시 범죄 발생
-                <br />
-                <span class="white highlight">296,177건</span>
-              </p>
-              <p class="mid" align="center"><b>검거율</b>이 높은 지역 (건수)</p>
+              <p class="chart-subtitle">최근 3년간 서울시 범죄 발생</p>
+              <p class="white highlight">296,177건</p>
+              <p class="chart-subtitle"><b>검거율</b>이 높은 지역 (건수)</p>
               <highcharts :options="chartArrest"></highcharts>
-              <p class="mid" align="center"><b>범죄율</b>이 높은 지역 (건수)</p>
+              <p class="chart-subtitle"><b>범죄율</b>이 높은 지역 (건수)</p>
               <highcharts :options="chartCrime"></highcharts>
             </div>
             <div style="flex: 1"></div>
-            <div class="right-content" align="center">
-              <p class="mid">최근 3년간 발생 건수</p>
-              <highcharts :options="chartLatest"></highcharts>
-              <p class="mid">서울시 5대 범죄</p>
-              <p class="type5" style='background-color:#F57373'>폭력</p><br />
-              <p class="type5" style='background-color:#FA9385'>절도</p><br />
-              <p class="type5" style='background-color:#FAAF85'>강간</p><br />
-              <p class="type5" style='background-color:#FACB85'>강도</p><br />
-              <p class="type5" style='background-color:#FAD985'>살인</p>
+            <div class="right-content">
+              <div>
+                <p class="chart-subtitle">최근 3년간 발생 건수</p>
+                <highcharts :options="chartLatest"></highcharts>
+              </div>
+              <div align="center">
+                <p class="chart-subtitle">서울시 5대 범죄</p>
+                <p class="type5" style="background-color: #f57373">폭력</p><br />
+                <p class="type5" style="background-color: #fa9385">절도</p><br />
+                <p class="type5" style="background-color: #faaf85">강간</p><br />
+                <p class="type5" style="background-color: #facb85">강도</p><br />
+                <p class="type5" style="background-color: #fad985">살인</p>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-      <div class="guCharts" v-show="isGu">
-        <!-- <modal v-if="showModal" @close="showModal = false">
-        <h3 slot="header">custom header</h3>
-        </modal> -->
-        <!-- <div class="black_bg"></div> -->
-        <div>
-          <div class="modal_wrap" style="overflow:auto; width:400px; height:700px;"> 
-              <!-- <div class="modal_close" @click="offClick"><a href="#">close</a></div> -->
-              <div>
-                <br/>
-                  <span class = "mid">범죄 현황</span>
-                  <button type='button' id="detail_btn" @click="onClick"> > 예측분석</button>
-                <br/><br/>
-                  <span class = "rateTitle">💡 범죄율 </span>
+          <!-- 구 선택시 모달 창-->
+          <div class="guCharts" v-show="isGu">
+            <!-- <modal v-if="showModal" @close="showModal = false">
+            <h3 slot="header">custom header</h3>
+            </modal> -->
+            <!-- <div class="black_bg"></div> -->
+            <div class="modal-content">
+              <div class="modal_wrap">
+                <!-- <div class="modal_close" @click="offClick"><a href="#">close</a></div> -->
+                <div class="modal-title">
+                  <p style="font-size: 24px; font-weight: 600">범죄 현황</p>
+                  <div style="flex: 1"></div>
+                  <p id="detail_btn" @click="onClick">예측 분석 보기 ></p>
+                </div>
+                <!-- 범죄율 -->
+                <div>
+                  <p class="rateTitle">💡 범죄율</p>
+                  <vc-donut :sections="sections" :size="100"></vc-donut>
+                </div>
+                <!-- 검거율 -->
+                <highcharts :options="chartArrest"></highcharts>
+                <!-- 범죄 유형 -->
               </div>
-              <highcharts :options="chartArrest"></highcharts>
-              <highcharts :options="chartArrest"></highcharts>
-          </div>
-          <div>화살표를만들라고</div>
-          <div class="modal_wrap_detail">
-              <div class="modal_close" @click="offClick"><a href="#">close</a></div>
-              <div>
-                <br/>
-                  <span class = "mid"> 강남구 범죄예측분석333</span>
+              <div class="arrow-area">
+                <img
+                  class="arrow"
+                  src="@/assets/ic-arrow-right.png"
+                  :width="20"
+                />
               </div>
+              <div style="flex: 1"></div>
+              <div class="predict-modal" v-show="isPredict">
+                <div class="predict-title">
+                  <p><span>자치구</span>범죄 예측 분석</p>
+                  <div style="flex: 1"></div>
+                  <img
+                    src="@/assets/ic-close.png"
+                    :width="20"
+                    @click="offClick"
+                  />
+                </div>
+                <div>테이블</div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-    <!-- 구 선택시 화면 -->
-    <div></div>
   </div>
 </template>
 <script>
-import {Chart} from "highcharts-vue";
+import VcDonut from "../../../node_modules/vue-css-donut-chart/src/components/Donut.vue";
+import { Chart } from "highcharts-vue";
 export default {
   name: "Crime",
   components: {
     highcharts: Chart,
+    VcDonut,
   },
   data() {
     return {
@@ -116,6 +135,7 @@ export default {
       selectGu: "전체",
       isMain: true,
       isGu: false,
+      isPredict: false,
       isChecked: "",
       chartArrest: {
         title: {
@@ -153,10 +173,10 @@ export default {
         },
         plotOptions: {
           bar: {
-              dataLabels: {
-                  enabled: true,
-              }
-          }
+            dataLabels: {
+              enabled: true,
+            },
+          },
         },
         legend: {
           enabled: false,
@@ -200,7 +220,7 @@ export default {
           type: "bar",
         },
         xAxis: {
-          categories: ["강남구", "영등포구", "동작구", "광진구","송파구"],
+          categories: ["강남구", "영등포구", "동작구", "광진구", "송파구"],
           labels: {
             style: {
               color: "#ffffff",
@@ -223,10 +243,10 @@ export default {
         },
         plotOptions: {
           bar: {
-              dataLabels: {
-                  enabled: true,
-              }
-          }
+            dataLabels: {
+              enabled: true,
+            },
+          },
         },
         legend: {
           enabled: false,
@@ -278,7 +298,7 @@ export default {
           },
         },
         yAxis: {
-          min:0,
+          min: 0,
           gridLineColor: "rgba(0,0,0,0)",
           labels: {
             style: {
@@ -288,10 +308,10 @@ export default {
         },
         plotOptions: {
           column: {
-              dataLabels: {
-                  enabled: true,
-              }
-          }
+            dataLabels: {
+              enabled: true,
+            },
+          },
         },
         legend: {
           enabled: false,
@@ -315,7 +335,7 @@ export default {
           },
         ],
       },
-
+      sections: [{ label: "label", value: 25 }],
     };
   },
   methods: {
@@ -333,16 +353,14 @@ export default {
       this.isGu = true;
       this.isMain = false;
       this.isChecked = guSelect;
-      console.log(this.isChecked);
-      document.querySelector('.modal_wrap').style.display ='block';
     },
     onClick() {
-      document.querySelector('.modal_wrap_detail').style.display ='block';
+      this.isPredict = true;
     },
     offClick() {
-      document.querySelector('.modal_wrap_detail').style.display ='none';
+      this.isPredict = false;
     },
-  }
+  },
 };
 </script>
 <style scoped>
@@ -355,7 +373,7 @@ export default {
   position: relative;
 }
 .map {
-  margin: 52px 0;
+  padding: 52px 0;
   width: 100%;
 }
 .main-content {
@@ -367,34 +385,28 @@ export default {
   height: 100%;
   margin: 0 auto;
 }
-.mid {
+.right-content {
+  width: 350px;
+}
+.chart-subtitle {
   font-size: 25px;
-  padding: 20px 20px;
+  margin-top: 28px;
+  margin-bottom: 8px;
 }
 .highlight {
   font-size: 45px;
   font-weight: 600;
-  padding: 20px 0px 0px 0px;
 }
 .rateTitle {
   font-size: 20px;
-  padding: 10px 0px 0px 20px;
 }
 #selectGu {
   padding: 10px 6px 10px 6px;
-  background-color: #454D5E;
+  background-color: #454d5e;
   border-radius: 5px;
   border: 1px solid white;
   width: 150px;
   font-size: 16px;
-}
-.seoulCrime {
-  position: absolute;
-  padding: 30px 6px 50px 6px;
-  bottom: 20px;
-  right: 10px;
-  z-index: 888;
-  width: 300px;
 }
 .type5 {
   display: inline-block;
@@ -403,38 +415,46 @@ export default {
   font-size: 18px;
   margin-top: 20px;
 }
+.modal-content {
+  display: flex;
+  margin-top: 24px;
+}
 .modal_wrap {
-  display: none;
-  position: absolute;
-  top: 110px;
-  left: 35px;
   z-index: 888;
   width: 400px;
-  height: 700px;
-  background:#454D5E;
+  height: 100%;
+  background: #454d5e;
   border-radius: 5px;
   box-shadow: 0px 0px 20px #000;
+  overflow: auto;
+  padding: 24px;
+}
+.arrow-area {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.arrow {
+  padding: 24px 12px;
+  background: #454d5e;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+.modal-title {
+  display: flex;
+  margin-bottom: 16px;
 }
 #detail_btn {
-  margin-left: 120px;
-  padding: 10px 6px 10px 6px;
-  background-color: #454D5E;
-  border-radius: 5px;
-  border: 1px solid white;
-  width: 130px;
   font-size: 16px;
 }
-.modal_wrap_detail {
-  display: none;
-  position: absolute;
-  top: 110px;
-  right: 35px;
+.predict-modal {
   z-index: 888;
   width: 400px;
   height: 300px;
-  background: #454D5E;
+  background: #454d5e;
   border-radius: 5px;
   box-shadow: 0px 0px 20px #000;
+  padding: 24px;
 }
 .modal_wrap::-webkit-scrollbar {
   width: 10px;
@@ -446,7 +466,7 @@ export default {
   border: 2px solid transparent;
 }
 .modal_wrap::-webkit-scrollbar-track {
-  background-color: #454D5E;
+  background-color: #454d5e;
   border-radius: 10px;
   /* box-shadow: inset 0px 0px 5px white; */
 }
@@ -457,23 +477,12 @@ export default {
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0);
-  top:0;
+  top: 0;
   left: 0;
   z-index: 1;
 }
-.modal_close {
-  width: 26px;
-  height: 26px;
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
-.modal_close > a {
-  display: block;
-  width: 100%;
-  height: 100%;
-  /* background-image: url("../../assets/ic-close.png"); */
-  background: url(https://img.icons8.com/metro/26/000000/close-window.png);
-  text-indent: -9999px;
+.predict-title {
+  display: flex;
+  font-size: 18px;
 }
 </style>
