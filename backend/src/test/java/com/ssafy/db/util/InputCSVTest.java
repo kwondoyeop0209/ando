@@ -18,8 +18,13 @@ class InputCSVTest {
     @Autowired
     InputCSV inputCSV;
 
-    @Test
+
     void inputCCTV() throws IOException {
         inputCSV.inputCCTV();
+    }
+
+
+    void inputBoan() throws IOException{
+        inputCSV.inputLight();
     }
 }
