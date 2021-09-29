@@ -26,18 +26,18 @@ public class InputCSV {
         String [] nextLine;
         while ((nextLine = reader.readNext()) != null) {   // 2
             for (int i = 0; i < nextLine.length; i++) {
-                cctv cctv = new cctv();
-                cctv.setAddress(nextLine[1]);
-                cctv.setLat(Double.parseDouble(nextLine[2]));
-                cctv.setLat(Double.parseDouble(nextLine[3]));
-                cctv.setNumber(Integer.parseInt(nextLine[4]));
-                Optional<dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[5],nextLine[0]);
-                if(dongOptional.isPresent()){
-                    dong dong = dongOptional.get();
-                    cctv.setDong(dong);
-                    cctvRepository.save(cctv);
-                }
                 System.out.println(i + " " + nextLine[i]);
+            }
+            cctv cctv = new cctv();
+            cctv.setAddress(nextLine[1]);
+            cctv.setLat(Double.parseDouble(nextLine[2]));
+            cctv.setLng(Double.parseDouble(nextLine[3]));
+            cctv.setNumber(Integer.parseInt(nextLine[4]));
+            Optional<dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[5],nextLine[0]);
+            if(dongOptional.isPresent()){
+                dong dong = dongOptional.get();
+                cctv.setDong(dong);
+                cctvRepository.save(cctv);
             }
             System.out.println();
         }
