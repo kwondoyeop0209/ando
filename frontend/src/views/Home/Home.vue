@@ -92,8 +92,12 @@ export default {
 </script>
 
 <style scoped>
+.home {
+  background-color: #454d5e;
+  min-width: 1450px;
+}
 .main {
-  min-width: 1200px;
+  width: 1450px;
   margin: 0 auto;
   position: relative;
   padding: 72px 0;
@@ -104,7 +108,7 @@ export default {
 .main-content {
   position: absolute;
   top: 180px;
-  left: 100px;
+  left: 120px;
   z-index: 888;
 }
 .main-title {
@@ -127,7 +131,7 @@ export default {
   margin-top: 56px;
 }
 .blank {
-  width: 1200px;
+  width: 1450px;
   margin: 0 auto;
 }
 .data-cnt {
