@@ -1,42 +1,50 @@
 <template>
   <div class="crime">
     <div class="main">
+      <img :src="require(`@/assets/${selectGu}.png`)" class="map" />
       <div class="main-content">
-      검색 :
-        <select id="selectGu" @change="changeGu(), showMain()">
-          <option selected>전체</option>
-          <option value="강남구">강남구</option>
-          <option value="광진구">광진구</option>
-          <option value="송파구">송파구</option>
-          <option value="관악구">관악구</option>
-        </select>
-      </div>
-      <div class="charts" v-show="isMain">
-        <img src="@/assets/seoul-map.png" class="seoul-map" />
-      <div class="left-content">
-        <p class="mid">최근 3년간 서울시 범죄 발생
-          <br /><span class="white highlight">296,177건</span>
-        </p>
-        <p class="mid" align = "center"><b>검거율</b>이 높은 지역 (건수)</p>
-        <highcharts :options="chartArrest"></highcharts>
-        <p class="mid" align = "center"><b>범죄율</b>이 높은 지역 (건수)</p>
-        <highcharts :options="chartCrime"></highcharts>
-      </div>
-      <div class="right-content" align = "center">
-        <p class="mid">최근 3년간 발생 건수</p>
-        <highcharts :options="chartLatest"></highcharts>
-      </div>
-      <div class="seoulCrime" align="center">
-        <p class="mid">서울시 5대 범죄</p>
-        <p class="type5" style='background-color:#F57373'>폭력</p><br />
-        <p class="type5" style='background-color:#FA9385'>절도</p><br />
-        <p class="type5" style='background-color:#FAAF85'>강간</p><br />
-        <p class="type5" style='background-color:#FACB85'>강도</p><br />
-        <p class="type5" style='background-color:#FAD985'>살인</p>
-      </div>
+        <div style="width: 1450px; margin: 0 auto;">
+          <!-- 검색 -->
+          <div>
+            검색 :
+            <select
+              id="selectGu"
+              @change="changeGu(), showMain()"
+              v-model="selectGu"
+            >
+              <option selected value="전체">전체</option>
+              <option v-for="(gu, idx) in guList" :key="idx" :value="gu">
+                {{ gu }}
+              </option>
+            </select>
+          </div>
+          <!-- 전체 범죄 현황 차트 및 내용 -->
+          <div class="charts" v-show="isMain" style="display: flex">
+            <div class="left-content">
+              <p class="mid">최근 3년간 서울시 범죄 발생
+                <br />
+                <span class="white highlight">296,177건</span>
+              </p>
+              <p class="mid" align="center"><b>검거율</b>이 높은 지역 (건수)</p>
+              <highcharts :options="chartArrest"></highcharts>
+              <p class="mid" align="center"><b>범죄율</b>이 높은 지역 (건수)</p>
+              <highcharts :options="chartCrime"></highcharts>
+            </div>
+            <div style="flex: 1"></div>
+            <div class="right-content" align="center">
+              <p class="mid">최근 3년간 발생 건수</p>
+              <highcharts :options="chartLatest"></highcharts>
+              <p class="mid">서울시 5대 범죄</p>
+              <p class="type5" style='background-color:#F57373'>폭력</p><br />
+              <p class="type5" style='background-color:#FA9385'>절도</p><br />
+              <p class="type5" style='background-color:#FAAF85'>강간</p><br />
+              <p class="type5" style='background-color:#FACB85'>강도</p><br />
+              <p class="type5" style='background-color:#FAD985'>살인</p>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="guCharts" v-show="isGu">
-        <img src="@/assets/강남구.png" class="gangnam-map" />
         <!-- <modal v-if="showModal" @close="showModal = false">
         <h3 slot="header">custom header</h3>
         </modal> -->
@@ -71,7 +79,6 @@
 </template>
 <script>
 import {Chart} from "highcharts-vue";
-
 export default {
   name: "Crime",
   components: {
@@ -79,9 +86,37 @@ export default {
   },
   data() {
     return {
+      guList: [
+        "강남구",
+        "강동구",
+        "강북구",
+        "강서구",
+        "관악구",
+        "광진구",
+        "구로구",
+        "금천구",
+        "노원구",
+        "도봉구",
+        "동대문구",
+        "동작구",
+        "마포구",
+        "서대문구",
+        "서초구",
+        "성동구",
+        "성북구",
+        "송파구",
+        "양천구",
+        "영등포구",
+        "용산구",
+        "은평구",
+        "종로구",
+        "중구",
+        "중랑구",
+      ],
+      selectGu: "전체",
       isMain: true,
       isGu: false,
-      isChecked:'',
+      isChecked: "",
       chartArrest: {
         title: {
           text: "",
@@ -94,7 +129,7 @@ export default {
           type: "bar",
         },
         xAxis: {
-          categories: ["강남구", "영등포구", "동작구","광진구","송파구"],
+          categories: ["강남구", "영등포구", "동작구", "광진구", "송파구"],
           labels: {
             style: {
               fontsize: "14px",
@@ -165,7 +200,7 @@ export default {
           type: "bar",
         },
         xAxis: {
-          categories: ["강남구", "영등포구", "동작구","광진구","송파구"],
+          categories: ["강남구", "영등포구", "동작구", "광진구","송파구"],
           labels: {
             style: {
               color: "#ffffff",
@@ -283,71 +318,56 @@ export default {
 
     };
   },
-  methods:{
-    showMain(){
-      const guSelect = document.getElementById("selectGu");
-      
-      const selectedText = guSelect.options[guSelect.selectedIndex].text;
-      if(selectedText=="전체"){
-        this.isMain=true
-        this.isGu=false
-      }else{
-        this.isMain=false
+  methods: {
+    showMain() {
+      const guSelect = this.selectGu;
+      if (guSelect === "전체") {
+        this.isMain = true;
+        this.isGu = false;
+      } else {
+        this.isMain = false;
       }
     },
-    changeGu(){
-      const guSelect = document.getElementById("selectGu");
-      
-      const selectedText = guSelect.options[guSelect.selectedIndex].text;
-      //console.log(selectedText);
-      this.isGu=true
-      this.isChecked=selectedText;
+    changeGu() {
+      const guSelect = this.selectGu;
+      this.isGu = true;
+      this.isMain = false;
+      this.isChecked = guSelect;
       console.log(this.isChecked);
       document.querySelector('.modal_wrap').style.display ='block';
     },
     onClick() {
-        document.querySelector('.modal_wrap_detail').style.display ='block';
+      document.querySelector('.modal_wrap_detail').style.display ='block';
     },
     offClick() {
-        document.querySelector('.modal_wrap_detail').style.display ='none';
-    }    
+      document.querySelector('.modal_wrap_detail').style.display ='none';
+    },
   }
 };
 </script>
 <style scoped>
 .crime {
   width: 100%;
+  height: 1200px;
 }
 .main {
-  min-width: 1200px;
+  min-width: 1450px;
   position: relative;
 }
-.seoul-map {
-  margin: 48px 0;
+.map {
+  margin: 52px 0;
   width: 100%;
 }
 .main-content {
   position: absolute;
-  top: 30px;
-  left: 35px;
+  top: 52px;
+  left: 0;
   z-index: 888;
-  width: 300px;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
 }
-.left-content{
-  position: absolute;
-  top: 70px;
-  left: 20px;
-  z-index: 888;
-  width: 400px;
-}
-.right-content {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  z-index: 888;
-  width: 400px;
-}
-.mid{
+.mid {
   font-size: 25px;
   padding: 20px 20px;
 }
@@ -356,11 +376,11 @@ export default {
   font-weight: 600;
   padding: 20px 0px 0px 0px;
 }
-.rateTitle{
+.rateTitle {
   font-size: 20px;
   padding: 10px 0px 0px 20px;
 }
-#selectGu{
+#selectGu {
   padding: 10px 6px 10px 6px;
   background-color: #454D5E;
   border-radius: 5px;
@@ -368,7 +388,7 @@ export default {
   width: 150px;
   font-size: 16px;
 }
-.seoulCrime{
+.seoulCrime {
   position: absolute;
   padding: 30px 6px 50px 6px;
   bottom: 20px;
@@ -383,7 +403,7 @@ export default {
   font-size: 18px;
   margin-top: 20px;
 }
-.modal_wrap{
+.modal_wrap {
   display: none;
   position: absolute;
   top: 110px;
@@ -395,7 +415,7 @@ export default {
   border-radius: 5px;
   box-shadow: 0px 0px 20px #000;
 }
-#detail_btn{
+#detail_btn {
   margin-left: 120px;
   padding: 10px 6px 10px 6px;
   background-color: #454D5E;
@@ -404,7 +424,7 @@ export default {
   width: 130px;
   font-size: 16px;
 }
-.modal_wrap_detail{
+.modal_wrap_detail {
   display: none;
   position: absolute;
   top: 110px;
@@ -412,49 +432,48 @@ export default {
   z-index: 888;
   width: 400px;
   height: 300px;
-  background:#454D5E;
+  background: #454D5E;
   border-radius: 5px;
   box-shadow: 0px 0px 20px #000;
 }
 .modal_wrap::-webkit-scrollbar {
-    width: 10px;
+  width: 10px;
 }
 .modal_wrap::-webkit-scrollbar-thumb {
-    background-color: darkgray;
-    border-radius: 10px;
-    background-clip: padding-box;
-    border: 2px solid transparent;
+  background-color: darkgray;
+  border-radius: 10px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
 }
 .modal_wrap::-webkit-scrollbar-track {
   background-color: #454D5E;
   border-radius: 10px;
   /* box-shadow: inset 0px 0px 5px white; */
 }
-.black_bg{
-    display: none;
-    position: absolute;
-    content: "";
-    width: 100%;
-    height: 100%;
-    background-color:rgba(0, 0, 0, 0);
-    top:0;
-    left: 0;
-    z-index: 1;
+.black_bg {
+  display: none;
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0);
+  top:0;
+  left: 0;
+  z-index: 1;
 }
-.modal_close{
-    width: 26px;
-    height: 26px;
-    position: absolute;
-    top: 10px;
-    right: 10px;
+.modal_close {
+  width: 26px;
+  height: 26px;
+  position: absolute;
+  top: 10px;
+  right: 10px;
 }
-.modal_close> a{
-    display: block;
-    width: 100%;
-    height: 100%;
-    /* background-image: url("../../assets/ic-close.png"); */
-    background:url(https://img.icons8.com/metro/26/000000/close-window.png);
-    text-indent: -9999px;
+.modal_close > a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  /* background-image: url("../../assets/ic-close.png"); */
+  background: url(https://img.icons8.com/metro/26/000000/close-window.png);
+  text-indent: -9999px;
 }
-
 </style>
