@@ -9,7 +9,7 @@
       <div style="flex: 1"></div>
       <div style="margin-right: 24px">
         <router-link to="/crime" class="deco-none">
-          구역별 범죄 현황
+          구별 범죄 현황
         </router-link>
       </div>
       <div>
