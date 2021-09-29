@@ -16,7 +16,7 @@ class dongRepositoryTest {
     @Autowired
     dongRepository dongRepository;
 
-    @Test
+
     public void getDong(){
         dong dong = dongRepository.findByDongAndSiGunGu_Gu("신사동","강남구").get();
         System.out.println(dong.getDong());
