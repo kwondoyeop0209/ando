@@ -20,7 +20,7 @@ public class arrest_rate extends BaseEntity{
     @JoinColumn(name = "crime_id")
     crime_type crime_type;
 
-    int generation;
-    int arrest;
+    String type;
+    int count;
     int year;
 }

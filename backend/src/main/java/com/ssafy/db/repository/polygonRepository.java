@@ -1,11 +1,10 @@
 package com.ssafy.db.repository;
 
+import com.ssafy.db.entity.Polygon;
 import com.ssafy.db.entity.cctv;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import java.util.Optional;
 
-
-public interface cctvRepository extends JpaRepository<cctv,Long> {
+public interface polygonRepository extends JpaRepository<Polygon,Long> {
 
 }
