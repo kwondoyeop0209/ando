@@ -1,9 +1,9 @@
 package com.ssafy.db.repository;
 
-import com.ssafy.db.entity.arrest_rate;
+import com.ssafy.db.entity.ArrestRate;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface arrestRateRepository extends JpaRepository<arrest_rate,Long> {
+public interface arrestRateRepository extends JpaRepository<ArrestRate,Long> {
 
 }
 
