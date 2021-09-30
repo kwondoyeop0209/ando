@@ -2,9 +2,21 @@
   <div class="safety-index">
     <!-- left -->
     <div class="info">
-      안전지수
-        <vue-good-table :columns="columns" :rows="rows" @on-row-click="onRowClick" theme="polar-bear" v-if="isShow"></vue-good-table>
+      <div>
+        <button @click="changeSize(400)" style="background:#6a7daf; width:100px; font-size:20px; border-radius: 10%; float: right;">환경 지수</button>
+        <button @click="changeSize(800)" style="background:#6a7daf; width:100px; font-size:20px; border-radius: 10%; float: right;">안전 지수</button>
+      </div>
+      <br><br>
+      <!-- 순위 나오는 부분 -->
+        <vue-good-table v-show="isClick" :columns="columns" :rows="rows" 
+         :sort-options="{
+           enabled: false,
+           initialSortBy: {field: 'rank', type: 'asc'}
+           }"
+         @on-row-click="onRowClick" theme="nocturnal" style="display:table; text-align: center; vertical-align: middle; width:100%; height:100%; margin:0 auto;" v-if="isShow">
+         </vue-good-table>
 
+        <!-- 표에서 셀 클릭하면 나오는 상세화면 -->
         <div v-else>
           {{dong}}
           <div>
@@ -13,30 +25,28 @@
           <div>
             동작구 내에서 3위 <br>
             전체에서 48위
-          </div>
+          </div><br>
+          <hr class="one"><br>
           <div>
-            <p> CCTV 보유 현황 3위 (밑에 1자 차트? 저건 좀 더 고민해볼것!) </p>
+            <p> CCTV 보유 현황 3위 (밑에 게이지 차트는 나중에 데이터 들어오면 손보기로) </p>
             <p> 유흥지 분포 4위 (차트 추가) </p>
             <p> 파출소 분포 2위 (차트 추가) </p>
             <p> 보안등 분포 3위 (차트 추가) </p>
           </div>
-
         </div>
     </div>
 
-    <!-- right -->
+    <!-- right 지도가 원래 이러면 바로 나와야하는데 왜 안나오냐 대체-->
      <div id="map"></div>
       <div class="map">
-      <button @click="changeSize(800)" style="color:black;">안전 지수</button>
-      <button @click="changeSize(800)" style="color:black;">환경 지수</button>
     </div>
   </div>
-  
 </template>
 
 <script>
 import { VueGoodTable } from 'vue-good-table';
 import {Chart} from "highcharts-vue";
+import 'vue-good-table/dist/vue-good-table.css'
 
 export default {
   name: "SafetyIndex",
@@ -47,6 +57,7 @@ export default {
   data() {
     return {
       isShow: true,
+      isClick: false,
       dong: "",
       safetyScore: {
         title: {
@@ -98,7 +109,6 @@ export default {
         ],
       },
 
-
       map: null,
       markerPositions1: [
         [37.499590490909185, 127.0263723554437],
@@ -111,21 +121,24 @@ export default {
       ],
       markers: [],
       infowindow: null,
-
        columns: [
         {
           label: '순위',
           field: 'rank',
           type: 'number',
           
+          width: '30px',
+          
         },
         {
           label: '행정동',
           field: 'name',
+          
         },
         {
           label: '점수',
           field: 'score',
+          
         },
         
       ],
@@ -148,17 +161,7 @@ export default {
   mounted() {
     if (window.kakao && window.kakao.maps) {
       console.log("여기는 mounted속 if문 돌고있는거임")
-      const container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
-      const options = { //지도 중심좌표
-        center: new kakao.maps.LatLng(37.517353,127.037164),
-        level: 3,
-      };
-      //지도 생성
-      this.map = new kakao.maps.Map(container, options);
-
       this.initMap();
-
-
     } else {
       console.log("여기는 mounted속 if문 안돌때임")
       const script = document.createElement("script");
@@ -254,6 +257,7 @@ export default {
       
     },
     changeSize(size) {
+      this.isClick = true;
       const container = document.getElementById("map");
       container.style.width = `${size*2}px`;
       container.style.height = `${size}px`;
@@ -263,10 +267,9 @@ export default {
       console.log(params.row.name);
       const dongName = params.row.name;
       this.dong = dongName;
-
       this.isShow = false;
-    }
-
+    },
+  
 
   },
 };
@@ -279,74 +282,24 @@ export default {
   min-width: 1200px;
   width: 100%;
   display: flex;
+  
 }
 .info {
   background-color: #454d5e;
   flex: 0 0 auto;
   width: 400px;
+  font-size: 25px;
+  padding: 20px 20px;
   overflow: hidden;
+  text-align: center;
+  vertical-align: middle;
+  background: #454d5e;
 }
+
 .map {
   background-color: #454d5e;
   height: 100%;
   flex-grow: 1;
 }
 
-
-.pop_table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border: none;
-    border-bottom:5px solid #000;
-    color:#000;
-    margin: auto;
-}
- 
-.pop_table caption{
-    height: 60px;
-    font-size: 1.2em;
-    font-weight: bold;
-    text-align: center;
-    line-height: 52px;
-    border-bottom: 5px solid #FFF;
-    -webkit-border-radius: 8px 8px 0 0;
-    -moz-border-radius: 8px 8px 0 0;
-    border-radius: 8px 8px 0 0;
-    background: #F94E5B;
-}
- 
-.pop_table caption:before {
-    content: '';
-    display: block;
-    height: 8px;
-    -webkit-border-radius: 8px 8px 0 0;
-    -moz-border-radius: 8px 8px 0 0;
-    border-radius: 8px 8px 0 0;
-    background-color: #000;
-    
-}
- 
-.pop_table th {
-    padding: 15px;
-    border: none;
-    border-bottom: 2px solid #FFF;
-    background: #507cda;
-    font-weight: bold;
-    text-align: center;
-    vertical-align: middle;
-}
- 
-.pop_table td {
-    padding: 15px;
-    border: none;
-    border-bottom: 2px solid #000;
-    text-align: center;
-    vertical-align: baseline;
-}
- 
-.pop_table tr:last-child th,
-.pop_table tr:last-child td {
-    border-bottom: none;
-}
 </style>
