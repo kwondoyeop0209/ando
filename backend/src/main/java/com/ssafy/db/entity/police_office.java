@@ -16,7 +16,6 @@ public class police_office extends BaseEntity{
     @JoinColumn(name = "dong_id")
     com.ssafy.db.entity.dong dong;
 
-    String name;
     double lat;
     double lng;
     String address;
