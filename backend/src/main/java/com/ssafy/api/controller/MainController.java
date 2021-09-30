@@ -1,9 +1,15 @@
 package com.ssafy.api.controller;
 
 
+import com.ssafy.api.response.gu.guGetRes;
+import com.ssafy.api.service.gu.guService;
+import com.ssafy.db.dto.GetGuResDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
+
+import javassist.NotFoundException;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -15,7 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/main")
 @Api(value = "ando")
+@RequiredArgsConstructor
 public class MainController {
+
+    final guService guService;
 
     @ApiOperation(value = "test", notes = "test", response = List.class)
     @GetMapping("/shorts")
@@ -26,4 +35,18 @@ public class MainController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
+    
+    @GetMapping("/sigungu")
+    public ResponseEntity<guGetRes> getGu(){
+        List<GetGuResDto> getGuResDtoList;
+        try {
+            getGuResDtoList = guService.getGuList();
+        }catch (NotFoundException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(guGetRes.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(),null
+            ));
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(guGetRes.of(200,"Success", getGuResDtoList));
+    }
+
+
 }
