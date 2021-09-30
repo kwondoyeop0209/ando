@@ -12,7 +12,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CctvCorrelationGetRes {
+public class SpaceCorrelationGetRes {
      List<CctvCorrelationMapping> countList;
      List<ArrestMapping> arrestList;
 
