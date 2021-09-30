@@ -16,9 +16,7 @@ public class security_light extends BaseEntity{
     @JoinColumn(name = "dong_id")
     com.ssafy.db.entity.dong dong;
 
-    String name;
     String address;
-    String address2;
     double lat;
     double lng;
 }
