@@ -1,11 +1,11 @@
 package com.ssafy.api.service.gu;
 
-import com.ssafy.db.dto.GetGuResDto;
+import com.ssafy.db.dto.gu.GetGuDto;
 import javassist.NotFoundException;
 
 import java.util.List;
 
 public interface GuService {
 
-    List<GetGuResDto> getGuList() throws NotFoundException;
+    List<GetGuDto> getGuList() throws NotFoundException;
 }

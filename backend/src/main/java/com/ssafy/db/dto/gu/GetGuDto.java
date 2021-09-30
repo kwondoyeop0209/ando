@@ -1,4 +1,4 @@
-package com.ssafy.db.dto;
+package com.ssafy.db.dto.gu;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetGuResDto {
+public class GetGuDto {
 
     Long id;
     String gu;

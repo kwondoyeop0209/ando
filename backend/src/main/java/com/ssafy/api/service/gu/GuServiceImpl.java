@@ -1,6 +1,6 @@
 package com.ssafy.api.service.gu;
 
-import com.ssafy.db.dto.GetGuResDto;
+import com.ssafy.db.dto.gu.GetGuDto;
 import com.ssafy.db.entity.Gu;
 import com.ssafy.db.repository.guRepository;
 import javassist.NotFoundException;
@@ -18,14 +18,14 @@ public class GuServiceImpl implements GuService {
 
 
     @Override
-    public List<GetGuResDto> getGuList() throws NotFoundException {
-        List<GetGuResDto> getGuResDtoList = new ArrayList<>();
+    public List<GetGuDto> getGuList() throws NotFoundException {
+        List<GetGuDto> getGuDtoList = new ArrayList<>();
         List<Gu> guList = guRepository.findAll();
         if(guList.isEmpty())
             throw new NotFoundException("gu is empty");
         for(Gu gu: guList)
-            getGuResDtoList.add(new GetGuResDto(gu.getId(),gu.getGu()));
-        return getGuResDtoList;
+            getGuDtoList.add(new GetGuDto(gu.getId(),gu.getGu()));
+        return getGuDtoList;
     }
 
 }
