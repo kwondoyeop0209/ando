@@ -1,7 +1,6 @@
 package com.ssafy.db.entity;
 
 import javax.persistence.Entity;
-import javax.persistence.ForeignKey;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import lombok.Getter;
@@ -10,12 +9,12 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class crime_spot extends BaseEntity{
+public class CrimeTime extends BaseEntity{
 
     @ManyToOne
-    @JoinColumn(name = "crime_id")
-    crime_type crime_type;
+    @JoinColumn(name = "crimeId")
+    CrimeType crimeType;
 
-    String spot;
+    String time;
     int count;
 }
