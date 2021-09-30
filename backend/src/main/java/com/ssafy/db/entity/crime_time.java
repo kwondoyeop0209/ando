@@ -17,6 +17,6 @@ public class crime_time extends BaseEntity{
     @JoinColumn(name = "crime_id")
     crime_type crime_type;
 
-    Time time;
+    String time;
     int count;
 }
