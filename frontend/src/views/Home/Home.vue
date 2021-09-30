@@ -24,7 +24,7 @@
           <span class="white-blue" style="font-size: 48px; font-weight: 700">
             8,271,409건
           </span>
-          의<br/>데이터 분석
+          의<br />데이터 분석
         </p>
       </div>
     </div>
@@ -33,16 +33,22 @@
       <div class="blank intro">
         <div class="el">
           <div>
-            <div style="margin-left: 46px">
-              <p class="explain-title white-blue">구별 범죄 현황 및 범죄 예측 분석</p>
-              <p class="explain-content" style="margin-bottom: 100px;">서울시 자치구별 범죄 현황을 시각화하고<br/>범죄 데이터를 분석해<br/>시간, 장소, 유형에 따른 범죄를 예측합니다</p>
+            <div style="margin-left: 46px" class="anim">
+              <p class="explain-title white-blue">
+                구별 범죄 현황 및 범죄 예측 분석
+              </p>
+              <p class="explain-content" style="margin-bottom: 100px">
+                서울시 자치구별 범죄 현황을 시각화하고<br />
+                범죄 데이터를 분석해<br />
+                시간, 장소, 유형에 따른 범죄를 예측합니다
+              </p>
             </div>
-            <img src="@/assets/intro2.png" :width="500"/>
+            <img src="@/assets/intro2.png" :width="500" class="anim2" />
           </div>
         </div>
         <div class="el">
           <div>
-            <img src="@/assets/intro1.png" :width="500"/>
+            <img src="@/assets/intro1.png" :width="500" class="anim2" />
           </div>
         </div>
       </div>
@@ -51,14 +57,18 @@
     <div class="intro-safety">
       <div class="blank intro">
         <div class="el">
-          <div>
+          <div class="anim">
             <p class="explain-title white-blue">우리 동네 안전 지수</p>
-            <p class="explain-content">각 행정동별로 환경 요소를 분석해<br/>범죄 안전 지대를 도출하고<br/>행정동내의 각 환경 요소의 분포 순위를 제공합니다</p>
+            <p class="explain-content">
+              각 행정동별로 환경 요소를 분석해<br />
+              범죄 안전 지대를 도출하고<br />
+              행정동내의 각 환경 요소의 분포 순위를 제공합니다
+            </p>
           </div>
         </div>
         <div class="el">
           <div>
-            <img src="@/assets/intro3.png" :width="550"/>
+            <img src="@/assets/intro3.png" :width="550" class="anim2" />
           </div>
         </div>
       </div>
@@ -67,13 +77,17 @@
     <div>
       <div class="blank intro">
         <div class="el">
-          <div>
+          <div class="anim">
             <p class="explain-title white-blue">우리 동네 각 환경요소 현황</p>
-            <p class="explain-content">서울시 자치구별 범죄 현황을 시각화하고<br/>범죄 데이터를 분석해<br/>시간, 장소, 유형에 따른 범죄를 예측합니다</p>
+            <p class="explain-content">
+              서울시 자치구별 범죄 현황을 시각화하고<br />
+              범죄 데이터를 분석해 <br />
+              시간, 장소, 유형에 따른 범죄를 예측합니다
+            </p>
           </div>
         </div>
         <div class="el">
-          <img src="@/assets/intro4.png" :width="580"/>
+          <img src="@/assets/intro4.png" :width="580" class="anim2" />
         </div>
       </div>
     </div>
@@ -88,12 +102,49 @@ export default {
   components: {
     HomeFooter,
   },
+  mounted() {
+    window.addEventListener("scroll", this.handleScroll);
+  },
+  methods: {
+    isElementUnderBottom(elem, triggerDiff) {
+      const { top } = elem.getBoundingClientRect();
+      const { innerHeight } = window;
+      return top > innerHeight + (triggerDiff || 0);
+    },
+    handleScroll() {
+      const elems = document.querySelectorAll(".anim");
+      elems.forEach((elem) => {
+        if (this.isElementUnderBottom(elem, -20)) {
+          elem.style.opacity = "0";
+          elem.style.transform = "translateY(100px)";
+        } else {
+          elem.style.opacity = "1";
+          elem.style.transform = "translateY(0px)";
+        }
+      });
+
+      const elems2 = document.querySelectorAll(".anim2");
+      elems2.forEach((elem) => {
+        if (this.isElementUnderBottom(elem, -20)) {
+          elem.style.opacity = "0";
+          elem.style.transform = "translateY(200px)";
+        } else {
+          elem.style.opacity = "1";
+          elem.style.transform = "translateY(0px)";
+        }
+      });
+    },
+  },
 };
 </script>
 
 <style scoped>
+.home {
+  background-color: #454d5e;
+  min-width: 1450px;
+}
 .main {
-  min-width: 1200px;
+  width: 1450px;
   margin: 0 auto;
   position: relative;
   padding: 72px 0;
@@ -104,7 +155,7 @@ export default {
 .main-content {
   position: absolute;
   top: 180px;
-  left: 100px;
+  left: 120px;
   z-index: 888;
 }
 .main-title {
@@ -127,7 +178,7 @@ export default {
   margin-top: 56px;
 }
 .blank {
-  width: 1200px;
+  width: 1450px;
   margin: 0 auto;
 }
 .data-cnt {
@@ -146,12 +197,19 @@ export default {
   padding: 200px 0;
   display: flex;
 }
+.anim {
+  transition: transform 1s, opacity 1s;
+}
+.anim2 {
+  transition: transform 1.5s, opacity 1.5s;
+}
 .explain-title {
   font-size: 28px;
   font-weight: 700;
   margin-top: 44px;
   margin-bottom: 24px;
 }
+
 .explain-content {
   font-size: 16px;
   margin-bottom: 32px;
