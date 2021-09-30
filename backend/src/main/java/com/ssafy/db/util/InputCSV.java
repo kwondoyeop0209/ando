@@ -13,7 +13,7 @@ import java.util.Optional;
 public class InputCSV {
 
     @Autowired
-    dongRepository dongRepository;
+    com.ssafy.db.repository.dongRepository dongRepository;
 
     @Autowired
     cctvRepository cctvRepository;

@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface dongRepository extends JpaRepository<Dong,Long> {
 
     Optional<Dong> findByDongAndSiGunGu_Gu(String dong,String gu);
-//    List<Dong> findALL();
+    List<Dong> findAll();
 }
 

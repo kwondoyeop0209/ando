@@ -1,8 +1,8 @@
-package com.ssafy.api.service.cctv;
+package com.ssafy.api.service.guardhouse;
 
 import com.ssafy.api.response.cctv.CountByDongGetRes;
 
-public interface CCTVService {
+public interface GuardHouseService {
 
     public CountByDongGetRes getCCTVCount();
 }
