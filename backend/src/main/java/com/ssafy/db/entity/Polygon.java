@@ -12,8 +12,8 @@ import lombok.Setter;
 @Setter
 public class Polygon extends BaseEntity{
     @ManyToOne
-    @JoinColumn(name = "dong_id")
-    dong dong;
+    @JoinColumn(name = "dongId")
+    Dong dong;
 
     @Column(columnDefinition="TEXT")
     String coordinates;

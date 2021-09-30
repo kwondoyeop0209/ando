@@ -7,7 +7,6 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class gu extends BaseEntity{
-    String gu;
-    double area;
+public class CrimeType extends BaseEntity{
+    String type;
 }

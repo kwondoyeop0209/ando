@@ -9,14 +9,14 @@ import lombok.Setter;
 @Entity
 @Getter
 @Setter
-public class risk_index extends BaseEntity{
+public class RiskIndex extends BaseEntity{
     @ManyToOne
-    @JoinColumn(name = "gu_id")
-    gu siGunGu;
+    @JoinColumn(name = "guId")
+    Gu siGunGu;
 
     @ManyToOne
-    @JoinColumn(name = "crime_id")
-    crime_type crime_type;
+    @JoinColumn(name = "crimeId")
+    CrimeType crime_type;
 
     String day;
     String spot;

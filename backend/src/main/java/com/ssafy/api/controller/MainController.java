@@ -2,7 +2,7 @@ package com.ssafy.api.controller;
 
 
 import com.ssafy.api.response.gu.guGetRes;
-import com.ssafy.api.service.gu.guService;
+import com.ssafy.api.service.gu.GuService;
 import com.ssafy.db.dto.GetGuResDto;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class MainController {
 
-    final guService guService;
+    final GuService guService;
 
     @ApiOperation(value = "test", notes = "test", response = List.class)
     @GetMapping("/shorts")
@@ -35,7 +35,7 @@ public class MainController {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
-    
+
     @GetMapping("/sigungu")
     public ResponseEntity<guGetRes> getGu(){
         List<GetGuResDto> getGuResDtoList;

@@ -1,7 +1,7 @@
 package com.ssafy.api.service.gu;
 
 import com.ssafy.db.dto.GetGuResDto;
-import com.ssafy.db.entity.gu;
+import com.ssafy.db.entity.Gu;
 import com.ssafy.db.repository.guRepository;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -12,7 +12,7 @@ import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class guServiceImpl implements guService{
+public class GuServiceImpl implements GuService {
 
     final guRepository guRepository;
 
@@ -20,10 +20,10 @@ public class guServiceImpl implements guService{
     @Override
     public List<GetGuResDto> getGuList() throws NotFoundException {
         List<GetGuResDto> getGuResDtoList = new ArrayList<>();
-        List<gu> guList = guRepository.findAll();
+        List<Gu> guList = guRepository.findAll();
         if(guList.isEmpty())
             throw new NotFoundException("gu is empty");
-        for(gu gu: guList)
+        for(Gu gu: guList)
             getGuResDtoList.add(new GetGuResDto(gu.getId(),gu.getGu()));
         return getGuResDtoList;
     }
