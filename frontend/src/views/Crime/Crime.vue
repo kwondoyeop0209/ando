@@ -367,13 +367,16 @@ export default {
 .crime {
   width: 100%;
   height: 1200px;
+  background-color: #454d5e;
 }
 .main {
   min-width: 1450px;
+  height: 100%;
   position: relative;
+  background-color: #454d5e;
 }
 .map {
-  padding: 52px 0;
+  padding-top: 52px;
   width: 100%;
 }
 .main-content {
@@ -439,6 +442,7 @@ export default {
   background: #454d5e;
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
+  z-index: 999;
 }
 .modal-title {
   display: flex;
