@@ -1,6 +1,6 @@
 package com.ssafy.api.service.cctv;
 
-import com.ssafy.api.response.cctv.CCTVCountGetRes;
+import com.ssafy.api.response.cctv.CountByDongGetRes;
 import com.ssafy.db.entity.Dong;
 import com.ssafy.db.repository.dongRepository;
 import java.util.List;
@@ -14,11 +14,8 @@ public class CCTVServiceImpl implements CCTVService {
     dongRepository dongRepository;
 
     @Override
-    public CCTVCountGetRes getCCTVCount() {
-//        List<Dong> dongList = dongRepository.findALL();
-//        CCTVCountGetRes cctvCountGetRes = new CCTVCountGetRes();
-//        cctvCountGetRes.of(dongList);
-//        return cctvCountGetRes;
+    public CountByDongGetRes getCCTVCount() {
+        List<Dong> dongList = dongRepository.findAll();
         return null;
     }
 }

@@ -3,7 +3,6 @@ package com.ssafy.db.util;
 import com.opencsv.CSVReader;
 import com.ssafy.db.entity.Polygon;
 import com.ssafy.db.entity.Dong;
-import com.ssafy.db.repository.dongRepository;
 import com.ssafy.db.repository.polygonRepository;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -17,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class Inputpolygon {
 
     @Autowired
-    dongRepository dongRepository;
+    com.ssafy.db.repository.dongRepository dongRepository;
 
     @Autowired
     polygonRepository polygonRepository;
