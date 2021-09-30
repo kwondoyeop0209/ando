@@ -1,13 +1,11 @@
 package com.ssafy.api.controller;
 
 
-import com.ssafy.api.response.cctv.CountByDongGetRes;
-import com.ssafy.api.service.bar.BarService;
+import com.ssafy.api.response.cctv.CctvCorrelationGetRes;
+import com.ssafy.api.response.dong.CountByDongGetRes;
 import com.ssafy.api.service.cctv.CCTVService;
-import com.ssafy.api.service.guardhouse.GuardHouseService;
-import com.ssafy.api.service.police.PoliceService;
-import com.ssafy.api.service.securitylight.SecurityLightService;
 import com.ssafy.api.service.space.SpaceService;
+import com.ssafy.db.mapping.CctvInfoMapping;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import java.util.List;
@@ -16,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,8 +26,8 @@ public class SpaceController {
 
     @Autowired
     SpaceService spaceService;
-//    @Autowired
-//    CCTVService cctvService;
+    @Autowired
+    CCTVService cctvService;
 //    @Autowired
 //    BarService barService;
 //    @Autowired
@@ -84,6 +83,28 @@ public class SpaceController {
         try {
             CountByDongGetRes list = spaceService.getSpaceCount("light");
             return new ResponseEntity<CountByDongGetRes>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @ApiOperation(value = "cctv 상세정보 목록", notes = "동별 CCTV 상세정보를 목록으로 반환", response = List.class)
+    @GetMapping("/cctv/{dong}")
+    public ResponseEntity<List<CctvInfoMapping>> getCCTVCount(@PathVariable Long dong) {
+        try {
+            List<CctvInfoMapping> list = cctvService.getCCTVInfoByDongId(dong);
+            return new ResponseEntity<List<CctvInfoMapping>>(list, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @ApiOperation(value = "cctv 상관관계 정보", notes = "구별 CCTV 개수 목록, 구별 범죄 범거수 목록을 객체로 반환", response = List.class)
+    @GetMapping("/cctv/graph")
+    public ResponseEntity<CctvCorrelationGetRes> getCCTVCorrelation() {
+        try {
+            CctvCorrelationGetRes list = cctvService.getCCTVCorrelation();
+            return new ResponseEntity<CctvCorrelationGetRes>(list, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

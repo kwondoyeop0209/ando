@@ -1,8 +1,11 @@
 package com.ssafy.api.service.cctv;
 
-import com.ssafy.api.response.cctv.CountByDongGetRes;
+import com.ssafy.api.response.cctv.CctvCorrelationGetRes;
+import com.ssafy.db.mapping.CctvInfoMapping;
+import java.util.List;
 
 public interface CCTVService {
 
-    public CountByDongGetRes getCCTVCount();
+    List<CctvInfoMapping> getCCTVInfoByDongId(Long dongId);
+    CctvCorrelationGetRes getCCTVCorrelation();
 }
