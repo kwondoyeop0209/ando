@@ -2,81 +2,113 @@
   <div class="safety-index">
     <!-- left -->
     <div class="info">
-      <table class="pop_table">
-    <caption>안전지수</caption>
-    <tbody>
-        <tr>
-            <td>1</td>
-            <th scope="row">신대방동</th>
-            <td>8.2점</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <th scope="row">역삼동</th>
-            <td>8.1점</td>
-        </tr>
-        <tr>
-            <td>3</td>
-            <th scope="row">상도3동</th>
-            <td>7.6점</td>
-        </tr>
-        <tr>
-            <td>4</td>
-            <th scope="row">이촌동</th>
-            <td>7.3점</td>
-        </tr>
-        <tr>
-            <td>5</td>
-            <th scope="row">신길1동</th>
-            <td>7.1점</td>
-        </tr>
-        <tr>
-            <td>6</td>
-            <th scope="row">역삼동</th>
-            <td>6.6점</td>
-        </tr>
-        <tr>
-            <td>7</td>
-            <th scope="row">삼성동</th>
-            <td>6.4점</td>
-        </tr>
-        <tr>
-            <td>8</td>
-            <th scope="row">규동</th>
-            <td>5.2점</td>
-        </tr>
-        <tr>
-            <td>9</td>
-            <th scope="row">사당4동</th>
-            <td>5.0점</td>
-        </tr>
-        <tr>
-            <td>10</td>
-            <th scope="row">잠실4동</th>
-            <td>4.3점</td>
-        </tr>
-    </tbody>
-</table>
+      <div>
+        <button @click="changeSize(400)" style="background:#6a7daf; width:100px; font-size:20px; border-radius: 10%; float: right;">환경 지수</button>
+        <button @click="changeSize(800)" style="background:#6a7daf; width:100px; font-size:20px; border-radius: 10%; float: right;">안전 지수</button>
+      </div>
+      <br><br>
+      <!-- 순위 나오는 부분 -->
+        <vue-good-table v-show="isClick" :columns="columns" :rows="rows" 
+         :sort-options="{
+           enabled: false,
+           initialSortBy: {field: 'rank', type: 'asc'}
+           }"
+         @on-row-click="onRowClick" theme="nocturnal" style="display:table; text-align: center; vertical-align: middle; width:100%; height:100%; margin:0 auto;" v-if="isShow">
+         </vue-good-table>
 
+        <!-- 표에서 셀 클릭하면 나오는 상세화면 -->
+        <div v-else>
+          {{dong}}
+          <div>
+            <highcharts :options="safetyScore"></highcharts>
+          </div>
+          <div>
+            동작구 내에서 3위 <br>
+            전체에서 48위
+          </div><br>
+          <hr class="one"><br>
+          <div>
+            <p> CCTV 보유 현황 3위 (밑에 게이지 차트는 나중에 데이터 들어오면 손보기로) </p>
+            <p> 유흥지 분포 4위 (차트 추가) </p>
+            <p> 파출소 분포 2위 (차트 추가) </p>
+            <p> 보안등 분포 3위 (차트 추가) </p>
+          </div>
+        </div>
     </div>
-    <!-- right -->
-    
+
+    <!-- right 지도가 원래 이러면 바로 나와야하는데 왜 안나오냐 대체-->
      <div id="map"></div>
-    <div class="button-group">
-      <button @click="changeSize(800)" style="color:black;">안전 지수</button>
-      <button @click="changeSize(800)" style="color:black;">환경 지수</button>
-      <button @click="displayMarker(markerPositions1)" style="color:black;">마카 보이기</button>
-      <button @click="displayInfoWindow" style="color:black;">infowindow띄우기</button>
+      <div class="map">
     </div>
   </div>
-  
 </template>
 
 <script>
+import { VueGoodTable } from 'vue-good-table';
+import {Chart} from "highcharts-vue";
+import 'vue-good-table/dist/vue-good-table.css'
+
 export default {
   name: "SafetyIndex",
+  components: {
+    VueGoodTable,
+    highcharts: Chart
+  },
   data() {
     return {
+      isShow: true,
+      isClick: false,
+      dong: "",
+      safetyScore: {
+        title: {
+          text: "",
+        },
+        credits: {
+          enabled: false,
+        },
+        chart: {
+          backgroundColor: "rgba(0,0,0,0)",
+          type: "column",
+        },
+        xAxis: {
+          categories: ["안전지수 점수"],
+          labels: {
+            style: {
+              color: "#ffffff",
+            },
+          },
+        },
+        yAxis: {
+          min:0,
+          gridLineColor: "rgba(0,0,0,0)",
+          labels: {
+            style: {
+              color: "#ffffff",
+            },
+          },
+        },
+        plotOptions: {
+          column: {
+              dataLabels: {
+                  enabled: true,
+              }
+          }
+        },
+        legend: {
+          enabled: false,
+        },
+        series: [
+          {
+            data: [
+              {
+                y: 4.7,
+                color: "#6A7DAF",
+              },
+            ],
+          },
+        ],
+      },
+
       map: null,
       markerPositions1: [
         [37.499590490909185, 127.0263723554437],
@@ -89,10 +121,44 @@ export default {
       ],
       markers: [],
       infowindow: null,
+       columns: [
+        {
+          label: '순위',
+          field: 'rank',
+          type: 'number',
+          
+          width: '30px',
+          
+        },
+        {
+          label: '행정동',
+          field: 'name',
+          
+        },
+        {
+          label: '점수',
+          field: 'score',
+          
+        },
+        
+      ],
+      rows: [
+        { id:1, rank: 1, name:"신대방동", score: "8.7점"},
+        { id:2, rank: 2, name:"역삼동", score: "8.4점"},
+        { id:3, rank: 3, name:"상도3동", score: "7.9점"},
+        { id:4, rank: 4, name:"이촌동", score: "7.2점"},
+        { id:5, rank: 5, name:"신길1동", score: "5.4점"},
+        { id:6, rank: 6, name:"상도2동", score: "5.2점"},
+        { id:7, rank: 7, name:"사당4동", score: "5.1점"},
+        { id:8, rank: 8, name:"홍제2동", score: "4.8점"},
+        { id:9, rank: 9, name:"미아동", score: "4.5점"},
+        { id:10, rank: 10, name:"혜화동", score: "4.2점"},
+      ],
+
+
     };
   },
   mounted() {
-    console.log("여기는 mounted속임")
     if (window.kakao && window.kakao.maps) {
       console.log("여기는 mounted속 if문 돌고있는거임")
       this.initMap();
@@ -107,12 +173,10 @@ export default {
       document.head.appendChild(script);
     }
   },
-  updated(){
-        this.initMap();
-    },
+  
   methods: {
     initMap() {
-      const container = document.getElementById("map"); //지도 표시할 div
+      const container = document.getElementById("map"); //지도를 담을 영역의 DOM 레퍼런스
       const options = { //지도 중심좌표
         center: new kakao.maps.LatLng(37.517353,127.037164),
         level: 3,
@@ -120,7 +184,51 @@ export default {
       //지도 생성
       this.map = new kakao.maps.Map(container, options);
 
-            // 커스텀 오버레이에 표시할 내용입니다     
+      // 여기는 마커를 세팅하는 부분!! (이제 실제로 데이터들 받게되면 좌표들을 리스트로 쫙 풀고 한번에 보여주면 됨!)
+      // 마커를 표시할 위치와 title 객체 배열입니다 
+      const positions = [
+          {
+              title: '여긴어디지', 
+              latlng: new kakao.maps.LatLng(37.517353,127.037164)
+          },
+          {
+              title: '호잇', 
+              latlng: new kakao.maps.LatLng(37.499590490909185, 127.0263723554437)
+          },
+          {
+              title: '공원', 
+              latlng: new kakao.maps.LatLng(37.499427948430814, 127.02794423197847)
+          },
+          {
+              title: '뭐야 이건어디일까나',
+              latlng: new kakao.maps.LatLng(37.498553760499505, 127.02882598822454)
+          }
+      ];
+
+      // 마커 이미지의 이미지 주소입니다
+      const imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png"; 
+          
+      for (var i = 0; i < positions.length; i ++) {
+          
+          // 마커 이미지의 이미지 크기 입니다
+          const imageSize = new kakao.maps.Size(24, 35); 
+          
+          // 마커 이미지를 생성합니다    
+          const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize); 
+          
+          // 마커를 생성합니다
+          this.marker = new kakao.maps.Marker({
+              map: this.map, // 마커를 표시할 지도
+              position: positions[i].latlng, // 마커를 표시할 위치
+              title : positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
+              image : markerImage // 마커 이미지 
+          });
+      }
+
+
+      // 여기는 오버레이랑 기타 컨트롤러 등을 세팅하는 부분!!
+
+      // 커스텀 오버레이에 표시할 내용입니다     
       // HTML 문자열 또는 Dom Element 입니다 
       const content = '<div class ="label"><span class="left"></span><span class="center" style="color:black;">안전!</span><span class="right"></span></div>';
 
@@ -144,82 +252,25 @@ export default {
       // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
       this.zoomControl = new kakao.maps.ZoomControl();
       this.map.addControl(this.zoomControl, kakao.maps.ControlPosition.RIGHT);
-
-      this.polygonPath = [
-          new kakao.maps.LatLng(37.52381, 127.0265),
-          new kakao.maps.LatLng(37.517353,127.037164),
-          new kakao.maps.LatLng(37.524399,127.050457),
-          new kakao.maps.LatLng(37.511399,127.046255),
-          new kakao.maps.LatLng(37.49604,127.04679) 
-      ];
-
-      // 지도에 표시할 다각형을 생성합니다
-      this.polygon = new kakao.maps.Polygon({
-          path:this.polygonPath, // 그려질 다각형의 좌표 배열입니다
-          strokeWeight: 3, // 선의 두께입니다
-          strokeColor: '#39DE2A', // 선의 색깔입니다
-          strokeOpacity: 0.8, // 선의 불투명도 입니다 1에서 0 사이의 값이며 0에 가까울수록 투명합니다
-          strokeStyle: 'longdash', // 선의 스타일입니다
-          fillColor: '#A2FF99', // 채우기 색깔입니다
-          fillOpacity: 0.7 // 채우기 불투명도 입니다
-      });
-
-      // 지도에 다각형을 표시합니다
-      this.polygon.setMap(this.map);
+      
+      //여기까지가 기본 지도 세팅 완료
       
     },
     changeSize(size) {
+      this.isClick = true;
       const container = document.getElementById("map");
       container.style.width = `${size*2}px`;
       container.style.height = `${size}px`;
       this.map.relayout();
     },
-    displayMarker(markerPositions) {
-      if (this.markers.length > 0) {
-        this.markers.forEach((marker) => marker.setMap(null));
-      }
-
-      const positions = markerPositions.map(
-        (position) => new kakao.maps.LatLng(...position)
-      );
-
-      if (positions.length > 0) {
-        this.markers = positions.map(
-          (position) =>
-            new kakao.maps.Marker({
-              map: this.map,
-              position,
-            })
-        );
-
-        const bounds = positions.reduce(
-          (bounds, latlng) => bounds.extend(latlng),
-          new kakao.maps.LatLngBounds()
-        );
-
-        this.map.setBounds(bounds);
-      }
+    onRowClick(params) {
+      console.log(params.row.name);
+      const dongName = params.row.name;
+      this.dong = dongName;
+      this.isShow = false;
     },
-    displayInfoWindow() {
-      if (this.infowindow && this.infowindow.getMap()) {
-        //이미 생성한 인포윈도우가 있기 때문에 지도 중심좌표를 인포윈도우 좌표로 이동시킨다.
-        this.map.setCenter(this.infowindow.getPosition());
-        return;
-      }
+  
 
-      var iwContent = '<div style="padding:5px; color:black;">Hello World!</div>', // 인포윈도우에 표출될 내용으로 HTML 문자열이나 document element가 가능합니다
-        iwPosition = new kakao.maps.LatLng(33.450701, 126.570667), //인포윈도우 표시 위치입니다
-        iwRemoveable = true; // removeable 속성을 ture 로 설정하면 인포윈도우를 닫을 수 있는 x버튼이 표시됩니다
-
-      this.infowindow = new kakao.maps.InfoWindow({
-        map: this.map, // 인포윈도우가 표시될 지도
-        position: iwPosition,
-        content: iwContent,
-        removable: iwRemoveable,
-      });
-
-      this.map.setCenter(iwPosition);
-    },
   },
 };
 </script>
@@ -231,77 +282,24 @@ export default {
   min-width: 1200px;
   width: 100%;
   display: flex;
+  
 }
 .info {
   background-color: #454d5e;
   flex: 0 0 auto;
   width: 400px;
+  font-size: 25px;
+  padding: 20px 20px;
   overflow: hidden;
-}
-.map {
-  background-color: gray;
-  flex-grow: 1;
-}
-.button-group {
-  margin: 5px 0px;
-  background-color: gray;
-  color: blue;
+  text-align: center;
+  vertical-align: middle;
+  background: #454d5e;
 }
 
-.pop_table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    border: none;
-    border-bottom:5px solid #000;
-    color:#000;
-    margin: auto;
+.map {
+  background-color: #454d5e;
+  height: 100%;
+  flex-grow: 1;
 }
- 
-.pop_table caption{
-    height: 60px;
-    font-size: 1.2em;
-    font-weight: bold;
-    text-align: center;
-    line-height: 52px;
-    border-bottom: 5px solid #FFF;
-    -webkit-border-radius: 8px 8px 0 0;
-    -moz-border-radius: 8px 8px 0 0;
-    border-radius: 8px 8px 0 0;
-    background: #F94E5B;
-}
- 
-.pop_table caption:before {
-    content: '';
-    display: block;
-    height: 8px;
-    -webkit-border-radius: 8px 8px 0 0;
-    -moz-border-radius: 8px 8px 0 0;
-    border-radius: 8px 8px 0 0;
-    background-color: #000;
-    
-}
- 
-.pop_table th {
-    padding: 15px;
-    border: none;
-    border-bottom: 2px solid #FFF;
-    background: #507cda;
-    font-weight: bold;
-    text-align: center;
-    vertical-align: middle;
-}
- 
-.pop_table td {
-    padding: 15px;
-    border: none;
-    border-bottom: 2px solid #000;
-    text-align: center;
-    vertical-align: baseline;
-}
- 
-.pop_table tr:last-child th,
-.pop_table tr:last-child td {
-    border-bottom: none;
-}
+
 </style>
