@@ -24,15 +24,15 @@
               <p class="chart-subtitle">최근 3년간 서울시 범죄 발생</p>
               <p class="white highlight">296,177건</p>
               <p class="chart-subtitle"><b>검거율</b>이 높은 지역 (건수)</p>
-              <highcharts :options="chartArrest"></highcharts>
+              <highcharts :options="chartArrest" style="height: 300px"></highcharts>
               <p class="chart-subtitle"><b>범죄율</b>이 높은 지역 (건수)</p>
-              <highcharts :options="chartCrime"></highcharts>
+              <highcharts :options="chartCrime" style="height: 300px"></highcharts>
             </div>
             <div style="flex: 1"></div>
             <div class="right-content">
               <div>
                 <p class="chart-subtitle">최근 3년간 발생 건수</p>
-                <highcharts :options="chartLatest"></highcharts>
+                <highcharts :options="chartLatest" style="height: 300px"></highcharts>
               </div>
               <div align="center">
                 <p class="chart-subtitle">서울시 5대 범죄</p>
@@ -54,18 +54,60 @@
               <div class="modal_wrap">
                 <!-- <div class="modal_close" @click="offClick"><a href="#">close</a></div> -->
                 <div class="modal-title">
-                  <p style="font-size: 24px; font-weight: 600">범죄 현황</p>
+                  
+                  <p style="font-size: 24px; font-weight: 600"><span style="color:#A4B5E2; font-size:24px; font-weight: 600">{{selectGu}}</span> 범죄 현황</p>
                   <div style="flex: 1"></div>
                   <p id="detail_btn" @click="onClick">예측 분석 보기 ></p>
                 </div>
                 <!-- 범죄율 -->
                 <div>
-                  <p class="rateTitle">💡 범죄율</p>
-                  <vc-donut :sections="sections" :size="100"></vc-donut>
-                </div>
+                  <p class="rateTitle">💡 범죄율</p><br />
+                  <p class="rateDetail"> 총 몇 건 중 몇 00건이 발생</p><br />
+                  <vc-donut :sections="crimeRate" :size="150" 
+                  background="#454d5e" foreground="#EEEEEE"
+                  unit="px" :thickness="20"
+                  :total="100"
+                  :start-angle="0" :auto-adjust-text-size="true">
+                    <h1>25%</h1>
+                  </vc-donut>
+                </div><br />
                 <!-- 검거율 -->
-                <highcharts :options="chartArrest"></highcharts>
+                <div>
+                  <p class="rateTitle">💡 검거율</p><br />
+                  <p class="rateDetail"> 총 몇 건 중 몇 00건이 발생</p><br />
+                  <vc-donut :sections="arrestRate" :size="150" 
+                  background="#454d5e" foreground="#EEEEEE"
+                  unit="px" :thickness="20"
+                  :total="100"
+                  :start-angle="0" :auto-adjust-text-size="true">
+                    <h1>25%</h1>
+                  </vc-donut>
+                </div><br />
                 <!-- 범죄 유형 -->
+                <div>
+                  <p class="rateTitle">💡 범죄 유형</p><br />
+                  <Chart2 :options="chartTypeOfCrime"></Chart2>
+                </div><br />
+                <div>
+                  <p class="rateTitle">💡 00 이/가 높은 요일</p><br />
+                  <highcharts :options="highestDay" style="height: 300px"></highcharts>
+                </div><br />
+                <div>
+                  <p class="rateTitle">💡 00 이/가 높은 시간</p><br />
+                  <highcharts :options="highestTime" style="height: 300px"></highcharts>
+                </div><br />
+                <div>
+                  <p class="rateTitle">💡 00 이/가 높은 발생 장소</p><br />
+                  <highcharts :options="highestSpot" style="height: 300px"></highcharts>
+                </div><br />
+                <!-- <div>
+                <p class="chart-subtitle">최근 3년간 발생 건수</p>
+                <highcharts :options="chartLatest"></highcharts>
+                </div>
+                <div>
+                  <p class="chart-subtitle">최근 3년간 발생 건수</p>
+                  <highcharts :options="chartLatest"></highcharts>
+                </div> -->
               </div>
               <div class="arrow-area">
                 <img
@@ -77,7 +119,7 @@
               <div style="flex: 1"></div>
               <div class="predict-modal" v-show="isPredict">
                 <div class="predict-title">
-                  <p><span>자치구</span>범죄 예측 분석</p>
+                  <p><span style="color:#A4B5E2; font-size:18px; font-weight: 600">{{selectGu}}</span> 범죄 예측 분석</p>
                   <div style="flex: 1"></div>
                   <img
                     src="@/assets/ic-close.png"
@@ -85,7 +127,9 @@
                     @click="offClick"
                   />
                 </div>
-                <div>테이블</div>
+                <div>
+                  테이블
+                </div>
               </div>
             </div>
           </div>
@@ -97,10 +141,12 @@
 <script>
 import VcDonut from "../../../node_modules/vue-css-donut-chart/src/components/Donut.vue";
 import { Chart } from "highcharts-vue";
+import { Chart2 } from "highcharts/modules/variable-pie";
+
 export default {
   name: "Crime",
   components: {
-    highcharts: Chart,
+    highcharts: Chart,Chart2,
     VcDonut,
   },
   data() {
@@ -183,6 +229,7 @@ export default {
         },
         series: [
           {
+            name: '발생건수',
             data: [
               {
                 y: 321,
@@ -253,6 +300,7 @@ export default {
         },
         series: [
           {
+            name: '발생건수',
             data: [
               {
                 y: 321,
@@ -298,6 +346,12 @@ export default {
           },
         },
         yAxis: {
+          title: {
+            text: "건수",
+            style: {
+              color: "#ffffff",
+            },
+          },
           min: 0,
           gridLineColor: "rgba(0,0,0,0)",
           labels: {
@@ -318,6 +372,7 @@ export default {
         },
         series: [
           {
+            name: '발생건수',
             data: [
               {
                 y: 321,
@@ -335,7 +390,234 @@ export default {
           },
         ],
       },
-      sections: [{ label: "label", value: 25 }],
+      crimeRate: [{ label: "label", value: 25, color:'#F57272' }],
+      arrestRate: [{ label: "label", value: 25, color:'#2F488A' }],
+      chartTypeOfCrime:{
+          chart: {
+            type: 'variablepie'
+          },
+          title: {
+              text: ''
+          },
+          series: [{
+              minPointSize: 10,
+              innerSize: '20%',
+              zMin: 0,
+              name: 'countries',
+              data: [{
+                  name: 'Spain',
+                  y: 505370,
+                  z: 92.9
+              }, {
+                  name: 'France',
+                  y: 551500,
+                  z: 118.7
+              }, {
+                  name: 'Poland',
+                  y: 312685,
+                  z: 124.6
+              }, {
+                  name: 'Czech Republic',
+                  y: 78867,
+                  z: 137.5
+              }, {
+                  name: 'Italy',
+                  y: 301340,
+                  z: 201.8
+              }, {
+                  name: 'Switzerland',
+                  y: 41277,
+                  z: 214.5
+              }, {
+                  name: 'Germany',
+                  y: 357022,
+                  z: 235.6
+              }
+            ],
+          },
+        ],
+      },
+      highestDay:{
+        chart: {
+            backgroundColor: "rgba(0,0,0,0)",
+            type: 'areaspline'
+        },
+        title: {
+            text: ''
+        },
+        xAxis: {
+          categories: [
+                '월',
+                '화',
+                '수',
+                '목',
+                '금',
+                '토',
+                '일'
+          ],
+          labels: {
+            style: {
+              color: "#ffffff",
+            },
+          },
+            
+        },
+        yAxis: {
+          title: {
+            text: "건수",
+            style: {
+              color: "#ffffff",
+            },
+          },
+          gridLineColor: "rgba(0,0,0,0)",
+          labels: {
+            style: {
+              color: "#ffffff",
+            },
+          },
+        },
+        tooltip: {
+            shared: true,
+            valueSuffix: ' 건'
+        },
+        credits: {
+            enabled: false,
+        },
+        legend: {
+          enabled: false,
+        },
+        plotOptions: {
+            areaspline: {
+              // fillColor:'#A4B5E2',
+              fillOpacity: 0.5,
+            },
+        },
+        series: [{
+            name: '발생건수',
+            data: [3, 4, 3, 5, 4, 10, 12]
+        },
+        ],
+      },
+      highestTime:{
+        chart: {
+            backgroundColor: "rgba(0,0,0,0)",
+            type: 'areaspline'
+        },
+        title: {
+            text: ''
+        },
+        xAxis: {
+          categories: [
+                '00:00~02:59',
+                '03:00~05:59',
+                '06:00~08:59',
+                '09:00~11:59',
+                '12:00~14:59',
+                '15:00~17:59',
+                '18:00~20:59',
+                '21:00~23:59',
+          ],
+          labels: {
+            style: {
+              color: "#ffffff",
+            },
+          },
+            
+        },
+        yAxis: {
+          title: {
+            text: "건수",
+            style: {
+              color: "#ffffff",
+            },
+          },
+          gridLineColor: "rgba(0,0,0,0)",
+          labels: {
+            style: {
+              color: "#ffffff",
+            },
+          },
+        },
+        tooltip: {
+            shared: true,
+            valueSuffix: ' 건'
+        },
+        credits: {
+            enabled: false,
+        },
+        legend: {
+          enabled: false,
+        },
+        plotOptions: {
+            areaspline: {
+              fillOpacity: 0.5,
+            },
+        },
+        series: [{
+            name: '발생건수',
+            data:[10, 4, 2, 5, 4, 10, 12, 12],
+        },
+        ],
+      },
+      highestSpot:{
+        chart: {
+            renderTo : 'highestSpot',
+            backgroundColor: "rgba(0,0,0,0)",
+            type: 'column',
+            options3d: {
+                enabled: true,
+                alpha: 15,
+                beta: 15,
+                depth: 50,
+                viewDistance: 25
+            }
+        },
+        title: {
+            text: ''
+        },
+        plotOptions: {
+        column: {
+            depth: 25
+        }
+        },
+        legend: {
+          enabled: false,
+        },
+        credits: {
+            enabled: false,
+        },
+        xAxis: {
+          categories: ["a동", "b동", "c동", "d동", "e동"],
+          labels: {
+            style: {
+              fontsize: "14px",
+              color: "#ffffff",
+            },
+          },
+        },
+        yAxis: {
+          title: {
+            text: "건수",
+            style: {
+              color: "#ffffff",
+            },
+          },
+          gridLineColor: "rgba(0,0,0,0)",
+          labels: {
+            style: {
+              color: "#ffffff",
+            },
+          },
+        },
+        tooltip: {
+            shared: true,
+            valueSuffix: ' 건'
+        },
+        series: [{
+            name: '발생건수',
+            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
+        }]
+      },
     };
   },
   methods: {
@@ -403,6 +685,10 @@ export default {
 .rateTitle {
   font-size: 20px;
 }
+.rateDetail {
+  font-size: 18px;
+  margin-left: 28px;
+}
 #selectGu {
   padding: 10px 6px 10px 6px;
   background-color: #454d5e;
@@ -443,6 +729,7 @@ export default {
   border-top-right-radius: 8px;
   border-bottom-right-radius: 8px;
   z-index: 999;
+  box-shadow: 12px 0px 20px -7px #000;
 }
 .modal-title {
   display: flex;
@@ -473,17 +760,6 @@ export default {
   background-color: #454d5e;
   border-radius: 10px;
   /* box-shadow: inset 0px 0px 5px white; */
-}
-.black_bg {
-  display: none;
-  position: absolute;
-  content: "";
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0, 0, 0, 0);
-  top: 0;
-  left: 0;
-  z-index: 1;
 }
 .predict-title {
   display: flex;
