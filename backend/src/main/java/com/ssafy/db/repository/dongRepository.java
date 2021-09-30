@@ -12,5 +12,6 @@ public interface dongRepository extends JpaRepository<Dong,Long> {
 
     Optional<Dong> findByDongAndSiGunGu_Gu(String dong,String gu);
     List<Dong> findAll();
+    List<Dong> findBySiGunGu_Id(Long id);
 }
 
