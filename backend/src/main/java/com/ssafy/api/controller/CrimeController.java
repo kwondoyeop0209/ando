@@ -11,11 +11,14 @@ import com.ssafy.api.response.riskindex.RiskIndexListGetRes;
 import com.ssafy.api.service.arrestrate.ArrestRateService;
 import com.ssafy.api.service.riskindex.RiskIndexService;
 import io.swagger.annotations.Api;
+import io.swagger.annotations.ApiOperation;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
 @RestController
@@ -28,6 +31,7 @@ public class CrimeController {
 
     final RiskIndexService riskIndexService;
 
+    @ApiOperation(value = "구별 범죄 건수", notes = "null 이면 서울시 3년 발생 건수, gu랑 year 넣으면 해당 구의 해당 년도 유형별 범죄 건수 리턴", response = List.class)
     @GetMapping
     public ResponseEntity<?> getCrimeList(GetCrimeListReq getCrimeListReq){
 
@@ -48,7 +52,7 @@ public class CrimeController {
         }
     }
 
-
+    @ApiOperation(value = "범죄 예측 분석", notes = "해당 구의 범죄 예측 분석 리스트 리턴", response = RiskIndexListGetRes.class)
     @GetMapping("/forecast/{sigungu}")
     public ResponseEntity<RiskIndexListGetRes> getRiskIndexList(@PathVariable Long sigungu){
         try {
@@ -61,6 +65,7 @@ public class CrimeController {
         }
     }
 
+    @ApiOperation(value = "구 발생&검거", notes = "서울시 전체와 해당 구의 해당 년도 발생 건수, 검거 건수 리턴 ", response = GetRateRes.class)
     @GetMapping("/rate")
     public ResponseEntity<GetRateRes> getArrestRate(GetRateReq getRateReq){
         if(getRateReq.getGu() == null || getRateReq.getYear() == 0)
@@ -73,6 +78,7 @@ public class CrimeController {
             return ResponseEntity.status(HttpStatus.OK).body(GetRateRes.of(HttpStatus.OK.value(), "Success", arrestRateService.getRate(getRateReq.getGu(), getRateReq.getYear())));
     }
 
+    @ApiOperation(value = "Top 5 범죄건수&검거건수 목록", notes = "2020년 Top 5 발생 건수와 해당 구, 검거 건수와 해당 구 리턴", response = TopArrestCrimeGuListRes.class)
     @GetMapping("/top")
     public ResponseEntity<TopArrestCrimeGuListRes> getTopArrestCrimeGuList(){
         try {

@@ -37,6 +37,7 @@ public class MainController {
         }
     }
 
+    @ApiOperation(value = "구 목록", notes = "구 id, 구 이름 리스트 리턴", response = guGetRes.class)
     @GetMapping("/sigungu")
     public ResponseEntity<guGetRes> getGuList(){
         List<GetGuDto> getGuDtoList;
@@ -48,6 +49,7 @@ public class MainController {
         }
     }
 
+    @ApiOperation(value = "동 목록", notes = "동 id, 동 이름 리스트 리턴", response = DongListGetRes.class)
     @GetMapping("/dong/{sigungu}")
     public ResponseEntity<DongListGetRes> getDongList(@PathVariable Long sigungu) {
         List<GetDongListDto> getDongListDtoList;
