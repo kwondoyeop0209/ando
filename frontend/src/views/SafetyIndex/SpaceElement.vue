@@ -1,41 +1,18 @@
 <template>
-  <div class="safety-index">
+  <div class="space-element">
     <!-- left -->
     <div class="info">
       <div>
-        <button @click="goSpacePage()" style="background:#6a7daf; width:100px; font-size:20px; border-radius: 10%; float: right;">환경 지수</button>
-        <button @click="changeSize(800)" style="background:#6a7daf; width:100px; font-size:20px; border-radius: 10%; float: right;">안전 지수</button>
+          <p>여기는 환경요소페이지</p>
+        <button @click="changeSize(800)" style="background:#6a7daf; width:100px; font-size:20px; border-radius: 10%; float: right;">환경 지수</button>
+        <button @click="goSafetyPage()" style="background:#6a7daf; width:100px; font-size:20px; border-radius: 10%; float: right;">안전 지수</button>
       </div>
       <br><br>
-      <!-- 순위 나오는 부분 -->
-        <vue-good-table v-show="isClick" :columns="columns" :rows="rows" 
-         :sort-options="{
-           enabled: false,
-           initialSortBy: {field: 'rank', type: 'asc'}
-           }"
-         @on-row-click="onRowClick" theme="nocturnal" style="display:table; text-align: center; vertical-align: middle; width:100%; height:100%; margin:0 auto;" v-if="isShow">
-         </vue-good-table>
-
-        <!-- 표에서 셀 클릭하면 나오는 상세화면 -->
-        <div v-else>
-          {{dong}}
           <div>
-            <highcharts :options="safetyScore"></highcharts>
+            <highcharts :options="Score"></highcharts>
           </div>
-          <div>
-            동작구 내에서 3위 <br>
-            전체에서 48위
-          </div><br>
-          <hr class="one"><br>
-          <div>
-            <p> CCTV 보유 현황 3위 (밑에 게이지 차트는 나중에 데이터 들어오면 손보기로) </p>
-            <p> 유흥지 분포 4위 (차트 추가) </p>
-            <p> 파출소 분포 2위 (차트 추가) </p>
-            <p> 보안등 분포 3위 (차트 추가) </p>
-          </div>
-        </div>
     </div>
-
+         
     <!-- right 지도가 원래 이러면 바로 나와야하는데 왜 안나오냐 대체-->
      <div id="map"></div>
       <div class="map">
@@ -44,14 +21,12 @@
 </template>
 
 <script>
-import { VueGoodTable } from 'vue-good-table';
 import {Chart} from "highcharts-vue";
 import 'vue-good-table/dist/vue-good-table.css'
 
 export default {
-  name: "SafetyIndex",
+  name: "SpaceElement",
   components: {
-    VueGoodTable,
     highcharts: Chart
   },
   data() {
@@ -59,7 +34,7 @@ export default {
       isShow: true,
       isClick: false,
       dong: "",
-      safetyScore: {
+      Score: {
         title: {
           text: "",
         },
@@ -71,7 +46,7 @@ export default {
           type: "column",
         },
         xAxis: {
-          categories: ["안전지수 점수"],
+          categories: ["갯수"],
           labels: {
             style: {
               color: "#ffffff",
@@ -121,41 +96,6 @@ export default {
       ],
       markers: [],
       infowindow: null,
-       columns: [
-        {
-          label: '순위',
-          field: 'rank',
-          type: 'number',
-          
-          width: '30px',
-          
-        },
-        {
-          label: '행정동',
-          field: 'name',
-          
-        },
-        {
-          label: '점수',
-          field: 'score',
-          
-        },
-        
-      ],
-      rows: [
-        { id:1, rank: 1, name:"신대방동", score: "8.7점"},
-        { id:2, rank: 2, name:"역삼동", score: "8.4점"},
-        { id:3, rank: 3, name:"상도3동", score: "7.9점"},
-        { id:4, rank: 4, name:"이촌동", score: "7.2점"},
-        { id:5, rank: 5, name:"신길1동", score: "5.4점"},
-        { id:6, rank: 6, name:"상도2동", score: "5.2점"},
-        { id:7, rank: 7, name:"사당4동", score: "5.1점"},
-        { id:8, rank: 8, name:"홍제2동", score: "4.8점"},
-        { id:9, rank: 9, name:"미아동", score: "4.5점"},
-        { id:10, rank: 10, name:"혜화동", score: "4.2점"},
-      ],
-
-
     };
   },
   mounted() {
@@ -263,19 +203,12 @@ export default {
       container.style.height = `${size}px`;
       this.map.relayout();
     },
-    onRowClick(params) {
-      console.log(params.row.name);
-      const dongName = params.row.name;
-      this.dong = dongName;
-      this.isShow = false;
-    },
-    goSpacePage() {
-      this.$router.push({
-        name: "SpaceElement"
+    goSafetyPage() {
+        this.$router.push({
+        name: "SafetyIndex"
       })
 
     }
-  
 
   },
 };
@@ -284,7 +217,7 @@ export default {
 
 
 <style scoped>
-.safety-index {
+.space-element {
   min-width: 1200px;
   width: 100%;
   display: flex;
