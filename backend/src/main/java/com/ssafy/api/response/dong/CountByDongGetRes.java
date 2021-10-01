@@ -1,4 +1,4 @@
-package com.ssafy.api.response.cctv;
+package com.ssafy.api.response.dong;
 
 import com.ssafy.db.dto.CountByDong;
 import com.ssafy.db.entity.Dong;
