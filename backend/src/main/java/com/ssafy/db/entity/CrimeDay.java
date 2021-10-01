@@ -15,7 +15,7 @@ public class CrimeDay extends BaseEntity{
     @JoinColumn(name = "crimeId")
     CrimeType crimeType;
 
-    String type;
     String day;
     int count;
+    int year;
 }

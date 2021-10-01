@@ -1,5 +1,6 @@
 package com.ssafy.api.service.arrestrate;
 
+import com.ssafy.db.dto.arrestrate.GetGuCrimeListDto;
 import com.ssafy.db.dto.arrestrate.GetTotalCrimeListDto;
 import com.ssafy.db.entity.ArrestRate;
 import com.ssafy.db.repository.ArrestRateRepositorySupport;
@@ -24,5 +25,13 @@ public class ArrestRateServiceImpl implements ArrestRateService{
         if(getTotalCrimeListDtoList.isEmpty())
             throw new NotFoundException("TotalList is empty");
         return getTotalCrimeListDtoList;
+    }
+
+    @Override
+    public List<GetGuCrimeListDto> getGuCrimeList(Long id) throws NotFoundException {
+        List<GetGuCrimeListDto> getGuCrimeListDtoList = arrestRateRepositorySupport.findGuCrime(id);
+        if(getGuCrimeListDtoList.isEmpty())
+            throw new NotFoundException("GuList is empty");
+        return getGuCrimeListDtoList;
     }
 }

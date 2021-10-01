@@ -16,5 +16,6 @@ public class GetTotalCrimeListDto {
 
     int count;
     int year;
+    String type;
 
 }

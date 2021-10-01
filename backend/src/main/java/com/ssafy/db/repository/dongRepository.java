@@ -17,6 +17,14 @@ public interface dongRepository extends JpaRepository<Dong,Long> {
     List<Dong> findBySiGunGu_Id(Long id);
 
     @Query(value = "SELECT g.gu as gu, sum(d.cctv_cnt) as cnt from dong d join gu g on g.id = d.gu_id group by d.gu_id",nativeQuery = true)
-    List<CctvCorrelationMapping> findAllGroupBySiGunGu_Id();
+    List<CctvCorrelationMapping> findCCTVGroupBySiGunGu_Id();
+    @Query(value = "SELECT g.gu as gu, sum(d.bar_cnt) as cnt from dong d join gu g on g.id = d.gu_id group by d.gu_id",nativeQuery = true)
+    List<CctvCorrelationMapping> findBarGroupBySiGunGu_Id();
+    @Query(value = "SELECT g.gu as gu, sum(d.police_cnt) as cnt from dong d join gu g on g.id = d.gu_id group by d.gu_id",nativeQuery = true)
+    List<CctvCorrelationMapping> findPoliceGroupBySiGunGu_Id();
+    @Query(value = "SELECT g.gu as gu, sum(d.guard_house_cnt) as cnt from dong d join gu g on g.id = d.gu_id group by d.gu_id",nativeQuery = true)
+    List<CctvCorrelationMapping> findGuardGroupBySiGunGu_Id();
+    @Query(value = "SELECT g.gu as gu, sum(d.light_cnt) as cnt from dong d join gu g on g.id = d.gu_id group by d.gu_id",nativeQuery = true)
+    List<CctvCorrelationMapping> findLightGroupBySiGunGu_Id();
 }
 
