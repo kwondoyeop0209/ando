@@ -13,5 +13,6 @@ public class GetGuCrimeListDto {
 
     int count;
     String crimeType;
+    Long crimeTypeId;
 
 }
