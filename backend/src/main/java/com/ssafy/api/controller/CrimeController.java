@@ -1,12 +1,15 @@
 package com.ssafy.api.controller;
 
 import com.ssafy.api.request.arrstrate.GetCrimeListReq;
+import com.ssafy.api.request.arrstrate.GetRateReq;
 import com.ssafy.api.response.BaseResponseBody;
+import com.ssafy.api.response.arrestrate.GetRateRes;
 import com.ssafy.api.response.arrestrate.GuCrimeListRes;
 import com.ssafy.api.response.arrestrate.TotalCrimeListGetRes;
 import com.ssafy.api.response.riskindex.RiskIndexListGetRes;
 import com.ssafy.api.service.arrestrate.ArrestRateService;
 import com.ssafy.api.service.riskindex.RiskIndexService;
+import com.ssafy.db.dto.arrestrate.GetRateDto;
 import io.swagger.annotations.Api;
 import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
@@ -29,16 +32,16 @@ public class CrimeController {
     public ResponseEntity<?> getCrimeList(GetCrimeListReq getCrimeListReq){
 
         try {
-            if(getCrimeListReq.getGu_id() == null && getCrimeListReq.getYear() == 0)
+            if(getCrimeListReq.getGuId() == null && getCrimeListReq.getYear() == 0)
                 return ResponseEntity.status(HttpStatus.OK).body(TotalCrimeListGetRes.of(HttpStatus.OK.value(), "Success", arrestRateService.getTotalCrimeList()));
-            else if(getCrimeListReq.getGu_id() == null)
+            else if(getCrimeListReq.getGuId() == null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(TotalCrimeListGetRes.of(HttpStatus.BAD_REQUEST.value(), "Gu_id is not correct!",null));
-            else if(getCrimeListReq.getGu_id() <= 0 || getCrimeListReq.getGu_id() >= 26){
+            else if(getCrimeListReq.getGuId() <= 0 || getCrimeListReq.getGuId() >= 26){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(TotalCrimeListGetRes.of(HttpStatus.BAD_REQUEST.value(), "Gu_id is not correct!",null));
             }else if(getCrimeListReq.getYear() <= 2017 || getCrimeListReq.getYear() >= 2021)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(TotalCrimeListGetRes.of(HttpStatus.BAD_REQUEST.value(), "Year is not correct!",null));
             else{
-                return ResponseEntity.status(HttpStatus.OK).body(GuCrimeListRes.of(HttpStatus.OK.value(), "Success",arrestRateService.getGuCrimeList(getCrimeListReq.getGu_id(), getCrimeListReq.getYear())));
+                return ResponseEntity.status(HttpStatus.OK).body(GuCrimeListRes.of(HttpStatus.OK.value(), "Success",arrestRateService.getGuCrimeList(getCrimeListReq.getGuId(), getCrimeListReq.getYear())));
             }
         }catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage()));
@@ -58,8 +61,16 @@ public class CrimeController {
         }
     }
 
-
-
-
+    @GetMapping("/arrest-rate")
+    public ResponseEntity<GetRateRes> getArrestRate(GetRateReq getRateReq){
+        if(getRateReq.getGuId() == null || getRateReq.getYear() == 0)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(GetRateRes.of(HttpStatus.BAD_REQUEST.value(), "Request is not correct!",null));
+        else if(getRateReq.getGuId() <= 0 || getRateReq.getGuId() >= 26)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(GetRateRes.of(HttpStatus.BAD_REQUEST.value(), "Gu_id is not correct!",null));
+        else if(getRateReq.getYear() <= 2017 || getRateReq.getYear() >= 2021)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(GetRateRes.of(HttpStatus.BAD_REQUEST.value(), "Year is not correct!",null));
+        else
+            return ResponseEntity.status(HttpStatus.OK).body(GetRateRes.of(HttpStatus.OK.value(), "Success", arrestRateService.getRate(getRateReq.getGuId(), getRateReq.getYear())));
+    }
 
 }

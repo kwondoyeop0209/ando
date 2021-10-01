@@ -1,6 +1,7 @@
 package com.ssafy.api.service.arrestrate;
 
 import com.ssafy.db.dto.arrestrate.GetGuCrimeListDto;
+import com.ssafy.db.dto.arrestrate.GetRateDto;
 import com.ssafy.db.dto.arrestrate.GetTotalCrimeListDto;
 import com.ssafy.db.entity.ArrestRate;
 import com.ssafy.db.repository.ArrestRateRepositorySupport;
@@ -33,5 +34,17 @@ public class ArrestRateServiceImpl implements ArrestRateService{
         if(getGuCrimeListDtoList.isEmpty())
             throw new NotFoundException("GuList is empty");
         return getGuCrimeListDtoList;
+    }
+
+    @Override
+    public GetRateDto getRate(Long id, int year){
+        GetRateDto getRateDto = new GetRateDto();
+
+        getRateDto.setGuArrestCount(arrestRateRepositorySupport.getGuCount("검거",year,id));
+        getRateDto.setTotalArrestCount(arrestRateRepositorySupport.getTotalCount("검거",year));
+        getRateDto.setGuCrimeCount(arrestRateRepositorySupport.getGuCount("발생",year,id));
+        getRateDto.setTotalCrimeCount(arrestRateRepositorySupport.getTotalCount("발생",year));
+
+        return getRateDto;
     }
 }
