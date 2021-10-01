@@ -32,16 +32,16 @@ public class CrimeController {
     public ResponseEntity<?> getCrimeList(GetCrimeListReq getCrimeListReq){
 
         try {
-            if(getCrimeListReq.getGuId() == null && getCrimeListReq.getYear() == 0)
+            if(getCrimeListReq.getGu() == null && getCrimeListReq.getYear() == 0)
                 return ResponseEntity.status(HttpStatus.OK).body(TotalCrimeListGetRes.of(HttpStatus.OK.value(), "Success", arrestRateService.getTotalCrimeList()));
-            else if(getCrimeListReq.getGuId() == null)
+            else if(getCrimeListReq.getGu() == null)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(TotalCrimeListGetRes.of(HttpStatus.BAD_REQUEST.value(), "Gu_id is not correct!",null));
-            else if(getCrimeListReq.getGuId() <= 0 || getCrimeListReq.getGuId() >= 26){
+            else if(getCrimeListReq.getGu() <= 0 || getCrimeListReq.getGu() >= 26){
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(TotalCrimeListGetRes.of(HttpStatus.BAD_REQUEST.value(), "Gu_id is not correct!",null));
             }else if(getCrimeListReq.getYear() <= 2017 || getCrimeListReq.getYear() >= 2021)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(TotalCrimeListGetRes.of(HttpStatus.BAD_REQUEST.value(), "Year is not correct!",null));
             else{
-                return ResponseEntity.status(HttpStatus.OK).body(GuCrimeListRes.of(HttpStatus.OK.value(), "Success",arrestRateService.getGuCrimeList(getCrimeListReq.getGuId(), getCrimeListReq.getYear())));
+                return ResponseEntity.status(HttpStatus.OK).body(GuCrimeListRes.of(HttpStatus.OK.value(), "Success",arrestRateService.getGuCrimeList(getCrimeListReq.getGu(), getCrimeListReq.getYear())));
             }
         }catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(BaseResponseBody.of(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage()));
@@ -63,14 +63,18 @@ public class CrimeController {
 
     @GetMapping("/arrest-rate")
     public ResponseEntity<GetRateRes> getArrestRate(GetRateReq getRateReq){
-        if(getRateReq.getGuId() == null || getRateReq.getYear() == 0)
+        if(getRateReq.getGu() == null || getRateReq.getYear() == 0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(GetRateRes.of(HttpStatus.BAD_REQUEST.value(), "Request is not correct!",null));
-        else if(getRateReq.getGuId() <= 0 || getRateReq.getGuId() >= 26)
+        else if(getRateReq.getGu() <= 0 || getRateReq.getGu() >= 26)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(GetRateRes.of(HttpStatus.BAD_REQUEST.value(), "Gu_id is not correct!",null));
         else if(getRateReq.getYear() <= 2017 || getRateReq.getYear() >= 2021)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(GetRateRes.of(HttpStatus.BAD_REQUEST.value(), "Year is not correct!",null));
         else
-            return ResponseEntity.status(HttpStatus.OK).body(GetRateRes.of(HttpStatus.OK.value(), "Success", arrestRateService.getRate(getRateReq.getGuId(), getRateReq.getYear())));
+            return ResponseEntity.status(HttpStatus.OK).body(GetRateRes.of(HttpStatus.OK.value(), "Success", arrestRateService.getRate(getRateReq.getGu(), getRateReq.getYear())));
     }
+
+
+
+
 
 }
