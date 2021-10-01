@@ -5,7 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class GetCrimeListReq {
+public class GetRateReq {
+
     Long guId;
     int year;
+
 }

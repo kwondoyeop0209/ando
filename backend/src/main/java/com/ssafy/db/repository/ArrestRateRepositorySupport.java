@@ -34,4 +34,11 @@ public class ArrestRateRepositorySupport extends QuerydslRepositorySupport {
     public List<GetGuCrimeListDto> findGuCrime(Long id,int year){
         return jpaQueryFactory.select(Projections.fields(GetGuCrimeListDto.class,qArrestRate.crimeType.type.as("crimeType") ,qArrestRate.count,qArrestRate.crimeType.id.as("crimeTypeId"))).from(qArrestRate).where(qArrestRate.siGunGu.id.eq(id),qArrestRate.type.eq("발생"),qArrestRate.year.eq(year)).orderBy(qArrestRate.crimeType.id.asc()).fetch();
     }
+
+    public int getTotalCount(String type,int year){
+        return jpaQueryFactory.select(qArrestRate.count.sum().as("count")).from(qArrestRate).where(qArrestRate.type.eq(type),qArrestRate.year.eq(year)).fetchOne();
+    }
+    public int getGuCount(String type,int year,Long guId){
+        return jpaQueryFactory.select(qArrestRate.count.sum().as("count")).from(qArrestRate).where(qArrestRate.year.eq(year),qArrestRate.siGunGu.id.eq(guId),qArrestRate.type.eq(type)).fetchOne();
+    }
 }
