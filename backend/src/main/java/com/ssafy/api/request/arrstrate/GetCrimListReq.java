@@ -7,5 +7,4 @@ import lombok.Setter;
 @Setter
 public class GetCrimListReq {
     Long gu_id;
-    Long type;
 }

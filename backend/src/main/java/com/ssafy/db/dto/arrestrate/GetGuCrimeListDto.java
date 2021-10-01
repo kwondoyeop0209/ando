@@ -10,7 +10,9 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class GetGuCrimeListDto {
+
     String type;
-    int year;
     int count;
+    String crimeType;
+
 }
