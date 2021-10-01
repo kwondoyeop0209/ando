@@ -17,4 +17,5 @@ public class CrimeSpot extends BaseEntity{
 
     String spot;
     int count;
+    int year;
 }

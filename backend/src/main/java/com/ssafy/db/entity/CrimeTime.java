@@ -17,5 +17,5 @@ public class CrimeTime extends BaseEntity{
 
     String time;
     int count;
-    
+    int year;
 }
