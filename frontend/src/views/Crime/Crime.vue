@@ -53,72 +53,80 @@
             <div class="modal-content">
               <div class="modal_wrap">
                 <!-- <div class="modal_close" @click="offClick"><a href="#">close</a></div> -->
-                <div class="modal-title">
-                  
+                <div class="modal-title" style="height:50px; width:400px; background-color:#454d5e">
                   <p style="font-size: 24px; font-weight: 600"><span style="color:#A4B5E2; font-size:24px; font-weight: 600">{{selectGu}}</span> 범죄 현황</p>
                   <div style="flex: 1"></div>
                   <p id="detail_btn" @click="onClick">예측 분석 보기 ></p>
                 </div>
+                <div class="state-content">
                 <!-- 범죄율 -->
-                <div>
-                  <p class="rateTitle">💡 범죄율</p><br />
-                  <p class="rateDetail"> 총 몇 건 중 몇 00건이 발생</p><br />
-                  <vc-donut :sections="crimeRate" :size="150" 
-                  background="#454d5e" foreground="#EEEEEE"
-                  unit="px" :thickness="20"
-                  :total="100"
-                  :start-angle="0" :auto-adjust-text-size="true">
-                    <h1>25%</h1>
-                  </vc-donut>
-                </div><br />
-                <!-- 검거율 -->
-                <div>
-                  <p class="rateTitle">💡 검거율</p><br />
-                  <p class="rateDetail"> 총 몇 건 중 몇 00건이 발생</p><br />
-                  <vc-donut :sections="arrestRate" :size="150" 
-                  background="#454d5e" foreground="#EEEEEE"
-                  unit="px" :thickness="20"
-                  :total="100"
-                  :start-angle="0" :auto-adjust-text-size="true">
-                    <h1>25%</h1>
-                  </vc-donut>
-                </div><br />
-                <!-- 범죄 유형 -->
-                <div>
-                  <p class="rateTitle">💡 범죄 유형</p><br />
-                    <vue-highcharts
-                      :options="chartTypeOfCrime"
-                      :highcharts="Highcharts"
-                      style="height: 400px"
-                    ></vue-highcharts>
-                </div><br />
-                <!-- 범죄유형 리스트 -->
-                <ul style="list-style: none; padding-left: 0px;">
-                  <li class="cList" v-for="(crime,i) in crimeTypeList" :key="crime.type">
-                    <a href="#" style="display: flex; text-decoration:none">
-                    <div class="number" style="margin-right: 5px">{{i+1}} </div>
-                    <div class="number" style="flex: 1; width:200px; text-align:center">{{crime.type}}  | {{crime.num}}</div>
-                    </a>
-                  </li> 
-                </ul>
-                <div>
-                  <p class="rateTitle">💡 00 이/가 높은 요일</p><br />
-                  <highcharts :options="highestDay" style="height: 300px"></highcharts>
-                </div><br />
-                <div>
-                  <p class="rateTitle">💡 00 이/가 높은 시간</p><br />
-                  <highcharts :options="highestTime" style="height: 300px"></highcharts>
-                </div><br />
-                <div>
-                  <p class="rateTitle">💡 00 이/가 높은 발생 장소</p><br />
-                  <!-- <highcharts :options="highestSpot" style="height: 300px"></highcharts> -->
-                    <vue-highcharts
-                      :options="highestSpot"
-                      :highcharts="Highcharts"
-                      style="height: 400px"
-                    ></vue-highcharts>
-                </div><br />
+                  <div>
+                    <p class="rateTitle">💡 범죄율</p><br />
+                    <p class="rateDetail"> 총 몇 건 중 몇 00건이 발생</p><br />
+                    <vc-donut :sections="crimeRate" :size="150" 
+                    background="#454d5e" foreground="#EEEEEE"
+                    unit="px" :thickness="20"
+                    :total="100"
+                    :start-angle="0" :auto-adjust-text-size="true">
+                      <h1>25%</h1>
+                    </vc-donut>
+                  </div><br />
+                  <!-- 검거율 -->
+                  <div>
+                    <p class="rateTitle">💡 검거율</p><br />
+                    <p class="rateDetail"> 총 몇 건 중 몇 00건이 발생</p><br />
+                    <vc-donut :sections="arrestRate" :size="150" 
+                    background="#454d5e" foreground="#EEEEEE"
+                    unit="px" :thickness="20"
+                    :total="100"
+                    :start-angle="0" :auto-adjust-text-size="true">
+                      <h1>25%</h1>
+                    </vc-donut>
+                  </div><br />
+                  <!-- 범죄 유형 -->
+                  <div>
+                    <p class="rateTitle">💡 범죄 유형</p><br />
+                      <vue-highcharts
+                        :options="chartTypeOfCrime"
+                        :highcharts="Highcharts"
+                        style="height: 400px"
+                      ></vue-highcharts>
+                  </div><br />
+                  <!-- 범죄유형 리스트 -->
+                  <div
+                    class="crime-item"
+                    v-for="(crime, idx) in crimeTypeList"
+                    :key="crime.type"
+                    @click="onCrimeDetail(crime.type)"
+                  >
+                    <div class="crimeDetail">{{ idx + 1 }}</div>
+                    <div class="crime-content">
+                      <p style="flex: 1; text-align: center">{{ crime.type }}</p>
+                      <p>|</p>
+                      <p style="flex: 1; text-align: center">{{ crime.num }}건</p>
+                    </div>
+                  </div><br />
+                  <!-- 유형에 따른 요일, 시간, 장소 -->
+                  <div>
+                    <p class="rateTitle">💡 00 이/가 높은 요일</p><br />
+                    <highcharts :options="highestDay" style="height: 300px"></highcharts>
+                  </div><br />
+                  <div>
+                    <p class="rateTitle">💡 00 이/가 높은 시간</p><br />
+                    <highcharts :options="highestTime" style="height: 300px"></highcharts>
+                  </div><br />
+                  <div>
+                    <p class="rateTitle">💡 00 이/가 높은 발생 장소</p><br />
+                    <!-- <highcharts :options="highestSpot" style="height: 300px"></highcharts> -->
+                      <vue-highcharts
+                        :options="highestSpot"
+                        :highcharts="Highcharts"
+                        style="height: 400px"
+                      ></vue-highcharts>
+                  </div><br />
+                </div>
               </div>
+              <!-- 확장 -->
               <div class="arrow-area">
                 <img
                   class="arrow"
@@ -126,6 +134,7 @@
                   :width="20"
                 />
               </div>
+              <!-- 오른쪽 범죄예측 모달창 -->
               <div style="flex: 1"></div>
               <div class="predict-modal" v-show="isPredict">
                 <div class="predict-title">
@@ -658,11 +667,11 @@ export default {
       },
 
       crimeTypeList:[
-        {type: '폭력', num:'145건'},
-        {type: '절도', num:'125건'},
-        {type: '강간', num:'80건'},
-        {type: '강도', num:'65건'},
-        {type: '살해', num:'15건'},
+        {type: '폭력', num:'145'},
+        {type: '절도', num:'125'},
+        {type: '강간', num:'80'},
+        {type: '강도', num:'65'},
+        {type: '살해', num:'15'},
       ],
       predictList:[
         {type: '폭력', day:'토요일', spot:'노상', idx:'1.95'},
@@ -696,6 +705,9 @@ export default {
     offClick() {
       this.isPredict = false;
     },
+    onCrimeDetail(){
+      // 00에 전달하는 값
+    }
   },
 };
 </script>
@@ -772,6 +784,9 @@ export default {
   overflow: auto;
   padding: 24px;
 }
+.state-content{
+
+}
 .arrow-area {
   display: flex;
   justify-content: center;
@@ -786,9 +801,12 @@ export default {
   box-shadow: 12px 0px 20px -7px #000;
 }
 .modal-title {
+  z-index: 999;
   display: flex;
+  position: fixed;
   margin-bottom: 16px;
 }
+
 #detail_btn {
   font-size: 16px;
 }
@@ -819,16 +837,22 @@ export default {
   display: flex;
   font-size: 18px;
 }
-.number{
-  margin-block: 5px;
-  display:block;
-  padding:10px;
-  border-radius: 5px;
-  width:10px;
-  background:#B8B8B8
+.crime-item {
+  display: flex;
+  margin-bottom: 8px;
 }
-.cList a :hover{
-  background-color: #F57272;
+.crimeDetail {
+  background-color: #B8B8B8;
+  padding: 8px 12px;
+  border-radius: 4px;
+}
+.crime-content {
+  background-color: #B8B8B8;
+  padding: 8px 5px;
+  border-radius: 4px;
+  margin-left: 8px;
+  flex: 1;
+  display: flex;
 }
 th{
   padding:10px;

@@ -2,7 +2,7 @@
   <div class="safety-detail">
     <!-- 순위 테이블 -->
     <div v-show="isRankSafety">
-      <p>안전 지수</p>
+      <p>안전 지수</p><br />
       <div class="rank-table">
         <div
           class="rank-item"
@@ -21,15 +21,16 @@
     </div>
     <!-- 표에서 셀 클릭하면 나오는 상세화면 -->
     <div v-show="isDongSafety">
-      {{ dong }}
+      <span style="font-size:24px; font-weight: 400">{{dong}} 안전지수</span>
+      <br /><br /> 
       <div>
         <highcharts :options="safetyScore"></highcharts>
       </div>
       <div>
-        동작구 내에서 3위 <br>
+        동작구 내에서 3위 <br />
         전체에서 48위
-      </div><br>
-      <hr class="one"><br>
+      </div><br />
+      <hr class="one"><br />
       <div>
         <p> CCTV 보유 현황 3위 (밑에 게이지 차트는 나중에 데이터 들어오면 손보기로) </p>
         <p> 유흥지 분포 4위 (차트 추가) </p>
