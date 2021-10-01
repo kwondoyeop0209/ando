@@ -1,4 +1,4 @@
-package com.ssafy.db.dto.arrestrate;
+package com.ssafy.db.dto.riskindex;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,9 +9,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetGuCrimeListDto {
-
-    int count;
+public class RiskIndexDto {
     String crimeType;
-
+    String day;
+    String spot;
+    String time;
+    double prtds;
 }
