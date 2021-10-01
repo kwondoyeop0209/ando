@@ -1,12 +1,10 @@
 package com.ssafy.db.repository;
 
-import com.ssafy.db.entity.arrest_rate;
-import com.ssafy.db.entity.crime_type;
-import com.ssafy.db.entity.gu;
+import com.ssafy.db.entity.CrimeType;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface crimeTypeRepository extends JpaRepository<crime_type,Long> {
+public interface crimeTypeRepository extends JpaRepository<CrimeType,Long> {
 
-    Optional<crime_type> findByType(String type);
+    Optional<CrimeType> findByType(String type);
 }

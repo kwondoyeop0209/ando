@@ -1,9 +1,9 @@
 package com.ssafy.db.util;
 
 import com.opencsv.CSVReader;
-import com.ssafy.db.entity.arrest_rate;
-import com.ssafy.db.entity.crime_type;
-import com.ssafy.db.entity.gu;
+import com.ssafy.db.entity.ArrestRate;
+import com.ssafy.db.entity.CrimeType;
+import com.ssafy.db.entity.Gu;
 import com.ssafy.db.repository.arrestRateRepository;
 import com.ssafy.db.repository.crimeTypeRepository;
 import com.ssafy.db.repository.guRepository;
@@ -42,22 +42,22 @@ public class ArrestRateCSV {
 
             for (int i = 4; i < nextLine.length; i++) {
 
-                arrest_rate arrest_rate = new arrest_rate();
+                ArrestRate arrest_rate = new ArrestRate();
                 if(i%2 == 0)
                     arrest_rate.setType("발생");
                 else
                     arrest_rate.setType("검거");
 
-                Optional<crime_type> crimeOptional = crimeTypeRepository.findByType(type[cnt++]);
+                Optional<CrimeType> crimeOptional = crimeTypeRepository.findByType(type[cnt++]);
                 if (crimeOptional.isPresent()) {
-                    crime_type crime_type = crimeOptional.get();
-                    arrest_rate.setCrime_type(crime_type);
+                    CrimeType crime_type = crimeOptional.get();
+                    arrest_rate.setCrimeType(crime_type);
                 }
                 arrest_rate.setCount(Integer.parseInt(nextLine[i].trim()));
                 arrest_rate.setYear(2018);
-                Optional<gu> guOptional = guRepository.findByGu(nextLine[1]);
+                Optional<Gu> guOptional = guRepository.findByGu(nextLine[1]);
                 if (guOptional.isPresent()) {
-                    gu gu = guOptional.get();
+                    Gu gu = guOptional.get();
                     arrest_rate.setSiGunGu(gu);
                     arrestRateRepository.save(arrest_rate);
                 }

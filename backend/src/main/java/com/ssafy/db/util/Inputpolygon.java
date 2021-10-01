@@ -2,10 +2,7 @@ package com.ssafy.db.util;
 
 import com.opencsv.CSVReader;
 import com.ssafy.db.entity.Polygon;
-import com.ssafy.db.entity.cctv;
-import com.ssafy.db.entity.dong;
-import com.ssafy.db.repository.cctvRepository;
-import com.ssafy.db.repository.dongRepository;
+import com.ssafy.db.entity.Dong;
 import com.ssafy.db.repository.polygonRepository;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -19,7 +16,7 @@ import org.springframework.stereotype.Component;
 public class Inputpolygon {
 
     @Autowired
-    dongRepository dongRepository;
+    com.ssafy.db.repository.dongRepository dongRepository;
 
     @Autowired
     polygonRepository polygonRepository;
@@ -34,9 +31,9 @@ public class Inputpolygon {
             Polygon polygon = new Polygon();
 
             polygon.setCoordinates(nextLine[1]);
-            Optional<dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(dongname,gu);
+            Optional<Dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(dongname,gu);
             if(dongOptional.isPresent()){
-                dong dong = dongOptional.get();
+                Dong dong = dongOptional.get();
                 polygon.setDong(dong);
                 polygonRepository.save(polygon);
             }

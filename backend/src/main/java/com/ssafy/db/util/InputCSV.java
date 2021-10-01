@@ -7,16 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.io.*;
-import java.nio.file.Paths;
 import java.util.Optional;
-
-import static com.ssafy.db.entity.Qsecurity_light.security_light;
 
 @Component
 public class InputCSV {
 
     @Autowired
-    dongRepository dongRepository;
+    com.ssafy.db.repository.dongRepository dongRepository;
 
     @Autowired
     cctvRepository cctvRepository;
@@ -31,7 +28,7 @@ public class InputCSV {
     police_officeRepository police_officeRepository;
 
     @Autowired
-    guard_houseRepository guard_houseRepository;
+    guardHouseRepository guard_houseRepository;
 
 
 
@@ -42,14 +39,14 @@ public class InputCSV {
             for (int i = 0; i < nextLine.length; i++) {
                 System.out.println(i + " " + nextLine[i]);
             }
-            cctv cctv = new cctv();
+            Cctv cctv = new Cctv();
             cctv.setAddress(nextLine[1]);
             cctv.setLat(Double.parseDouble(nextLine[2]));
             cctv.setLng(Double.parseDouble(nextLine[3]));
             cctv.setNumber(Integer.parseInt(nextLine[4]));
-            Optional<dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[5],nextLine[0]);
+            Optional<Dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[5],nextLine[0]);
             if(dongOptional.isPresent()){
-                dong dong = dongOptional.get();
+                Dong dong = dongOptional.get();
                 cctv.setDong(dong);
                 cctvRepository.save(cctv);
             }
@@ -64,13 +61,13 @@ public class InputCSV {
             for (int i = 0; i < nextLine.length; i++) {
                 System.out.println(i + " " + nextLine[i]);
             }
-            security_light light = new security_light();
+            SecurityLight light = new SecurityLight();
             light.setAddress(nextLine[2]);
             light.setLat(Double.parseDouble(nextLine[3]));
             light.setLng(Double.parseDouble(nextLine[4]));
-            Optional<dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[7],nextLine[6]);
+            Optional<Dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[7],nextLine[6]);
             if(dongOptional.isPresent()){
-                dong dong = dongOptional.get();
+                Dong dong = dongOptional.get();
                 light.setDong(dong);
                 security_lightRepository.save(light);
             }
@@ -85,14 +82,14 @@ public class InputCSV {
             for (int i = 0; i < nextLine.length; i++) {
                 System.out.println(i + " " + nextLine[i]);
             }
-            bar bar = new bar();
+            Bar bar = new Bar();
             bar.setAddress(nextLine[0]);
             bar.setLng(Double.parseDouble(nextLine[7]));
             bar.setLat(Double.parseDouble(nextLine[8]));
             bar.setName(nextLine[2]);
-            Optional<dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[9],nextLine[5]);
+            Optional<Dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[9],nextLine[5]);
             if(dongOptional.isPresent()){
-                dong dong = dongOptional.get();
+                Dong dong = dongOptional.get();
                 bar.setDong(dong);
                 barRepository.save(bar);
             }
@@ -107,14 +104,14 @@ public class InputCSV {
             for (int i = 0; i < nextLine.length; i++) {
                 System.out.println(i + " " + nextLine[i]);
             }
-            bar bar = new bar();
+            Bar bar = new Bar();
             bar.setAddress(nextLine[0]);
             bar.setLng(Double.parseDouble(nextLine[3]));
             bar.setLat(Double.parseDouble(nextLine[4]));
             bar.setName(nextLine[2]);
-            Optional<dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[6],nextLine[5]);
+            Optional<Dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[6],nextLine[5]);
             if(dongOptional.isPresent()){
-                dong dong = dongOptional.get();
+                Dong dong = dongOptional.get();
                 bar.setDong(dong);
                 barRepository.save(bar);
             }
@@ -129,13 +126,13 @@ public class InputCSV {
             for (int i = 0; i < nextLine.length; i++) {
                 System.out.println(i + " " + nextLine[i]);
             }
-            police_office police_office = new police_office();
+            PoliceOffice police_office = new PoliceOffice();
             police_office.setAddress(nextLine[1]);
             police_office.setLng(Double.parseDouble(nextLine[2]));
             police_office.setLat(Double.parseDouble(nextLine[3]));
-            Optional<dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[4],nextLine[0]);
+            Optional<Dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[4],nextLine[0]);
             if(dongOptional.isPresent()){
-                dong dong = dongOptional.get();
+                Dong dong = dongOptional.get();
                 police_office.setDong(dong);
                 police_officeRepository.save(police_office);
             }
@@ -150,17 +147,17 @@ public class InputCSV {
             for (int i = 0; i < nextLine.length; i++) {
                 System.out.println(i + " " + nextLine[i]);
             }
-            guard_house guard_house = new guard_house();
+            GuardHouse guard_house = new GuardHouse();
             guard_house.setAddress(nextLine[7]);
             guard_house.setLat(Double.parseDouble(nextLine[2]));
             guard_house.setLng(Double.parseDouble(nextLine[3]));
-            guard_house.setStore_name(nextLine[0]);
+            guard_house.setStoreName(nextLine[0]);
             guard_house.setPolice(nextLine[5]);
-            guard_house.setPhone_number(nextLine[4]);
+            guard_house.setPhoneNumber(nextLine[4]);
 
-            Optional<dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[6],nextLine[1]);
+            Optional<Dong> dongOptional = dongRepository.findByDongAndSiGunGu_Gu(nextLine[6],nextLine[1]);
             if(dongOptional.isPresent()){
-                dong dong = dongOptional.get();
+                Dong dong = dongOptional.get();
                 guard_house.setDong(dong);
                 guard_houseRepository.save(guard_house);
             }
