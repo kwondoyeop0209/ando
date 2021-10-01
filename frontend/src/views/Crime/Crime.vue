@@ -86,7 +86,12 @@
                 <!-- 범죄 유형 -->
                 <div>
                   <p class="rateTitle">💡 범죄 유형</p><br />
-                  <Chart2 :options="chartTypeOfCrime"></Chart2>
+                  <!-- <Chart2 :options="chartTypeOfCrime"></Chart2> -->
+                    <vue-highcharts
+                      :options="chartTypeOfCrime"
+                      :highcharts="Highcharts"
+                      style="height: 400px"
+                    ></vue-highcharts>
                 </div><br />
                 <div>
                   <p class="rateTitle">💡 00 이/가 높은 요일</p><br />
@@ -98,7 +103,12 @@
                 </div><br />
                 <div>
                   <p class="rateTitle">💡 00 이/가 높은 발생 장소</p><br />
-                  <highcharts :options="highestSpot" style="height: 300px"></highcharts>
+                  <!-- <highcharts :options="highestSpot" style="height: 300px"></highcharts> -->
+                    <vue-highcharts
+                      :options="highestSpot"
+                      :highcharts="Highcharts"
+                      style="height: 400px"
+                    ></vue-highcharts>
                 </div><br />
                 <!-- <div>
                 <p class="chart-subtitle">최근 3년간 발생 건수</p>
@@ -141,13 +151,21 @@
 <script>
 import VcDonut from "../../../node_modules/vue-css-donut-chart/src/components/Donut.vue";
 import { Chart } from "highcharts-vue";
-import { Chart2 } from "highcharts/modules/variable-pie";
+import VueHighcharts from "vue2-highcharts";
+import Highcharts from "highcharts";
+import Variablepie from "highcharts/modules/variable-pie";
+import Highcharts3D from "highcharts/highcharts-3d";
+
+Variablepie(Highcharts);
+Highcharts3D(Highcharts);
+
 
 export default {
   name: "Crime",
   components: {
-    highcharts: Chart,Chart2,
+    highcharts: Chart,
     VcDonut,
+    VueHighcharts,
   },
   data() {
     return {
@@ -183,6 +201,9 @@ export default {
       isGu: false,
       isPredict: false,
       isChecked: "",
+
+      Highcharts,
+      
       chartArrest: {
         title: {
           text: "",
@@ -394,45 +415,47 @@ export default {
       arrestRate: [{ label: "label", value: 25, color:'#2F488A' }],
       chartTypeOfCrime:{
           chart: {
+            backgroundColor: "rgba(0,0,0,0)",
             type: 'variablepie'
+
           },
           title: {
               text: ''
+          },
+          credits: {
+            enabled: false,
           },
           series: [{
               minPointSize: 10,
               innerSize: '20%',
               zMin: 0,
-              name: 'countries',
+              name: '범죄유형',
               data: [{
-                  name: 'Spain',
+                  name: '폭력',
                   y: 505370,
-                  z: 92.9
+                  z: 92.9,
+                  color: '#6A7DAF'
               }, {
-                  name: 'France',
+                  name: '절도',
                   y: 551500,
-                  z: 118.7
+                  z: 118.7,
+                  color: '#8F9FC8'
               }, {
-                  name: 'Poland',
+                  name: '강제추행',
                   y: 312685,
-                  z: 124.6
+                  z: 124.6,
+                  color: '#AFBBD9'
               }, {
-                  name: 'Czech Republic',
+                  name: '강도',
                   y: 78867,
-                  z: 137.5
+                  z: 137.5,
+                  color: '#CED6EA'
               }, {
-                  name: 'Italy',
+                  name: '살해',
                   y: 301340,
-                  z: 201.8
-              }, {
-                  name: 'Switzerland',
-                  y: 41277,
-                  z: 214.5
-              }, {
-                  name: 'Germany',
-                  y: 357022,
-                  z: 235.6
-              }
+                  z: 201.8,
+                  color: '#E9EDF5'
+              },
             ],
           },
         ],
@@ -559,7 +582,7 @@ export default {
         },
         ],
       },
-      highestSpot:{
+      highestSpot:{ 
         chart: {
             renderTo : 'highestSpot',
             backgroundColor: "rgba(0,0,0,0)",
@@ -576,9 +599,9 @@ export default {
             text: ''
         },
         plotOptions: {
-        column: {
-            depth: 25
-        }
+          column: {
+              depth: 25
+          }
         },
         legend: {
           enabled: false,
@@ -588,6 +611,7 @@ export default {
         },
         xAxis: {
           categories: ["a동", "b동", "c동", "d동", "e동"],
+          gridLineColor: "rgba(0,0,0,0)",
           labels: {
             style: {
               fontsize: "14px",
