@@ -3,6 +3,7 @@ package com.ssafy.api.service.arrestrate;
 import com.ssafy.db.dto.arrestrate.GetGuCrimeListDto;
 import com.ssafy.db.dto.arrestrate.GetRateDto;
 import com.ssafy.db.dto.arrestrate.GetTotalCrimeListDto;
+import com.ssafy.db.dto.arrestrate.TopGuListDto;
 import com.ssafy.db.entity.ArrestRate;
 import com.ssafy.db.repository.ArrestRateRepositorySupport;
 import com.ssafy.db.repository.arrestRateRepository;
@@ -47,4 +48,13 @@ public class ArrestRateServiceImpl implements ArrestRateService{
 
         return getRateDto;
     }
+
+    @Override
+    public List<TopGuListDto> getTopGuList(String type) throws NotFoundException {
+        List<TopGuListDto> guListDtoList = arrestRateRepositorySupport.getTopGu(type);
+        if(guListDtoList.isEmpty())
+            throw new NotFoundException(type+"List is empty");
+        return guListDtoList;
+    }
+
 }
