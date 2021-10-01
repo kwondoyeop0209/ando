@@ -8,6 +8,33 @@
         <button @click="goSafetyPage()" style="background:#6a7daf; width:100px; font-size:20px; border-radius: 10%; float: right;">안전 지수</button>
       </div>
       <br><br>
+        <!-- 검색 -->
+          <div>
+            검색 :
+            <select
+              id="selectGu"
+              @change="changeGu(), showMain()"
+              v-model="selectGu"
+            >
+              <option selected value="전체">전체</option>
+              <option v-for="(gu, idx) in guList" :key="idx" :value="gu">
+                {{ gu }}
+              </option>
+            </select>
+            
+            <select
+              id="selectDong"
+              @change="changeDong(), showMain2()"
+              v-model="selectDong"
+            >
+              <option v-for="(dong, idx) in dongList" :key="idx" :value="dong">
+                {{ dong }}
+              </option>
+            </select>
+          </div>
+        
+
+
           <div>
             <highcharts :options="Score"></highcharts>
           </div>
@@ -33,7 +60,47 @@ export default {
     return {
       isShow: true,
       isClick: false,
-      dong: "",
+      
+    guList: [
+        "강남구",
+        "강동구",
+        "강북구",
+        "강서구",
+        "관악구",
+        "광진구",
+        "구로구",
+        "금천구",
+        "노원구",
+        "도봉구",
+        "동대문구",
+        "동작구",
+        "마포구",
+        "서대문구",
+        "서초구",
+        "성동구",
+        "성북구",
+        "송파구",
+        "양천구",
+        "영등포구",
+        "용산구",
+        "은평구",
+        "종로구",
+        "중구",
+        "중랑구",
+      ],
+      dongList: 
+          ["신사동", "논현1동","논현2동","삼성1동","삼성2동","대치1동","대치4동","역삼1동","역삼2동","도곡1동","도곡2동","개포1동","개포4동",
+          "일원본동","일원1동","일원2동","수서동","세곡동","압구정동","청담동","대치2동","개포2동"],
+    
+
+      selectGu: "전체",
+      selectDong: "전체",
+      isMain: true,
+      isMain2: true,
+      isGu: false,
+      isDong: false,
+
+
       Score: {
         title: {
           text: "",
@@ -208,7 +275,40 @@ export default {
         name: "SafetyIndex"
       })
 
-    }
+    },
+
+    showMain() {
+      const guSelect = this.selectGu;
+      if (guSelect === "전체") {
+        this.isMain = true;
+        this.isGu = false;
+      } else {
+        this.isMain = false;
+      }
+    },
+    changeGu() {
+      const guSelect = this.selectGu;
+      this.isGu = true;
+      this.isMain = false;
+      this.isChecked = guSelect;
+    },
+
+    //해당 구 클릭했을 때 행정동 나오게 해야함
+    showMain2() {
+      const dongSelect = this.selectDong;
+      if (dongSelect === "전체") {
+        this.isMain2 = true;
+        this.isDong = false;
+      } else {
+        this.isMain2 = false;
+      }
+    },
+    changeDong() {
+      const dongSelect = this.selectDong;
+      this.isDong = true;
+      this.isMain = false;
+      this.isChecked = dongSelect;
+    },
 
   },
 };
@@ -239,6 +339,24 @@ export default {
   background-color: #454d5e;
   height: 100%;
   flex-grow: 1;
+}
+
+#selectGu {
+  padding: 10px 6px 10px 6px;
+  background-color: #454d5e;
+  border-radius: 5px;
+  border: 1px solid white;
+  width: 150px;
+  font-size: 16px;
+}
+
+#selectDong {
+  padding: 10px 6px 10px 6px;
+  background-color: #454d5e;
+  border-radius: 5px;
+  border: 1px solid white;
+  width: 150px;
+  font-size: 16px;
 }
 
 </style>
