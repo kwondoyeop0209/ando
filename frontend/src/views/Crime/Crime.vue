@@ -782,10 +782,11 @@ export default {
   border-radius: 5px;
   box-shadow: 0px 0px 20px #000;
   overflow: auto;
-  padding: 24px;
+  padding-right: 24px;
+  padding-left: 24px;
 }
 .state-content{
-
+  padding-top: 75px;
 }
 .arrow-area {
   display: flex;
@@ -804,7 +805,9 @@ export default {
   z-index: 999;
   display: flex;
   position: fixed;
+  padding-top: 24px;
   margin-bottom: 16px;
+  height: 60px;
 }
 
 #detail_btn {
