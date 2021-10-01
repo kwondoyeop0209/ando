@@ -1,34 +1,34 @@
-package com.ssafy.api.service.cctv;
+package com.ssafy.api.service.bar;
 
 import com.ssafy.api.response.cctv.SpaceCorrelationGetRes;
-import com.ssafy.db.mapping.CctvInfoMapping;
+import com.ssafy.db.mapping.BarInfoMapping;
 import com.ssafy.db.repository.arrestRateRepository;
-import com.ssafy.db.repository.cctvRepository;
+import com.ssafy.db.repository.barRepository;
 import com.ssafy.db.repository.dongRepository;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service
-public class CCTVServiceImpl implements CCTVService {
+public class BarServiceImpl implements BarService {
 
     @Autowired
-    cctvRepository cctvRepository;
+    barRepository barRepository;
     @Autowired
     dongRepository dongRepository;
     @Autowired
     arrestRateRepository arrestRateRepository;
 
     @Override
-    public List<CctvInfoMapping> getCCTVInfoByDongId(Long dongId) {
-        return cctvRepository.findAllByDongId(dongId);
+    public List<BarInfoMapping> getBarInfoByDongId(Long dongId) {
+        return barRepository.findAllByDongId(dongId);
     }
 
     @Override
-    public SpaceCorrelationGetRes getCCTVCorrelation() {
+    public SpaceCorrelationGetRes getBarCorrelation() {
         SpaceCorrelationGetRes res = new SpaceCorrelationGetRes();
-        res.setCountList(dongRepository.findCCTVGroupBySiGunGu_Id());
-        res.setArrestList(arrestRateRepository.findArrestCntByGu());
+        res.setCountList(dongRepository.findBarGroupBySiGunGu_Id());
+        res.setArrestList(arrestRateRepository.findGenerationCntByGu());
         return res;
     }
 }

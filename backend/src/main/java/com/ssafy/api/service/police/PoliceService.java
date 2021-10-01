@@ -1,8 +1,11 @@
 package com.ssafy.api.service.police;
 
-import com.ssafy.api.response.dong.CountByDongGetRes;
+import com.ssafy.api.response.cctv.SpaceCorrelationGetRes;
+import com.ssafy.db.mapping.PoliceInfoMapping;
+import java.util.List;
 
 public interface PoliceService {
 
-    public CountByDongGetRes getCCTVCount();
+    List<PoliceInfoMapping> getPoliceInfoByDongId(Long dongId);
+    SpaceCorrelationGetRes getPoliceCorrelation();
 }

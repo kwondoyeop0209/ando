@@ -1,8 +1,11 @@
 package com.ssafy.api.service.securitylight;
 
-import com.ssafy.api.response.dong.CountByDongGetRes;
+import com.ssafy.api.response.cctv.SpaceCorrelationGetRes;
+import com.ssafy.db.mapping.SecurityLightInfoMapping;
+import java.util.List;
 
 public interface SecurityLightService {
 
-    public CountByDongGetRes getCCTVCount();
+    List<SecurityLightInfoMapping> getSecurityLightInfoByDongId(Long dongId);
+    SpaceCorrelationGetRes getSecurityLightCorrelation();
 }
