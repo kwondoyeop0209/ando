@@ -7,7 +7,7 @@ import lombok.Setter;
 @Setter
 public class GetRateReq {
 
-    Long guId;
+    Long gu;
     int year;
 
 }

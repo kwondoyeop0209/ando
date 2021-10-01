@@ -6,6 +6,6 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GetCrimeListReq {
-    Long guId;
+    Long gu;
     int year;
 }
