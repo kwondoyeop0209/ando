@@ -61,7 +61,7 @@ public class CrimeController {
         }
     }
 
-    @GetMapping("/arrest-rate")
+    @GetMapping("/rate")
     public ResponseEntity<GetRateRes> getArrestRate(GetRateReq getRateReq){
         if(getRateReq.getGu() == null || getRateReq.getYear() == 0)
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(GetRateRes.of(HttpStatus.BAD_REQUEST.value(), "Request is not correct!",null));
