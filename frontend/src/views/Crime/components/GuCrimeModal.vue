@@ -12,37 +12,51 @@
           <div class="el">
             <p class="rateTitle">💡 범죄율</p>
             <p class="rateDetail">총 몇 건 중 몇 00건이 발생</p>
-            <vc-donut
-              :sections="crimeRate"
-              :size="150"
-              background="#454d5e"
-              foreground="#EEEEEE"
-              unit="px"
-              :thickness="20"
-              :total="100"
-              :start-angle="0"
-              :auto-adjust-text-size="true"
-            >
-              <h1>25%</h1>
-            </vc-donut>
+            <div class="doughnut">
+              <VueSvgGauge
+                class="mini-gauge"
+                :start-angle="0"
+                :end-angle="360"
+                :min="0"
+                :max="100"
+                :value="25"
+                :separator-step="0"
+                :scale-interval="0"
+                :inner-radius="85"
+                :gauge-color="[{ offset: 0, color: '#2F488A'}]"
+                base-Color="#EEEEEE"
+              >
+                <div class="inner-text">
+                  <span>25%</span>
+                </div>
+              </VueSvgGauge>
+            </div>
           </div>
           <!-- 검거율 -->
           <div class="el">
             <p class="rateTitle">💡 검거율</p>
             <p class="rateDetail">총 몇 건 중 몇 00건이 발생</p>
-            <vc-donut
-              :sections="arrestRate"
-              :size="150"
-              background="#454d5e"
-              foreground="#EEEEEE"
-              unit="px"
-              :thickness="20"
-              :total="100"
-              :start-angle="0"
-              :auto-adjust-text-size="true"
-            >
-              <h1>25%</h1>
-            </vc-donut>
+            <div class="doughnut">
+              <VueSvgGauge
+                class="mini-gauge"
+                :start-angle="0"
+                :end-angle="360"
+                :min="0"
+                :max="100"
+                :value="25"
+                :separator-step="0"
+                :scale-interval="0"
+                :inner-radius="85"
+                :gauge-color="[{ offset: 0, color: '#F57272'}]"
+                base-Color="#EEEEEE"
+              >
+                <!-- 76줄은 단색  80줄은 그라데이션-->
+                <!-- :gauge-color="[{ offset: 0, color: '#de3a21'}, { offset: 100, color: '#f4c009'}]" -->
+                <div class="inner-text">
+                  <span>25%</span>
+                </div>
+              </VueSvgGauge>
+            </div>
           </div>
           <!-- 범죄 유형 -->
           <div class="el">
@@ -130,7 +144,7 @@ import VueHighcharts from "vue2-highcharts";
 import Highcharts from "highcharts";
 import Variablepie from "highcharts/modules/variable-pie";
 import Highcharts3D from "highcharts/highcharts-3d";
-import VcDonut from "../../../../node_modules/vue-css-donut-chart/src/components/Donut.vue";
+import { VueSvgGauge } from "vue-svg-gauge";
 
 Variablepie(Highcharts);
 Highcharts3D(Highcharts);
@@ -140,7 +154,7 @@ export default {
   components: {
     highcharts: Chart,
     VueHighcharts,
-    VcDonut,
+    VueSvgGauge,
   },
   props: {
     gu: String,
@@ -152,8 +166,6 @@ export default {
       isExpand: false,
       expandWidth: "450px",
       arrowImg: "ic-arrow-right",
-      crimeRate: [{ label: "label", value: 25, color:'#F57272' }],
-      arrestRate: [{ label: "label", value: 25, color:'#2F488A' }],
       chartTypeOfCrime: {
         chart: {
           backgroundColor: "rgba(0,0,0,0)",
@@ -476,6 +488,24 @@ export default {
 .state-content::-webkit-scrollbar-track {
   background-color: #454d5e;
   border-radius: 24px;
+}
+.doughnut {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 36px;
+}
+.mini-gauge {
+  max-width: 180px;
+}
+.inner-text {
+  display: flex;
+  margin-top: 80px;
+  align-items: center;
+  justify-content: center;
+  font-size: 35px;
+  font-weight: bold;
 }
 .arrow-area {
   display: flex;

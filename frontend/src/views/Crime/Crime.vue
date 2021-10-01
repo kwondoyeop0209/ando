@@ -28,6 +28,7 @@
     </div>
   </div>
 </template>
+<script src="../../node_modules/vue-svg-gauge/dist/vue-svg-gauge.min.js"></script>
 <script>
 import TotalCrimeModal from "./components/TotalCrimeModal.vue";
 import GuCrimeModal from "./components/GuCrimeModal.vue";
