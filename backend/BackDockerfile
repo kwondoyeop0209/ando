@@ -1,0 +1,5 @@
+FROM openjdk:8
+ARG JAR_FILE=build/libs/AnDo-0.0.1-SNAPSHOT.jar
+COPY ${JAR_FILE} ando.jar
+ENTRYPOINT ["java","-jar","/ando.jar"]
+EXPOSE 8080

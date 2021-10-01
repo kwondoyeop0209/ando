@@ -26,8 +26,8 @@ export default {
   align-items: center;
 }
 .blank {
-  min-width: 1200px;
-  width: 1200px;
+  min-width: 1450px;
+  width: 1450px;
   margin: 0 auto;
   display: flex;
   justify-content: center;

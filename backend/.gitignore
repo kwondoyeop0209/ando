@@ -36,3 +36,9 @@ out/
 ### VS Code ###
 .vscode/
 /src/main/generated/
+/house.csv
+/karaoke.csv
+/police.csv
+/boan.csv
+/bar.csv
+
