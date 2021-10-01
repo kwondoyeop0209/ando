@@ -28,13 +28,10 @@ public class ArrestRateRepositorySupport extends QuerydslRepositorySupport {
     }
 
     public List<GetTotalCrimeListDto> findSeoulCrime() {
-        return jpaQueryFactory.select(Projections.fields(GetTotalCrimeListDto.class, qArrestRate.year, qArrestRate.count.sum().as("count"),qArrestRate.type)).from(qArrestRate).groupBy(qArrestRate.year,qArrestRate.type).orderBy(qArrestRate.year.asc()).fetch();
+        return jpaQueryFactory.select(Projections.fields(GetTotalCrimeListDto.class, qArrestRate.year, qArrestRate.count.sum().as("count"))).from(qArrestRate).where(qArrestRate.type.eq("발생")).groupBy(qArrestRate.year,qArrestRate.type).orderBy(qArrestRate.year.asc()).fetch();
     }
 
-    public List<GetGuCrimeListDto> findGuCrime(Long id){
-        return jpaQueryFactory.select(Projections.fields(GetGuCrimeListDto.class,qArrestRate.crimeType.type.as("crimeType") ,qArrestRate.count.sum().as("count"))).from(qArrestRate).where(qArrestRate.siGunGu.id.eq(id),qArrestRate.type.eq("발생")).groupBy(qArrestRate.crimeType.id).fetch();
+    public List<GetGuCrimeListDto> findGuCrime(Long id,int year){
+        return jpaQueryFactory.select(Projections.fields(GetGuCrimeListDto.class,qArrestRate.crimeType.type.as("crimeType") ,qArrestRate.count,qArrestRate.crimeType.id.as("crimeTypeId"))).from(qArrestRate).where(qArrestRate.siGunGu.id.eq(id),qArrestRate.type.eq("발생"),qArrestRate.year.eq(year)).orderBy(qArrestRate.crimeType.id.asc()).fetch();
     }
-
-
-
 }

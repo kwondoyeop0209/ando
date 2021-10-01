@@ -27,7 +27,7 @@ public class ArrestRateCSV {
     arrestRateRepository arrestRateRepository;
 
     public void inputArrestRate() throws IOException {
-        CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream("arrest_2018_utf8.csv"), "UTF-8"));
+        CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream("arrest_2019_utf8.csv"), "UTF-8"));
         String [] nextLine;
         String [] type ={"살인","살인","강도","강도","강간","강간","절도","절도","폭력","폭력"};
 

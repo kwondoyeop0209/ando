@@ -28,8 +28,8 @@ public class ArrestRateServiceImpl implements ArrestRateService{
     }
 
     @Override
-    public List<GetGuCrimeListDto> getGuCrimeList(Long id) throws NotFoundException {
-        List<GetGuCrimeListDto> getGuCrimeListDtoList = arrestRateRepositorySupport.findGuCrime(id);
+    public List<GetGuCrimeListDto> getGuCrimeList(Long id,int year) throws NotFoundException {
+        List<GetGuCrimeListDto> getGuCrimeListDtoList = arrestRateRepositorySupport.findGuCrime(id,year);
         if(getGuCrimeListDtoList.isEmpty())
             throw new NotFoundException("GuList is empty");
         return getGuCrimeListDtoList;

@@ -20,19 +20,21 @@ class ArrestRateRepositorySupportTest {
     ArrestRateRepositorySupport arrestRateRepositorySupport;
 
 
+    @Test
     public void getTotalSeoul(){
         List<GetTotalCrimeListDto> list = arrestRateRepositorySupport.findSeoulCrime();
         for (GetTotalCrimeListDto totalCrimeListDto : list){
-            System.out.println(totalCrimeListDto.getYear() + "    "+ totalCrimeListDto.getType()+ "    "+totalCrimeListDto.getCount());
+            System.out.println(totalCrimeListDto.getYear() + "    "+ "    "+totalCrimeListDto.getCount());
         }
     }
 
 
+    @Test
     public void getGuCrime(){
         Long id = Long.valueOf(1);
-        List<GetGuCrimeListDto> list = arrestRateRepositorySupport.findGuCrime(id);
+        List<GetGuCrimeListDto> list = arrestRateRepositorySupport.findGuCrime(id,2018);
         for (GetGuCrimeListDto dto : list){
-            System.out.println(dto.getCrimeType() + "   "+ dto.getType() + "     "+ dto.getCount());
+            System.out.println(dto.getCrimeType() + "   "+ "   "+ dto.getCount());
         }
     }
 

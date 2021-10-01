@@ -10,5 +10,5 @@ public interface ArrestRateService {
 
     List<GetTotalCrimeListDto> getTotalCrimeList() throws NotFoundException;
 
-    List<GetGuCrimeListDto> getGuCrimeList(Long id) throws NotFoundException;
+    List<GetGuCrimeListDto> getGuCrimeList(Long id,int year) throws NotFoundException;
 }
