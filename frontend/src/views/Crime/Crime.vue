@@ -86,13 +86,21 @@
                 <!-- 범죄 유형 -->
                 <div>
                   <p class="rateTitle">💡 범죄 유형</p><br />
-                  <!-- <Chart2 :options="chartTypeOfCrime"></Chart2> -->
                     <vue-highcharts
                       :options="chartTypeOfCrime"
                       :highcharts="Highcharts"
                       style="height: 400px"
                     ></vue-highcharts>
                 </div><br />
+                <!-- 범죄유형 리스트 -->
+                <ul style="list-style: none; padding-left: 0px;">
+                  <li class="cList" v-for="(crime,i) in crimeTypeList" :key="crime.type">
+                    <a href="#" style="display: flex; text-decoration:none">
+                    <div class="number" style="margin-right: 5px">{{i+1}} </div>
+                    <div class="number" style="flex: 1; width:200px; text-align:center">{{crime.type}}  | {{crime.num}}</div>
+                    </a>
+                  </li> 
+                </ul>
                 <div>
                   <p class="rateTitle">💡 00 이/가 높은 요일</p><br />
                   <highcharts :options="highestDay" style="height: 300px"></highcharts>
@@ -110,14 +118,6 @@
                       style="height: 400px"
                     ></vue-highcharts>
                 </div><br />
-                <!-- <div>
-                <p class="chart-subtitle">최근 3년간 발생 건수</p>
-                <highcharts :options="chartLatest"></highcharts>
-                </div>
-                <div>
-                  <p class="chart-subtitle">최근 3년간 발생 건수</p>
-                  <highcharts :options="chartLatest"></highcharts>
-                </div> -->
               </div>
               <div class="arrow-area">
                 <img
@@ -137,8 +137,22 @@
                     @click="offClick"
                   />
                 </div>
+                <!-- 예측테이블 -->
                 <div>
-                  테이블
+                  <table style="padding-top:10px">
+                    <tr>
+                      <th style="width:60px">유형</th>
+                      <th style="width:60px">요일</th>
+                      <th style="width:100px">장소</th>
+                      <th style="width:80px">위험 지수</th>
+                    </tr>
+                    <tr v-for="pItem in predictList" :key="pItem.type">
+                      <td><span v-html="pItem.type"></span></td>
+                      <td><span v-html="pItem.day"></span></td>
+                      <td><span v-html="pItem.spot"></span></td>
+                      <td><span v-html="pItem.idx"></span></td>
+                    </tr>
+                  </table>
                 </div>
               </div>
             </div>
@@ -642,6 +656,22 @@ export default {
             data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4]
         }]
       },
+
+      crimeTypeList:[
+        {type: '폭력', num:'145건'},
+        {type: '절도', num:'125건'},
+        {type: '강간', num:'80건'},
+        {type: '강도', num:'65건'},
+        {type: '살해', num:'15건'},
+      ],
+      predictList:[
+        {type: '폭력', day:'토요일', spot:'노상', idx:'1.95'},
+        {type: '절도', day:'토요일', spot:'노상', idx:'1.95'},
+        {type: '살해', day:'토요일', spot:'노상', idx:'1.95'},
+        {type: '강도', day:'토요일', spot:'노상', idx:'1.95'},
+        {type: '추행', day:'토요일', spot:'노상', idx:'1.95'},
+      ]
+
     };
   },
   methods: {
@@ -735,7 +765,7 @@ export default {
 .modal_wrap {
   z-index: 888;
   width: 400px;
-  height: 100%;
+  height: 800px;
   background: #454d5e;
   border-radius: 5px;
   box-shadow: 0px 0px 20px #000;
@@ -788,5 +818,27 @@ export default {
 .predict-title {
   display: flex;
   font-size: 18px;
+}
+.number{
+  margin-block: 5px;
+  display:block;
+  padding:10px;
+  border-radius: 5px;
+  width:10px;
+  background:#B8B8B8
+}
+.cList a :hover{
+  background-color: #F57272;
+}
+th{
+  padding:10px;
+  background-color: #B8B8B8;
+  border-radius: 5px;
+}
+td{
+  padding:10px;
+  background-color: #FF9D9D;
+  border-radius: 5px;
+  text-align: center;
 }
 </style>
