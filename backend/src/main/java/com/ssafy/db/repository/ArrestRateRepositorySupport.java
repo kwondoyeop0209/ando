@@ -4,6 +4,7 @@ import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.ssafy.db.dto.arrestrate.GetGuCrimeListDto;
 import com.ssafy.db.dto.arrestrate.GetTotalCrimeListDto;
+import com.ssafy.db.dto.arrestrate.TopGuListDto;
 import com.ssafy.db.entity.ArrestRate;
 import com.ssafy.db.entity.QArrestRate;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
@@ -40,5 +41,9 @@ public class ArrestRateRepositorySupport extends QuerydslRepositorySupport {
     }
     public int getGuCount(String type,int year,Long guId){
         return jpaQueryFactory.select(qArrestRate.count.sum().as("count")).from(qArrestRate).where(qArrestRate.year.eq(year),qArrestRate.siGunGu.id.eq(guId),qArrestRate.type.eq(type)).fetchOne();
+    }
+
+    public List<TopGuListDto> getTopGu(String type){
+        return jpaQueryFactory.select(Projections.fields(TopGuListDto.class,qArrestRate.siGunGu.gu.as("gu"),qArrestRate.count.sum().as("count"))).from(qArrestRate).where(qArrestRate.type.eq(type),qArrestRate.year.eq(2020)).groupBy(qArrestRate.siGunGu).orderBy(qArrestRate.count.sum().desc()).limit(5).fetch();
     }
 }
