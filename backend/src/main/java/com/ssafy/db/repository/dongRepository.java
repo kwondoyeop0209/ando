@@ -30,7 +30,6 @@ public interface dongRepository extends JpaRepository<Dong,Long> {
     List<CctvCorrelationMapping> findLightGroupBySiGunGu_Id();
 
 
-    Optional<Dong> findById(Long id);
 
 }
 
