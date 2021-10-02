@@ -3,7 +3,7 @@ package com.ssafy.db.util;
 import com.opencsv.CSVReader;
 import com.ssafy.db.entity.Polygon;
 import com.ssafy.db.entity.Dong;
-import com.ssafy.db.repository.polygonRepository;
+import com.ssafy.db.repository.PolygonRepository;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -19,7 +19,7 @@ public class Inputpolygon {
     com.ssafy.db.repository.dongRepository dongRepository;
 
     @Autowired
-    polygonRepository polygonRepository;
+    PolygonRepository polygonRepository;
 
     public void inputPolygon() throws IOException {
         CSVReader reader = new CSVReader(new InputStreamReader(new FileInputStream("geojson.csv"), "UTF-8"),';');
