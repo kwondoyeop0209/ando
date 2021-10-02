@@ -158,6 +158,7 @@ export default {
   },
   props: {
     gu: String,
+    year: String,
   },
   data() {
     return {
@@ -409,6 +410,12 @@ export default {
         { type: '추행', day:'토요일', spot:'노상', idx:'1.95' },
       ]
     };
+  },
+  watch: {
+    year: (val) => {
+      //년도가 바뀌면 다시 통신
+      console.log(val);
+    },
   },
   methods: {
     onClick() {
