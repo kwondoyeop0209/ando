@@ -1,11 +1,11 @@
-package com.ssafy.api.request.crimeday;
+package com.ssafy.api.request.crime;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class CrimeDayListGetReq {
+public class CrimeListGetReq {
     Long type;
     int year;
 }
