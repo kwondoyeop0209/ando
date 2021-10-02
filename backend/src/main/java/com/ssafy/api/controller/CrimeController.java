@@ -2,13 +2,16 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.request.arrstrate.GetCrimeListReq;
 import com.ssafy.api.request.arrstrate.GetRateReq;
+import com.ssafy.api.request.crimeday.CrimeDayListGetReq;
 import com.ssafy.api.response.BaseResponseBody;
 import com.ssafy.api.response.arrestrate.GetRateRes;
 import com.ssafy.api.response.arrestrate.GuCrimeListRes;
 import com.ssafy.api.response.arrestrate.TopArrestCrimeGuListRes;
 import com.ssafy.api.response.arrestrate.TotalCrimeListGetRes;
+import com.ssafy.api.response.crimeday.CrimeDayListGetRes;
 import com.ssafy.api.response.riskindex.RiskIndexListGetRes;
 import com.ssafy.api.service.arrestrate.ArrestRateService;
+import com.ssafy.api.service.crimeday.CrimeDayService;
 import com.ssafy.api.service.riskindex.RiskIndexService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +33,8 @@ public class CrimeController {
     final ArrestRateService arrestRateService;
 
     final RiskIndexService riskIndexService;
+
+    final CrimeDayService crimeDayService;
 
     @ApiOperation(value = "구별 범죄 건수", notes = "null 이면 서울시 3년 발생 건수, gu랑 year 넣으면 해당 구의 해당 년도 유형별 범죄 건수 리턴", response = List.class)
     @GetMapping
@@ -88,4 +93,19 @@ public class CrimeController {
         }
     }
 
+    @ApiOperation(value = "범죄 건수 요일별 목록", notes = "해당 년도의 해당 범죄유형의 요일별 범죄 건수 목록 리턴", response = TopArrestCrimeGuListRes.class)
+    @GetMapping("/day")
+    public ResponseEntity<CrimeDayListGetRes> getCrimeDayList(CrimeDayListGetReq crimeDayListGetReq){
+        try {
+            if(crimeDayListGetReq.getType() == null || crimeDayListGetReq.getYear() == 0)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(CrimeDayListGetRes.of(HttpStatus.BAD_REQUEST.value(), "Request is not correct!",null));
+            else if(crimeDayListGetReq.getType() == null  ||crimeDayListGetReq.getType()<=0 || crimeDayListGetReq.getType()>=6)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(CrimeDayListGetRes.of(HttpStatus.BAD_REQUEST.value(), "CrimeType is not correct!", null));
+            else if(crimeDayListGetReq.getYear() <= 2017 || crimeDayListGetReq.getYear() >= 2021)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(CrimeDayListGetRes.of(HttpStatus.BAD_REQUEST.value(), "Year is not correct!",null));
+            return ResponseEntity.status(HttpStatus.OK).body(CrimeDayListGetRes.of(HttpStatus.OK.value(), "Success", crimeDayService.getCrimeDayList(crimeDayListGetReq.getType(), crimeDayListGetReq.getYear())));
+        }catch (NotFoundException e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(CrimeDayListGetRes.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(),null));
+        }
+    }
 }
