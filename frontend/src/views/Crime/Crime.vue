@@ -22,7 +22,7 @@
           <!-- 전체 범죄 현황 차트 및 내용 -->
           <total-crime-modal v-show="isMain" />
           <!-- 구 선택시 모달 창-->
-          <gu-crime-modal v-show="isGu" :gu="selectGu" />
+          <gu-crime-modal v-show="isGu" :gu="selectGu" :year="selectYear" />
         </div>
       </div>
     </div>
@@ -32,6 +32,7 @@
 <script>
 import TotalCrimeModal from "./components/TotalCrimeModal.vue";
 import GuCrimeModal from "./components/GuCrimeModal.vue";
+
 export default {
   name: "Crime",
   components: {
