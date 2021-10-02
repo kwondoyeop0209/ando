@@ -22,7 +22,12 @@
           <!-- 전체 범죄 현황 차트 및 내용 -->
           <total-crime-modal v-show="isMain" />
           <!-- 구 선택시 모달 창-->
-          <gu-crime-modal v-show="isGu" :gu="selectGu" :year="selectYear" />
+          <gu-crime-modal
+            v-show="isGu"
+            :gu="selectGu"
+            :year="selectYear"
+            @initYear="initYear"
+          />
         </div>
       </div>
     </div>
@@ -84,6 +89,9 @@ export default {
         this.isMain = false;
         this.isGu = true;
       }
+    },
+    initYear() {
+      this.selectYear = "2020";
     },
   },
 };
