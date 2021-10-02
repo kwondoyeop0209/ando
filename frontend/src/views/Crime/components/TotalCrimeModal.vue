@@ -164,7 +164,7 @@ export default {
           type: "column",
         },
         xAxis: {
-          categories: ["2018년", "2019년", "2020년"],
+          categories: [],
           labels: {
             style: {
               color: "#ffffff",
@@ -199,20 +199,7 @@ export default {
         series: [
           {
             name: "발생건수",
-            data: [
-              {
-                y: 321,
-                color: "#6A7DAF",
-              },
-              {
-                y: 221,
-                color: "#6A7DAF",
-              },
-              {
-                y: 123,
-                color: "#6A7DAF",
-              },
-            ],
+            data: [],
           },
         ],
       },
@@ -256,6 +243,29 @@ export default {
       .catch(() => {
         console.log("오류가 발생했습니다.");
       });
+    
+    $axios
+      .get("/crime")
+      .then((response) => {
+        //최근 3년간 발생건수
+        //카테고리 반환
+        this.chartLatest.xAxis.categories = response.data.list.map(
+          (item) => item.year
+        );
+        //데이터 반환
+        this.chartLatest.series[0].data = response.data.list.map(
+          (item) => {
+            return {
+              y: item.count,
+              color: chartColor[0],
+            };
+          }
+        );
+      })
+      .catch(() => {
+        console.log("오류가 발생했습니다.");
+      });
+    
   },
 };
 </script>
