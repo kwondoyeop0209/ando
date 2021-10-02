@@ -2,6 +2,7 @@ package com.ssafy.api.service.dong;
 
 import com.ssafy.api.response.dong.SafetyRankingGetRes;
 import com.ssafy.api.response.dong.SpaceRankingGetRes;
+import com.ssafy.api.response.space.SpaceCountGetRes;
 import com.ssafy.db.dto.dong.GetDongListDto;
 import javassist.NotFoundException;
 
