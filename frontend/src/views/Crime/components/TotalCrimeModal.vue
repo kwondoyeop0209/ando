@@ -12,7 +12,12 @@
     <div class="right-content">
       <div align="center">
         <p class="chart-subtitle">최근 3년간 발생 건수</p>
-        <highcharts :options="chartLatest" style="height: 300px"></highcharts>
+        <highcharts
+          :options="chartLatest"
+          ref="chartLatest"
+          style="height: 300px"
+        >
+        </highcharts>
       </div>
       <div align="center" class="seoul-crime">
         <p class="chart-subtitle">서울시 5대 범죄</p>
@@ -37,6 +42,8 @@
 </template>
 <script>
 import { Chart } from "highcharts-vue";
+import $axios from "axios";
+const chartColor = ["#6A7DAF", "#8F9FC8", "#AFBBD9", "#CED6EA", "#E9EDF5"];
 export default {
   name: "TotalCrimeModal",
   components: {
@@ -56,7 +63,7 @@ export default {
           type: "bar",
         },
         xAxis: {
-          categories: ["강남구", "영등포구", "동작구", "광진구", "송파구"],
+          categories: [],
           labels: {
             style: {
               fontsize: "14px",
@@ -91,28 +98,7 @@ export default {
         series: [
           {
             name: "발생건수",
-            data: [
-              {
-                y: 321,
-                color: "#aaaaaa",
-              },
-              {
-                y: 221,
-                color: "#bbbbbb",
-              },
-              {
-                y: 123,
-                color: "#cccccc",
-              },
-              {
-                y: 333,
-                color: "#dddddd",
-              },
-              {
-                y: 444,
-                color: "#eeeeee",
-              },
-            ],
+            data: [],
           },
         ],
       },
@@ -128,7 +114,7 @@ export default {
           type: "bar",
         },
         xAxis: {
-          categories: ["강남구", "영등포구", "동작구", "광진구", "송파구"],
+          categories: [],
           labels: {
             style: {
               color: "#ffffff",
@@ -162,28 +148,7 @@ export default {
         series: [
           {
             name: "발생건수",
-            data: [
-              {
-                y: 321,
-                color: "#aaaaaa",
-              },
-              {
-                y: 221,
-                color: "#bbbbbb",
-              },
-              {
-                y: 123,
-                color: "#cccccc",
-              },
-              {
-                y: 333,
-                color: "#dddddd",
-              },
-              {
-                y: 444,
-                color: "#eeeeee",
-              },
-            ],
+            data: [],
           },
         ],
       },
@@ -252,6 +217,45 @@ export default {
         ],
       },
     };
+  },
+  created() {
+    //서버 통신
+    $axios
+      .get("/crime/top")
+      .then((response) => {
+        //검거율
+        //카테고리 반환
+        this.chartArrest.xAxis.categories = response.data.arrestList.map(
+          (item) => item.gu
+        );
+        //데이터 반환
+        this.chartArrest.series[0].data = response.data.arrestList.map(
+          (item, idx) => {
+            return {
+              y: item.count,
+              color: chartColor[idx],
+            };
+          }
+        );
+
+        //범죄율
+        //카테고리 반환
+        this.chartCrime.xAxis.categories = response.data.crimeList.map(
+          (item) => item.gu
+        );
+        //데이터 반환
+        this.chartCrime.series[0].data = response.data.crimeList.map(
+          (item, idx) => {
+            return {
+              y: item.count,
+              color: chartColor[idx],
+            };
+          }
+        );
+      })
+      .catch(() => {
+        console.log("오류가 발생했습니다.");
+      });
   },
 };
 </script>
