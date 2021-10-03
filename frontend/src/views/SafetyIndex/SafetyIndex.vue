@@ -13,7 +13,7 @@
           <p class="tab-items" @click="onSpace">환경 요소</p>
         </div>
         <div class="tab-bottom" v-show="isSpace">
-          <p class="tab-items">📹 CCTV</p>
+          <p class="tab-items" @click="onCctv" :isCctv="cctv"  >📹 CCTV</p>
           <p class="tab-items">🍺 유흥지</p>
           <p class="tab-items">🚨 파출소</p>
           <p class="tab-items">💡 보안등</p>
@@ -36,10 +36,12 @@ export default {
     SafetyDetail,
     SpaceDetail,
   },
+  
   data() {
     return {
       isSafety: true,
       isSpace: false,
+      isCctv: false,
     };
   },
   methods: {
@@ -51,6 +53,11 @@ export default {
       this.isSpace = false;
       this.isSafety = true;
     },
+    onCctv() {
+      this.isCctv = true;
+      console.log("부모에서 보내는거")
+    }
+
   },
 };
 </script>
