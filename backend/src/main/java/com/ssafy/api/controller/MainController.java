@@ -65,7 +65,7 @@ public class MainController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(DongListGetRes.of(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage() ,null));
         }
     }
-    @ApiOperation(value = "동 폴리곤", notes = "해당 동의 폴리곤 좌표값 리턴", response = DongListGetRes.class)
+    @ApiOperation(value = "동 폴리곤&중심좌표", notes = "해당 동의 폴리곤&중심 좌표값 리턴", response = DongListGetRes.class)
     @GetMapping("/polygon/{dong}")
     public ResponseEntity<PolygonGetRes> getPolygon(@PathVariable Long dong){
         try {
