@@ -44,6 +44,7 @@
 import { Chart } from "highcharts-vue";
 import $axios from "axios";
 const chartColor = ["#6A7DAF", "#8F9FC8", "#AFBBD9", "#CED6EA", "#E9EDF5"];
+
 export default {
   name: "TotalCrimeModal",
   components: {
