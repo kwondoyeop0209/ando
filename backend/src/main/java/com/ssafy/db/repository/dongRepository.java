@@ -4,6 +4,8 @@ import com.ssafy.db.entity.Dong;
 import com.ssafy.db.mapping.CctvCorrelationMapping;
 import com.ssafy.db.mapping.DongRanking;
 import java.util.List;
+
+import com.ssafy.db.mapping.LatLngMapping;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
@@ -17,6 +19,7 @@ public interface dongRepository extends JpaRepository<Dong,Long> {
     Optional<Dong> findByDongAndSiGunGu_Gu(String dong,String gu);
     List<Dong> findTop10ByOrderBySafetyIndexDesc();
     List<Dong> findBySiGunGu_Id(Long id);
+    Optional<LatLngMapping> findById(Long id,Class<LatLngMapping> latLngMapping);
 
     @Query(value = "SELECT g.gu as gu, sum(d.cctv_cnt) as cnt from dong d join gu g on g.id = d.gu_id group by d.gu_id",nativeQuery = true)
     List<CctvCorrelationMapping> findCCTVGroupBySiGunGu_Id();
@@ -30,7 +33,6 @@ public interface dongRepository extends JpaRepository<Dong,Long> {
     List<CctvCorrelationMapping> findLightGroupBySiGunGu_Id();
 
 
-    Optional<Dong> findById(Long id);
 
 }
 
