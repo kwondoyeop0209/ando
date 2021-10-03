@@ -2,8 +2,14 @@
   <div id="map"></div>
 </template>
 <script>
+import $axios from "axios";
+
 export default {
   name: "KakaoMap",
+  props: {
+    space: String,
+    isSpace: Boolean,
+  },
   data() {
     return {
       markerPositions1: [
@@ -15,8 +21,21 @@ export default {
         [37.49754540521486, 127.02546694890695],
         [37.49646391248451, 127.02675574250912],
       ],
-      markers: [],
+      container: undefined,
+      options: undefined,
+      map: undefined,
+      overlayList: [],
     }
+  },
+  watch: {
+    space: function (val) {
+      this.getSpaceList(val);
+    },
+    isSpace: function (val) {
+      if (!val) {
+        this.removeCustom();
+      }
+    },
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
@@ -31,19 +50,18 @@ export default {
   },
   methods: {
     initMap() {
-      const container = document.querySelector("#map");
-      const options = {
-        center: new kakao.maps.LatLng(37.517353, 127.037164),
-        level: 3,
-      }
-      const map = new kakao.maps.Map(container, options);
-      const markerPosition = new kakao.maps.LatLng(37.517353, 127.037164);
+      this.container = document.querySelector("#map");
+      this.options = {
+        center: new kakao.maps.LatLng(37.532612, 126.990182),
+        level: 7,
+      };
+      this.map = new kakao.maps.Map(this.container, this.options);
+      // const markerPosition = new kakao.maps.LatLng(37.517353, 127.037164);
 
-      const marker = new kakao.maps.Marker({
-        position: markerPosition,
-      });
-      marker.setMap(map);
-      
+      // const marker = new kakao.maps.Marker({
+      //   position: markerPosition,
+      // });
+      // marker.setMap(map);
       // 여기는 마커를 세팅하는 부분!! (이제 실제로 데이터들 받게되면 좌표들을 리스트로 쫙 풀고 한번에 보여주면 됨!)
       // 마커를 표시할 위치와 title 객체 배열입니다
       const positions = [
@@ -84,22 +102,6 @@ export default {
 
       // 여기는 오버레이랑 기타 컨트롤러 등을 세팅하는 부분!!
 
-      // 커스텀 오버레이에 표시할 내용입니다
-      // HTML 문자열 또는 Dom Element 입니다
-      const content = '<div class ="label"><span class="left"></span><span class="center" style="color:black;">안전!</span><span class="right"></span></div>';
-
-      // 커스텀 오버레이가 표시될 위치입니다 
-      const position = new kakao.maps.LatLng(37.517353, 127.037164);
-
-      // 커스텀 오버레이를 생성합니다
-      var customOverlay = new kakao.maps.CustomOverlay({
-        position: position,
-        content: content,
-      });
-
-      // 커스텀 오버레이를 지도에 표시합니다
-      customOverlay.setMap(this.map);
-
       // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
       this.mapTypeControl = new kakao.maps.MapTypeControl();
       this.map.addControl(this.mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
@@ -108,6 +110,44 @@ export default {
       this.zoomControl = new kakao.maps.ZoomControl();
       this.map.addControl(this.zoomControl, kakao.maps.ControlPosition.RIGHT);
       //여기까지가 기본 지도 세팅 완료
+
+      if(!this.isSpace) { //안전지수 탭이면
+        //행정동 마커 찍기
+      }
+    },
+    getSpaceList(val) {
+      $axios
+        .get(`/space/${val}`)
+        .then((response) => {
+          this.overlayCustom(response.data.list);
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    overlayCustom(data) {
+      this.removeCustom();
+      data.forEach((item) => {
+        const content = `<div style="background-color:#454d5e; border-radius: 16px; padding: 8px 8px; font-size: 14px;">
+            <span style="background-color: #888888; border-radius: 16px; padding: 4px 8px">${item.count}</span>
+            <span>${item.dongname}</span>
+          </div>`;
+
+        const position = new kakao.maps.LatLng(item.lat, item.lng);
+
+        const overlay = new kakao.maps.CustomOverlay({
+          map: this.map,
+          position: position,
+          content: content,
+          yAnchor: 1,
+        });
+        this.overlayList.push(overlay);
+      });
+    },
+    removeCustom() {
+      this.overlayList.forEach((item) => {
+        item.setMap(null);
+      });
     },
   },
 };
