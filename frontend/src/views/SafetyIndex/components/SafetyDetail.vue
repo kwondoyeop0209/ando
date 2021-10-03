@@ -8,7 +8,7 @@
           class="rank-item"
           v-for="(item, idx) in rankList"
           :key="idx"
-          @click="onSafetyDong(item.dong, item.safetyIndex)"
+          @click="onSafetyDong(item.dong, item.safetyIndex, item.id)"
         >
           <div class="rank">{{ idx + 1 }}</div>
           <div class="rank-content">
@@ -30,7 +30,7 @@
           :end-angle="90"
           :min="0"
           :max="100"
-          :value="47"
+          :value="this.safetyIndex*10"
           :separator-step="0"
           :scale-interval="10"
           :inner-radius="70"
@@ -39,21 +39,20 @@
         >
           <div class="inner-safetyIdx">
             <span>{{safetyIndex}} 점</span>
-            <span>4.7점</span>
           </div>
         </VueSvgGauge>
       </div>
-      <div class=rankDetail>
-        <p style="margin-bottom:10px">동작구 내에서 <span style="font-size:30px; font-weight: 600">3위</span></p>
-        <p>전체에서 <span style="font-size:30px; font-weight: 600">48위</span></p>
+      <div class=rankDetail >
+        <p style="margin-bottom:10px">구 내에서 <span style="font-size:30px; font-weight: 600">{{this.rankingData.rankingOfGu}} 위</span></p>
+        <p>전체에서 <span style="font-size:30px; font-weight: 600">{{this.rankingData.rankingOfSeoul}} 위</span></p>
       </div><br />
       <hr class="one"><br />
       <div>
         <!-- Crime에 똑같은 거 있음 복붙하면 됨 -->
-        <p> CCTV 보유 현황 3위 (밑에 게이지 차트는 나중에 데이터 들어오면 손보기로) </p>
-        <p> 유흥지 분포 4위 (차트 추가) </p>
-        <p> 파출소 분포 2위 (차트 추가) </p>
-        <p> 보안등 분포 3위 (차트 추가) </p>
+        <p> CCTV 보유 현황 <span style="font-size:30px; font-weight: 600">{{this.spaceData.cctvRanking}} 위</span></p>
+        <p> 유흥지 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.barRanking}} 위</span></p>
+        <p> 파출소 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.policeRanking}}위</span></p>
+        <p> 보안등 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.lightRanking}}위</span></p>
       </div>
     </div>
   </div>
@@ -76,6 +75,9 @@ export default {
       isRankSafety: true,
       rankList: [],
       dong: "",
+      dongID: "",
+      rankingData:[],
+      spaceData:[],
       safetyIndex: "",
       safetyScore: {
         title: {
@@ -138,11 +140,35 @@ export default {
     
   },
   methods: {
-    onSafetyDong(val, val2) {
+    onSafetyDong(val, val2, val3) {
       this.dong = val;
       this.safetyIndex = val2;
+      this.dongID = val3;
       this.isDongSafety = true;
       this.isRankSafety = false;
+
+      //안전지수 순위 보여주기
+      axios
+      .get("http://j5a305.p.ssafy.io:8080/api/v1/safety/point/"+ this.dongID)
+      .then(res => {
+        this.rankingData = res.data
+        console.log(this.rankingData)
+      })
+      .catch(e => {
+          console.log('error : ', e)
+          })
+
+
+      //환경 요소 순위 보여주기
+      axios
+      .get("http://j5a305.p.ssafy.io:8080/api/v1/safety/detail/"+ this.dongID)
+      .then(response => {
+        this.spaceData = response.data
+        console.log(this.spaceData)
+      })
+      .catch(e => {
+          console.log('error : ', e)
+          })
     }
   },
 };
@@ -188,5 +214,4 @@ export default {
   margin-left: 45px;
   font-size: 25px;
 }
-</style>
 </style>
