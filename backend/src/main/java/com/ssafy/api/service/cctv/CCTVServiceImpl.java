@@ -3,7 +3,7 @@ package com.ssafy.api.service.cctv;
 import com.ssafy.api.response.space.Space5RankingGetRes;
 import com.ssafy.api.response.space.SpaceCorrelationGetRes;
 import com.ssafy.api.response.space.SpaceCountGetRes;
-import com.ssafy.db.dto.CountByDong;
+import com.ssafy.db.dto.space.CountByDong;
 import com.ssafy.db.entity.Dong;
 import com.ssafy.db.mapping.CctvInfoMapping;
 import com.ssafy.db.repository.arrestRateRepository;
@@ -58,7 +58,13 @@ public class CCTVServiceImpl implements CCTVService {
     public Space5RankingGetRes getCCTVCount5List(Long id) {
         Space5RankingGetRes res = new Space5RankingGetRes();
         Long ranking = dongRepositorySupport.getSpaceRankingInGu("cctv",id);
-        List<CountByDong> list = dongRepositorySupport.get5List(ranking-3,id);
+        Long cnt = dongRepositorySupport.getDongCountInGu(id);
+        Long offset = ranking - 3;
+        if(ranking < 3)
+            offset = Long.parseLong(1+"");
+        if(ranking > cnt-2) offset = cnt-5;
+
+        List<CountByDong> list = dongRepositorySupport.get5List(offset,id);
         res.setList(list);
         res.setRanking(ranking);
         return res;

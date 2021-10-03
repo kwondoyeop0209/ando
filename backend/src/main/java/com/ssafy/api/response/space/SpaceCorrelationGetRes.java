@@ -1,6 +1,6 @@
 package com.ssafy.api.response.space;
 
-import com.ssafy.db.dto.CountByDong;
+import com.ssafy.db.dto.space.CountByDong;
 import com.ssafy.db.mapping.ArrestMapping;
 import com.ssafy.db.mapping.CctvCorrelationMapping;
 import java.util.List;

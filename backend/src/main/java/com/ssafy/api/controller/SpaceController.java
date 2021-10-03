@@ -2,15 +2,13 @@ package com.ssafy.api.controller;
 
 
 import com.ssafy.api.response.space.SpaceCorrelationGetRes;
-import com.ssafy.api.response.dong.CountByDongGetRes;
+import com.ssafy.api.response.space.CountByDongGetRes;
 import com.ssafy.api.service.bar.BarService;
-import com.ssafy.api.service.cctv.CCTVService;
 import com.ssafy.api.service.guardhouse.GuardHouseService;
 import com.ssafy.api.service.police.PoliceService;
 import com.ssafy.api.service.securitylight.SecurityLightService;
 import com.ssafy.api.service.space.SpaceService;
 import com.ssafy.db.mapping.BarInfoMapping;
-import com.ssafy.db.mapping.CctvInfoMapping;
 import com.ssafy.db.mapping.GuardHouseInfoMapping;
 import com.ssafy.db.mapping.PoliceInfoMapping;
 import com.ssafy.db.mapping.SecurityLightInfoMapping;

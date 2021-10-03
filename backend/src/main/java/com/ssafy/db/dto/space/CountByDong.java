@@ -1,4 +1,4 @@
-package com.ssafy.db.dto;
+package com.ssafy.db.dto.space;
 
 import lombok.Getter;
 import lombok.Setter;
