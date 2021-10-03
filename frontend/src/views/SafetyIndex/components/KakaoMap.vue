@@ -33,6 +33,7 @@ export default {
     },
     isSpace: function (val) {
       if (!val) {
+        this.getSpaceList("cctv");
         this.removeCustom();
       }
     },
@@ -113,6 +114,7 @@ export default {
 
       if(!this.isSpace) { //안전지수 탭이면
         //행정동 마커 찍기
+        this.getSpaceList("cctv");
       }
     },
     getSpaceList(val) {
@@ -128,9 +130,11 @@ export default {
     overlayCustom(data) {
       this.removeCustom();
       data.forEach((item) => {
-        const content = `<div style="background-color:#454d5e; border-radius: 16px; padding: 8px 8px; font-size: 14px;">
-            <span style="background-color: #888888; border-radius: 16px; padding: 4px 8px">${item.count}</span>
-            <span>${item.dongname}</span>
+        const cnt = this.isSpace ? `<span style="background-color: #888888; border-radius: 16px; padding: 4px 8px; margin-right: 4px">${item.count}</span>` : ``;
+        const content =
+          `<div style="background-color:#454d5e; border-radius: 16px; padding: 8px 8px; font-size: 14px;">` +
+          cnt +
+          `<span>${item.dongname}</span>
           </div>`;
 
         const position = new kakao.maps.LatLng(item.lat, item.lng);

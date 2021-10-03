@@ -53,6 +53,7 @@ export default {
     onSafety() {
       this.isSpace = false;
       this.isSafety = true;
+      this.space = "";
     },
     onCctv() {
       this.isCctv = true;
