@@ -9,10 +9,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetGuCrimeListDto {
-
+public class TopGuListDto {
+    String gu;
     int count;
-    String crimeType;
-    Long crimeTypeId;
-
 }

@@ -3,8 +3,10 @@ package com.ssafy.api.controller;
 
 import com.ssafy.api.response.dong.DongListGetRes;
 import com.ssafy.api.response.gu.guGetRes;
+import com.ssafy.api.response.polygon.PolygonGetRes;
 import com.ssafy.api.service.dong.DongService;
 import com.ssafy.api.service.gu.GuService;
+import com.ssafy.api.service.polygon.PolygonService;
 import com.ssafy.db.dto.dong.GetDongListDto;
 import com.ssafy.db.dto.gu.GetGuDto;
 import io.swagger.annotations.Api;
@@ -26,6 +28,7 @@ public class MainController {
 
     final GuService guService;
     final DongService dongService;
+    final PolygonService polygonService;
 
     @ApiOperation(value = "test", notes = "test", response = List.class)
     @GetMapping("/shorts")
@@ -37,6 +40,7 @@ public class MainController {
         }
     }
 
+    @ApiOperation(value = "구 목록", notes = "구 id, 구 이름 리스트 리턴", response = guGetRes.class)
     @GetMapping("/sigungu")
     public ResponseEntity<guGetRes> getGuList(){
         List<GetGuDto> getGuDtoList;
@@ -48,6 +52,7 @@ public class MainController {
         }
     }
 
+    @ApiOperation(value = "동 목록", notes = "동 id, 동 이름 리스트 리턴", response = DongListGetRes.class)
     @GetMapping("/dong/{sigungu}")
     public ResponseEntity<DongListGetRes> getDongList(@PathVariable Long sigungu) {
         List<GetDongListDto> getDongListDtoList;
@@ -58,6 +63,17 @@ public class MainController {
             return ResponseEntity.status(HttpStatus.OK).body(DongListGetRes.of(HttpStatus.OK.value(), "Success",getDongListDtoList));
         }catch (NotFoundException e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(DongListGetRes.of(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage() ,null));
+        }
+    }
+    @ApiOperation(value = "동 폴리곤", notes = "해당 동의 폴리곤 좌표값 리턴", response = DongListGetRes.class)
+    @GetMapping("/polygon/{dong}")
+    public ResponseEntity<PolygonGetRes> getPolygon(@PathVariable Long dong){
+        try {
+            if(dong<=0 || dong >= 427)
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(PolygonGetRes.of(HttpStatus.BAD_REQUEST.value(), "dong is not correct!",null));
+            return ResponseEntity.status(HttpStatus.OK).body(PolygonGetRes.of(HttpStatus.OK.value(), "Success", polygonService.getPolygon(dong)));
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(PolygonGetRes.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(),null));
         }
     }
 

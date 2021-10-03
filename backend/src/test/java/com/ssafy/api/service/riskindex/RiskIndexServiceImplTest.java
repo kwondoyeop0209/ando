@@ -28,4 +28,6 @@ class RiskIndexServiceImplTest {
             System.out.println("-------------------------------");
         }
     }
+
+
 }

@@ -9,10 +9,9 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetGuCrimeListDto {
-
-    int count;
-    String crimeType;
-    Long crimeTypeId;
-
+public class GetRateDto {
+    int totalCrimeCount;
+    int guCrimeCount;
+    int totalArrestCount;
+    int guArrestCount;
 }

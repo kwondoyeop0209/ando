@@ -39,6 +39,7 @@
         >
           <div class="inner-safetyIdx">
             <span>{{safetyIndex}} 점</span>
+            <span>4.7점</span>
           </div>
         </VueSvgGauge>
       </div>
@@ -62,6 +63,7 @@
 import { Chart } from "highcharts-vue";
 import { VueSvgGauge } from "vue-svg-gauge";
 import axios from "axios";
+
 export default {
   name: "SafetyDetail",
   components: {
@@ -186,4 +188,5 @@ export default {
   margin-left: 45px;
   font-size: 25px;
 }
+</style>
 </style>
