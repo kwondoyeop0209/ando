@@ -24,5 +24,7 @@ public class Dong extends BaseEntity{
     int cctvCnt;
     int barCnt;
     int lightCnt;
+    double lat;
+    double lng;
 
 }

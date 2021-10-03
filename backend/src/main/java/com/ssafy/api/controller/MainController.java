@@ -57,7 +57,7 @@ public class MainController {
     public ResponseEntity<DongListGetRes> getDongList(@PathVariable Long sigungu) {
         List<GetDongListDto> getDongListDtoList;
         try {
-            if(sigungu<1 || sigungu>26)
+            if(sigungu<1 || sigungu>=26)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(DongListGetRes.of(HttpStatus.BAD_REQUEST.value(), "Gu id is not correct",null));
             getDongListDtoList = dongService.getDongList(sigungu);
             return ResponseEntity.status(HttpStatus.OK).body(DongListGetRes.of(HttpStatus.OK.value(), "Success",getDongListDtoList));
@@ -70,10 +70,10 @@ public class MainController {
     public ResponseEntity<PolygonGetRes> getPolygon(@PathVariable Long dong){
         try {
             if(dong<=0 || dong >= 427)
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(PolygonGetRes.of(HttpStatus.BAD_REQUEST.value(), "dong is not correct!",null));
-            return ResponseEntity.status(HttpStatus.OK).body(PolygonGetRes.of(HttpStatus.OK.value(), "Success", polygonService.getPolygon(dong)));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(PolygonGetRes.of(HttpStatus.BAD_REQUEST.value(), "dong is not correct!",null,null));
+            return ResponseEntity.status(HttpStatus.OK).body(PolygonGetRes.of(HttpStatus.OK.value(), "Success", polygonService.getPolygon(dong),dongService.getLatLng(dong)));
         } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(PolygonGetRes.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(),null));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(PolygonGetRes.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(),null,null));
         }
     }
 
