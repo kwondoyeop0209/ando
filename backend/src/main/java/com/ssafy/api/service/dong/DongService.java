@@ -10,6 +10,9 @@ import javassist.NotFoundException;
 import java.util.List;
 
 public interface DongService {
+
+    String getGuNameByDong(Long id) throws NotFoundException;
+
     List<GetDongListDto> getDongList(Long id) throws NotFoundException;
     SafetyRankingGetRes getSafetyRanking(Long id) throws NotFoundException;
     SpaceRankingGetRes getSpaceRanking(Long id) throws NotFoundException;
