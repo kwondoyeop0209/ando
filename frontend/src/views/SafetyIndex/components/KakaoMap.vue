@@ -130,9 +130,9 @@ export default {
     overlayCustom(data) {
       this.removeCustom();
       data.forEach((item) => {
-        const cnt = this.isSpace ? `<span style="background-color: #888888; border-radius: 16px; padding: 4px 8px; margin-right: 4px">${item.count}</span>` : ``;
+        const cnt = this.isSpace ? `<span style="background-color: #888888; border-radius: 16px; padding: 2px 8px; margin-right: 4px">${item.count}</span>` : ``;
         const content =
-          `<div style="background-color:#454d5e; border-radius: 16px; padding: 8px 8px; font-size: 14px;">` +
+          `<div style="background-color:#454d5e; border-radius: 16px; padding: 8px; font-size: 14px;">` +
           cnt +
           `<span>${item.dongname}</span>
           </div>`;
