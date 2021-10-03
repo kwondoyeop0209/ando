@@ -29,6 +29,16 @@ public class DongServiceImpl implements DongService{
     dongRepositorySupport dongRepositorySupport;
 
     @Override
+    public String getGuNameByDong(Long id) throws NotFoundException {
+        Optional<Dong> dong = dongRepository.findById(id);
+        if(dong.isPresent()){
+            return dong.get().getSiGunGu().getGu();
+        }else{
+            throw new NotFoundException("Dong is Empty");
+        }
+    }
+
+    @Override
     public List<GetDongListDto> getDongList(Long id) throws NotFoundException {
         List<Dong> dongList = dongRepository.findBySiGunGu_Id(id);
         List<GetDongListDto> getDongListDtoList = new ArrayList<>();

@@ -9,8 +9,13 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class GetGuDto {
+public class GetGuDto implements Comparable<GetGuDto>{
 
     Long id;
     String gu;
+
+    @Override
+    public int compareTo(GetGuDto o) {
+        return this.gu.compareTo(o.gu);
+    }
 }
