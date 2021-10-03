@@ -39,7 +39,6 @@
         >
           <div class="inner-safetyIdx">
             <span>{{safetyIndex}} 점</span>
-            <span>4.7점</span>
           </div>
         </VueSvgGauge>
       </div>

@@ -9,7 +9,7 @@
             검색 :
             <select class="select" @change="changeGu" v-model="selectGu">
               <option selected value="전체">전체</option>
-              <option v-for="gu in guList" :key="gu.id">
+              <option v-for="gu in guList" :key="gu.id" :value="gu.id">
                 {{ gu.gu }}
               </option>
             </select>
@@ -52,6 +52,7 @@ export default {
       isMain: true,
       isGu: false,
       selectYear: "2020",
+      guid:"",
     };
   },
   created(){
@@ -73,6 +74,7 @@ export default {
       } else {
         this.isMain = false;
         this.isGu = true;
+        this.guid = guSelect.id;
       }
     },
     initYear() {
