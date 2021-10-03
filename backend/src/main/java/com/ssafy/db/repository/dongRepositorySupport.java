@@ -86,7 +86,7 @@ public class dongRepositorySupport extends QuerydslRepositorySupport {
                     .where(qDong.id.eq(id))));
         }
         else if (type.equals("police")) {
-            builder.and(qDong.cctvCnt
+            builder.and(qDong.policeCnt
                 .gtAll(JPAExpressions.select(qDong.policeCnt)
                     .from(qDong)
                     .where(qDong.id.eq(id))));

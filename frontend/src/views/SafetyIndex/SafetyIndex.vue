@@ -13,14 +13,14 @@
           <p class="tab-items" @click="onSpace">환경 요소</p>
         </div>
         <div class="tab-bottom" v-show="isSpace">
-          <p class="tab-items" @click="onCctv" :isCctv="cctv"  >📹 CCTV</p>
-          <p class="tab-items">🍺 유흥지</p>
-          <p class="tab-items">🚨 파출소</p>
-          <p class="tab-items">💡 보안등</p>
-          <p class="tab-items">🏠 지킴이집</p>
+          <p class="tab-items" @click="onCctv, selectSpace('cctv')" :isCctv="cctv">📹 CCTV</p>
+          <p class="tab-items" @click="selectSpace('bar')">🍺 유흥지</p>
+          <p class="tab-items" @click="selectSpace('police')">🚨 파출소</p>
+          <p class="tab-items" @click="selectSpace('light')">💡 보안등</p>
+          <p class="tab-items" @click="selectSpace('guard')">🏠 지킴이집</p>
         </div>
       </div>
-      <kakao-map />
+      <kakao-map :space="space" :isSpace="isSpace" />
     </div>
   </div>
 </template>
@@ -36,28 +36,32 @@ export default {
     SafetyDetail,
     SpaceDetail,
   },
-  
   data() {
     return {
       isSafety: true,
       isSpace: false,
       isCctv: false,
+      space: "",
     };
   },
   methods: {
     onSpace() {
       this.isSpace = true;
       this.isSafety = false;
+      this.space = "cctv";
     },
     onSafety() {
       this.isSpace = false;
       this.isSafety = true;
+      this.space = "";
     },
     onCctv() {
       this.isCctv = true;
       console.log("부모에서 보내는거")
-    }
-
+    },
+    selectSpace(val) {
+      this.space = val;
+    },
   },
 };
 </script>
