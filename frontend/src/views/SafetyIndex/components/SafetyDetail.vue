@@ -49,8 +49,8 @@
       <hr class="one"><br />
       <div>
         <!-- Crime에 똑같은 거 있음 복붙하면 됨 -->
-        <p> CCTV 보유 현황 <span style="font-size:30px; font-weight: 600">{{this.spaceData.cctvRanking}} 위</span></p>
-        <p> 유흥지 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.barRanking}} 위</span></p>
+        <p> CCTV 보유 현황 <span style="font-size:30px; font-weight: 600">{{this.spaceData.cctvRanking}}위</span></p>
+        <p> 유흥지 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.barRanking}}위</span></p>
         <p> 파출소 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.policeRanking}}위</span></p>
         <p> 보안등 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.lightRanking}}위</span></p>
       </div>
@@ -135,7 +135,7 @@ export default {
       .get("http://j5a305.p.ssafy.io:8080/api/v1/safety/top")
       .then(res => {
         this.rankList = res.data.getTopSafetyListDtoList
-        console.log(this.rankList)
+        //console.log(this.rankList)
       })
     
   },

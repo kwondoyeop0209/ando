@@ -1,6 +1,7 @@
 <template>
   <div class="space-detail">
-    <div>
+    <!-- 구 동 선택하는 공간 -->
+    <div class="select-region">
       <select class="select" @change="changeGu" v-model="selectGu">
               <option selected value="자치구">자치구</option>
               <option v-for="(gu, idx) in GuList" :key="idx" :value="gu">
@@ -13,35 +14,172 @@
               <option v-for="(dong, idx) in DongList" :key="idx" :value="dong">
                 {{ dong }}
               </option>
-       </select>  
+       </select>
+       <br /><br />
+
+       <!-- 갯수 보여주는 공간 -->
+       <div class = "space-info" v-show="isSpace">
+      <p style="margin-bottom:10px; font-size:30px; font-weight: 600"> {{space}} 비율 <br> </p>
+      <p style="margin-bottom:10px;">{{selectGu.gu}} 내
+        <span style="font-size:20px; font-weight: 400"> 총 {{this.spaceData.guCnt}}개 중
+          <br> {{this.spaceData.dongCnt}}개 </span> 설치가 되어 있어요!
+      </p>
+
+      <!-- 비율 보여주는 그래프 -->
+      <div class="doughnut">
+              <VueSvgGauge
+                class="mini-gauge"
+                :start-angle="0"
+                :end-angle="360"
+                :min="0"
+                :max="100"
+                :value="(this.spaceData.guCnt / this.spaceData.dongCnt)"
+                :separator-step="0"
+                :scale-interval="0"
+                :inner-radius="85"
+                :gauge-color="[{ offset: 0, color: '#2F488A'}]"
+                base-Color="#EEEEEE"
+              >
+                <div class="inner-text" style="padding:45%">
+                  <span >{{Math.round((this.spaceData.guCnt / this.spaceData.dongCnt),2)}}%</span>
+                </div>
+              </VueSvgGauge>
+            </div> <br>
+
+       <div>
+        <p style="margin-bottom:10px; font-size:20px; font-weight: 400"> {{selectGu.gu}} 내에서 {{this.rankData.ranking}}위를 차지했어요! <br> </p>
+      </div>
+
+      <!-- 5개 순위 보여주는 그래프(값 수정 필요) -->
+      <div class="rank-info">
+       <highcharts
+              :options="highestSpot"
+              :highcharts="Highcharts"
+              ref="Highcharts"
+              style="height: 400px"
+            ></highcharts>
+      </div>
+
+      <!-- 상관관계 보여주는 공간 (수정 필요) -->
+      <div class="graph-info">
+      <p style="margin-bottom:10px; font-size:30px; font-weight: 600"> {{space}}와 범죄의 상관 관계 <br> </p>
+      
+      </div>
+
+
+      
     </div>
-       <div > CCTV 버튼나오는거(아직 이쪽부분 수정중) {{cctv}} </div>
   </div>
+  </div>
+  
   
 </template>
 <script>
 
 import axios from "axios";
+import { Chart } from "highcharts-vue";
+//import VueHighcharts from "vue2-highcharts";
+import Highcharts from "highcharts";
+import Variablepie from "highcharts/modules/variable-pie";
+import Highcharts3D from "highcharts/highcharts-3d";
+import { VueSvgGauge } from "vue-svg-gauge";
+
+
+Variablepie(Highcharts);
+Highcharts3D(Highcharts);
+
+
 export default {
   name: "SpaceDetail",
   props: {
-    cctv: Boolean,
-    dance: Boolean,
-    police: Boolean,
-    boan: Boolean,
-    house: Boolean
+    space: String,
+    isSpace: Boolean
   },
+  components: {
+    highcharts: Chart,
+    
+    VueSvgGauge,
+  },
+
   data() {
     return {
+      Highcharts,
       selectGu: "자치구",
       selectGuID : "",
       selectDong: "행정동",
+      selectDongID: "",
       isMain: true,
       isGu: false,
       isDong: false,
       GuList: [],
-      GuIDList: [],
       DongList: [],
+      spaceData: [],
+      rankData: [],
+      graphData: [],
+      selectSpaceName:"",
+
+      highestSpot: {
+        chart: {
+          renderTo : 'highestSpot',
+          backgroundColor: "rgba(0,0,0,0)",
+          type: 'column',
+          options3d: {
+            enabled: true,
+            alpha: 15,
+            beta: 15,
+            depth: 50,
+            viewDistance: 25
+          }
+        },
+        title: {
+          text: "",
+        },
+        plotOptions: {
+          column: {
+            depth: 25
+          }
+        },
+        legend: {
+          enabled: false,
+        },
+        credits: {
+          enabled: false,
+        },
+        xAxis: {
+          categories: ["a동", "b동", "c동", "d동", "e동"],
+          gridLineColor: "rgba(0,0,0,0)",
+          labels: {
+            style: {
+              fontsize: "14px",
+              color: "#ffffff",
+            },
+          },
+        },
+        yAxis: {
+          title: {
+            text: "건수",
+            style: {
+              color: "#ffffff",
+            },
+          },
+          gridLineColor: "rgba(0,0,0,0)",
+          labels: {
+            style: {
+              color: "#ffffff",
+            },
+          },
+        },
+        tooltip: {
+            shared: true,
+            valueSuffix: ' 건'
+        },
+        series: [
+          {
+            name: '발생건수',
+            data: [29.9, 71.5, 106.4, 129.2, 144.0],
+          }
+        ]
+      },
     
     }
   },
@@ -74,24 +212,74 @@ export default {
       }
 
       //선택한 구랑 구 아이디 저장
-      console.log(this.selectGu.gu)
+      //console.log(this.selectGu.gu)
       //console.log(this.GuList)
       for (let i=0; i<this.GuList.length; i++) {
         if(this.GuList[i].gu == guSelect.gu) {
           const GuID =  this.GuList[i].id;
           this.selectGuID = GuID;
-          console.log(this.selectGuID)
+          //console.log(this.selectGuID)
         }
       }
     },
+
+    getSpaceList(val) {
+      //동 아이디도 저장!
+        const dongSelect = this.selectDong;
+        console.log(this.dongList)
+        console.log(dongSelect)
+        for (let i=0; i<this.dongList.length; i++) {
+        if(this.dongList[i].dong == dongSelect) {
+          const DongID =  this.dongList[i].id;
+          this.selectDongID = DongID;
+          console.log(this.selectDongID)
+      }
+        }
+
+      //환경 지수의 갯수 구하는 부분(구별, 동별) 
+      axios
+      .get("http://j5a305.p.ssafy.io:8080/api/v1/space/" + val + "/count/" + this.selectDongID)
+      .then(re => {
+        this.spaceData = re.data
+        console.log(this.spaceData)
+      })
+      .catch(e => {
+          console.log('error : ', e)
+          })
+    
+
+    //순위 구하는 부분
+      axios
+      .get("http://j5a305.p.ssafy.io:8080/api/v1/space/" + val + "/ranking/" + this.selectDongID)
+      .then(r => {
+        this.rankData = r.data
+        console.log(this.rankData)
+      })
+      .catch(e => {
+          console.log('error : ', e)
+          })
+    
+    
+    //그래프 구하는 부분()
+      axios
+      .get("http://j5a305.p.ssafy.io:8080/api/v1/space/" + val + "/graph")
+      .then(rs => {
+        this.graphData = rs.data
+        console.log(this.graphData)
+      })
+      .catch(e => {
+          console.log('error : ', e)
+          })
+    },
+
   },
 
   watch: {
       selectGuID: function (val) {
         // 해당 구의 행정동 리스트 가져오기
         this.DongList = []
-        console.log(val)
-        console.log(this.DongList)
+        //console.log(val)
+        //console.log(this.DongList)
       axios
       .get("http://j5a305.p.ssafy.io:8080/api/v1/main/dong/" + val)
       .then(respond => {
@@ -102,28 +290,31 @@ export default {
           this.DongList.push(dongName)
         }
         //console.log(this.DongList)
-      })
+
+        }
+      )
 
       .catch(e => {
           console.log('error : ', e)
           })
       },
 
-      cctv: function (val) {
-      console.log(val);
+    space: function (val) {
+      this.getSpaceList(val);
+      console.log(val)
+      this.isSpace = true;
+      this.selectSpaceName = val;
     },
-      dance: function (val) {
-      console.log(val);
+
+    isSpace: function (val) {
+      if (!val) {
+        this.getSpaceList("cctv");
+        this.removeCustom();
+      }
     },
-      police: function (val) {
-      console.log(val);
-    },
-      boan: function (val) {
-      console.log(val);
-    },
-      house: function (val) {
-      console.log(val);
-    },
+
+    
+
   }
 };
 

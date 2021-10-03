@@ -3,7 +3,7 @@ import VueRouter from "vue-router";
 import Home from "../views/Home/Home.vue";
 import Crime from "../views/Crime/Crime.vue";
 import SafetyIndex from "../views/SafetyIndex/SafetyIndex.vue";
-import SpaceElement from "../views/SafetyIndex/SpaceElement";
+
 
 Vue.use(VueRouter);
 
@@ -23,11 +23,6 @@ const routes = [
     name: "SafetyIndex",
     component: SafetyIndex,
   },
-  {
-    path: "/space",
-    name: "SpaceElement",
-    component: SpaceElement,
-  }
 ];
 
 const router = new VueRouter({

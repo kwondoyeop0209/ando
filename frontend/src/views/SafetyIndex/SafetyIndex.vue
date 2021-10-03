@@ -1,8 +1,8 @@
 <template>
   <div class="safety-index">
     <div class="info">
-      <safety-detail v-show="isSafety" />
-      <space-detail v-show="isSpace" />
+      <safety-detail v-show="isSafety"  />
+      <space-detail v-show="isSpace" :space="space"/>
     </div>
     <div class="map">
       <!-- 탭-->
@@ -13,7 +13,7 @@
           <p class="tab-items" @click="onSpace">환경 요소</p>
         </div>
         <div class="tab-bottom" v-show="isSpace">
-          <p class="tab-items" @click="onCctv, selectSpace('cctv')" :isCctv="cctv">📹 CCTV</p>
+          <p class="tab-items" @click="selectSpace('cctv')">📹 CCTV</p>
           <p class="tab-items" @click="selectSpace('bar')">🍺 유흥지</p>
           <p class="tab-items" @click="selectSpace('police')">🚨 파출소</p>
           <p class="tab-items" @click="selectSpace('light')">💡 보안등</p>
@@ -21,6 +21,7 @@
         </div>
       </div>
       <kakao-map :space="space" :isSpace="isSpace" />
+    
     </div>
   </div>
 </template>
@@ -48,19 +49,16 @@ export default {
     onSpace() {
       this.isSpace = true;
       this.isSafety = false;
-      this.space = "cctv";
+      this.space = "";
     },
     onSafety() {
       this.isSpace = false;
       this.isSafety = true;
       this.space = "";
     },
-    onCctv() {
-      this.isCctv = true;
-      console.log("부모에서 보내는거")
-    },
     selectSpace(val) {
       this.space = val;
+      console.log(val);
     },
   },
 };
