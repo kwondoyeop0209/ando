@@ -187,4 +187,58 @@ public class dongRepositorySupport extends QuerydslRepositorySupport {
             ).orderBy(qDong.cctvCnt.desc()).offset(start).limit(5).fetch();
 
     }
+
+    public List<CountByDong> get5List(String type, Long start, Long id) {
+
+        if (type.equals("cctv")) {
+            return jpaQueryFactory.select(Projections.fields(CountByDong.class, qDong.dong.as("dongname"),qDong.cctvCnt.as("count")))
+                .from(qDong)
+                .where(qDong.siGunGu.id.eq(
+                    JPAExpressions
+                        .select(qDong.siGunGu.id)
+                        .from(qDong)
+                        .where(qDong.id.eq(id)))
+                ).orderBy(qDong.cctvCnt.desc()).offset(start).limit(5).fetch();
+        }
+        else if (type.equals("police")) {
+            return jpaQueryFactory.select(Projections.fields(CountByDong.class, qDong.dong.as("dongname"),qDong.policeCnt.as("count")))
+                .from(qDong)
+                .where(qDong.siGunGu.id.eq(
+                    JPAExpressions
+                        .select(qDong.siGunGu.id)
+                        .from(qDong)
+                        .where(qDong.id.eq(id)))
+                ).orderBy(qDong.policeCnt.desc()).offset(start).limit(5).fetch();
+        }
+        else if (type.equals("light")) {
+            return jpaQueryFactory.select(Projections.fields(CountByDong.class, qDong.dong.as("dongname"),qDong.lightCnt.as("count")))
+                .from(qDong)
+                .where(qDong.siGunGu.id.eq(
+                    JPAExpressions
+                        .select(qDong.siGunGu.id)
+                        .from(qDong)
+                        .where(qDong.id.eq(id)))
+                ).orderBy(qDong.lightCnt.desc()).offset(start).limit(5).fetch();
+        }
+        else if (type.equals("guard")) {
+            return jpaQueryFactory.select(Projections.fields(CountByDong.class, qDong.dong.as("dongname"),qDong.guardHouseCnt.as("count")))
+                .from(qDong)
+                .where(qDong.siGunGu.id.eq(
+                    JPAExpressions
+                        .select(qDong.siGunGu.id)
+                        .from(qDong)
+                        .where(qDong.id.eq(id)))
+                ).orderBy(qDong.guardHouseCnt.desc()).offset(start).limit(5).fetch();
+        }
+        else {
+            return jpaQueryFactory.select(Projections.fields(CountByDong.class, qDong.dong.as("dongname"),qDong.barCnt.as("count")))
+                .from(qDong)
+                .where(qDong.siGunGu.id.eq(
+                    JPAExpressions
+                        .select(qDong.siGunGu.id)
+                        .from(qDong)
+                        .where(qDong.id.eq(id)))
+                ).orderBy(qDong.barCnt.desc()).offset(start).limit(5).fetch();
+        }
+    }
 }
