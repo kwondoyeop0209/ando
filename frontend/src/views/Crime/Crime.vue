@@ -9,8 +9,8 @@
             검색 :
             <select class="select" @change="changeGu" v-model="selectGu">
               <option selected value="전체">전체</option>
-              <option v-for="(gu, idx) in guList" :key="idx" :value="gu">
-                {{ gu }}
+              <option v-for="gu in guList" :key="gu.id">
+                {{ gu.gu }}
               </option>
             </select>
             <select class="select" v-show="isGu" v-model="selectYear">
@@ -37,6 +37,7 @@
 <script>
 import TotalCrimeModal from "./components/TotalCrimeModal.vue";
 import GuCrimeModal from "./components/GuCrimeModal.vue";
+import $axios from "axios";
 
 export default {
   name: "Crime",
@@ -46,38 +47,22 @@ export default {
   },
   data() {
     return {
-      guList: [
-        "강남구",
-        "강동구",
-        "강북구",
-        "강서구",
-        "관악구",
-        "광진구",
-        "구로구",
-        "금천구",
-        "노원구",
-        "도봉구",
-        "동대문구",
-        "동작구",
-        "마포구",
-        "서대문구",
-        "서초구",
-        "성동구",
-        "성북구",
-        "송파구",
-        "양천구",
-        "영등포구",
-        "용산구",
-        "은평구",
-        "종로구",
-        "중구",
-        "중랑구",
-      ],
+      guList: [],
       selectGu: "전체",
       isMain: true,
       isGu: false,
       selectYear: "2020",
     };
+  },
+  created(){
+    $axios
+      .get("/main/sigungu")
+      .then((response) =>{
+        this.guList=response.data.guList;
+      })
+      .catch(() => {
+        console.log("오류가 발생했습니다.");
+      });
   },
   methods: {
     changeGu() {
