@@ -8,7 +8,7 @@
           class="rank-item"
           v-for="(item, idx) in rankList"
           :key="idx"
-          @click="onSafetyDong(item.dong)"
+          @click="onSafetyDong(item.dong, item.safetyIndex)"
         >
           <div class="rank">{{ idx + 1 }}</div>
           <div class="rank-content">
@@ -38,6 +38,7 @@
           base-Color="#EEEEEE"
         >
           <div class="inner-safetyIdx">
+            <span>{{safetyIndex}} 점</span>
             <span>4.7점</span>
           </div>
         </VueSvgGauge>
@@ -61,6 +62,7 @@
 <script>
 import { Chart } from "highcharts-vue";
 import { VueSvgGauge } from "vue-svg-gauge";
+import axios from "axios";
 
 export default {
   name: "SafetyDetail",
@@ -74,6 +76,7 @@ export default {
       isRankSafety: true,
       rankList: [],
       dong: "",
+      safetyIndex: "",
       safetyScore: {
         title: {
           text: "",
@@ -126,28 +129,18 @@ export default {
     };
   },
   mounted() {
-    this.rankList = [
-      {
-        dong: "신대방동",
-        safetyIndex: 8.4,
-      },
-      {
-        dong: "역삼동",
-        safetyIndex: 8,
-      },
-      {
-        dong: "신사동",
-        safetyIndex: 7.4,
-      },
-      {
-        dong: "흑석동",
-        safetyIndex: 6.4,
-      },
-    ];
+      axios
+      .get("http://j5a305.p.ssafy.io:8080/api/v1/safety/top")
+      .then(res => {
+        this.rankList = res.data.getTopSafetyListDtoList
+        console.log(this.rankList)
+      })
+    
   },
   methods: {
-    onSafetyDong(val) {
+    onSafetyDong(val, val2) {
       this.dong = val;
+      this.safetyIndex = val2;
       this.isDongSafety = true;
       this.isRankSafety = false;
     }
@@ -195,4 +188,5 @@ export default {
   margin-left: 45px;
   font-size: 25px;
 }
+</style>
 </style>
