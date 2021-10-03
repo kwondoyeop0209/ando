@@ -1,6 +1,6 @@
 package com.ssafy.api.service.space;
 
-import com.ssafy.api.response.dong.CountByDongGetRes;
+import com.ssafy.api.response.space.CountByDongGetRes;
 
 public interface SpaceService {
 

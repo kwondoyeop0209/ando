@@ -4,11 +4,10 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Projections;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.ssafy.db.dto.CountByDong;
+import com.ssafy.db.dto.space.CountByDong;
 import com.ssafy.db.entity.QArrestRate;
 import com.ssafy.db.entity.QDong;
 import java.util.List;
-import org.hibernate.criterion.Projection;
 import org.springframework.data.jpa.repository.support.QuerydslRepositorySupport;
 import org.springframework.stereotype.Repository;
 
@@ -27,6 +26,12 @@ public class dongRepositorySupport extends QuerydslRepositorySupport {
     public dongRepositorySupport(JPAQueryFactory jpaQueryFactory) {
         super(QDong.class);
         this.jpaQueryFactory = jpaQueryFactory;
+    }
+
+    public Long getDongCountInGu(Long id){
+    return jpaQueryFactory.select(qDong.count()).from(qDong).where(
+        qDong.siGunGu.id.eq(
+        JPAExpressions.select(qDong.siGunGu.id).from(qDong).where(qDong.id.eq(id)))).fetchOne();
     }
 
     public Integer getSpaceCountByGuId(String type, Long guId){

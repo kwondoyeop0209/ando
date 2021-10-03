@@ -1,7 +1,7 @@
 package com.ssafy.api.response.space;
 
 import com.ssafy.api.response.BaseResponseBody;
-import com.ssafy.db.dto.CountByDong;
+import com.ssafy.db.dto.space.CountByDong;
 import java.util.List;
 import lombok.Getter;
 import lombok.Setter;
