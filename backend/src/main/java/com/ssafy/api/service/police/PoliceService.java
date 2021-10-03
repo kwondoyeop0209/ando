@@ -1,6 +1,6 @@
 package com.ssafy.api.service.police;
 
-import com.ssafy.api.response.cctv.SpaceCorrelationGetRes;
+import com.ssafy.api.response.space.SpaceCorrelationGetRes;
 import com.ssafy.db.mapping.PoliceInfoMapping;
 import java.util.List;
 

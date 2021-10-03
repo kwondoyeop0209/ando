@@ -158,6 +158,7 @@ export default {
   },
   props: {
     gu: String,
+    year: String,
   },
   data() {
     return {
@@ -410,6 +411,19 @@ export default {
       ]
     };
   },
+  watch: {
+    gu: function (val) {
+      //구가 바뀌면 다시 통신
+      console.log(val);
+
+      //년도 초기화해야함 => 2020년으로
+      this.$emit("initYear");
+    },
+    year: function (val) {
+      //년도가 바뀌면 다시 통신
+      console.log(val);
+    },
+  },
   methods: {
     onClick() {
       this.isPredict = true;
@@ -427,7 +441,7 @@ export default {
       }
       this.isExpand = !this.isExpand;
     },
-    onCrimeDetail(){
+    onCrimeDetail() {
       // 00에 전달하는 값
     },
   },

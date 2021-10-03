@@ -1,6 +1,6 @@
 package com.ssafy.api.service.space;
 
-import com.ssafy.api.response.dong.CountByDongGetRes;
+import com.ssafy.api.response.space.CountByDongGetRes;
 import com.ssafy.db.entity.Dong;
 import com.ssafy.db.repository.dongRepository;
 import java.util.List;

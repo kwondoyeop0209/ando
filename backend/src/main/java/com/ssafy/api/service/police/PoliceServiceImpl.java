@@ -1,6 +1,6 @@
 package com.ssafy.api.service.police;
 
-import com.ssafy.api.response.cctv.SpaceCorrelationGetRes;
+import com.ssafy.api.response.space.SpaceCorrelationGetRes;
 import com.ssafy.db.mapping.PoliceInfoMapping;
 import com.ssafy.db.repository.arrestRateRepository;
 import com.ssafy.db.repository.dongRepository;

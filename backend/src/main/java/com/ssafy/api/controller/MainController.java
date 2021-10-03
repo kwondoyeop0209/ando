@@ -57,7 +57,7 @@ public class MainController {
     public ResponseEntity<DongListGetRes> getDongList(@PathVariable Long sigungu) {
         List<GetDongListDto> getDongListDtoList;
         try {
-            if(sigungu<1 || sigungu>26)
+            if(sigungu<1 || sigungu>=26)
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(DongListGetRes.of(HttpStatus.BAD_REQUEST.value(), "Gu id is not correct",null));
             getDongListDtoList = dongService.getDongList(sigungu);
             return ResponseEntity.status(HttpStatus.OK).body(DongListGetRes.of(HttpStatus.OK.value(), "Success",getDongListDtoList));
@@ -65,15 +65,15 @@ public class MainController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(DongListGetRes.of(HttpStatus.INTERNAL_SERVER_ERROR.value(),e.getMessage() ,null));
         }
     }
-    @ApiOperation(value = "동 폴리곤", notes = "해당 동의 폴리곤 좌표값 리턴", response = DongListGetRes.class)
+    @ApiOperation(value = "동 폴리곤&중심좌표", notes = "해당 동의 폴리곤&중심 좌표값 리턴", response = DongListGetRes.class)
     @GetMapping("/polygon/{dong}")
     public ResponseEntity<PolygonGetRes> getPolygon(@PathVariable Long dong){
         try {
             if(dong<=0 || dong >= 427)
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(PolygonGetRes.of(HttpStatus.BAD_REQUEST.value(), "dong is not correct!",null));
-            return ResponseEntity.status(HttpStatus.OK).body(PolygonGetRes.of(HttpStatus.OK.value(), "Success", polygonService.getPolygon(dong)));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(PolygonGetRes.of(HttpStatus.BAD_REQUEST.value(), "dong is not correct!",null,null));
+            return ResponseEntity.status(HttpStatus.OK).body(PolygonGetRes.of(HttpStatus.OK.value(), "Success", polygonService.getPolygon(dong),dongService.getLatLng(dong)));
         } catch (NotFoundException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(PolygonGetRes.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(),null));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(PolygonGetRes.of(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(),null,null));
         }
     }
 

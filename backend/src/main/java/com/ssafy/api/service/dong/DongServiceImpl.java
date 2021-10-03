@@ -6,6 +6,7 @@ import com.ssafy.db.dto.dong.GetDongListDto;
 import com.ssafy.db.entity.Dong;
 import com.ssafy.db.mapping.DongRanking;
 import com.ssafy.db.mapping.DongSafetyIndex;
+import com.ssafy.db.mapping.LatLngMapping;
 import com.ssafy.db.repository.dongRepository;
 import com.ssafy.db.repository.dongRepositorySupport;
 import java.util.Optional;
@@ -85,6 +86,12 @@ public class DongServiceImpl implements DongService{
             throw new NotFoundException("Dong id Empty");
         }
         return spaceRankingGetRes;
+    }
+
+    @Override
+    public LatLngMapping getLatLng(Long id) throws NotFoundException {
+        LatLngMapping mapping =  dongRepository.findById(id,LatLngMapping.class).orElseThrow(()->new NotFoundException(id+"Dong Not Found!"));
+        return mapping;
     }
 
 }

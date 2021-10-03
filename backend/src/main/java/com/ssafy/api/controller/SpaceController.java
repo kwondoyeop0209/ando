@@ -1,16 +1,14 @@
 package com.ssafy.api.controller;
 
 
-import com.ssafy.api.response.cctv.SpaceCorrelationGetRes;
-import com.ssafy.api.response.dong.CountByDongGetRes;
+import com.ssafy.api.response.space.SpaceCorrelationGetRes;
+import com.ssafy.api.response.space.CountByDongGetRes;
 import com.ssafy.api.service.bar.BarService;
-import com.ssafy.api.service.cctv.CCTVService;
 import com.ssafy.api.service.guardhouse.GuardHouseService;
 import com.ssafy.api.service.police.PoliceService;
 import com.ssafy.api.service.securitylight.SecurityLightService;
 import com.ssafy.api.service.space.SpaceService;
 import com.ssafy.db.mapping.BarInfoMapping;
-import com.ssafy.db.mapping.CctvInfoMapping;
 import com.ssafy.db.mapping.GuardHouseInfoMapping;
 import com.ssafy.db.mapping.PoliceInfoMapping;
 import com.ssafy.db.mapping.SecurityLightInfoMapping;
@@ -35,8 +33,6 @@ public class SpaceController {
     @Autowired
     SpaceService spaceService;
     @Autowired
-    CCTVService cctvService;
-    @Autowired
     BarService barService;
     @Autowired
     PoliceService policeService;
@@ -45,16 +41,6 @@ public class SpaceController {
     @Autowired
     SecurityLightService securityLightService;
 
-    @ApiOperation(value = "cctv개수 목록", notes = "동별 CCTV 개수 목록", response = List.class)
-    @GetMapping("/cctv")
-    public ResponseEntity<CountByDongGetRes> getCCTVCount() {
-        try {
-            CountByDongGetRes list = spaceService.getSpaceCount("cctv");
-            return new ResponseEntity<CountByDongGetRes>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
     @ApiOperation(value = "bar개수 목록", notes = "동별 bar 개수 목록", response = List.class)
     @GetMapping("/bar")
     public ResponseEntity<CountByDongGetRes> getBarCount() {
@@ -91,28 +77,6 @@ public class SpaceController {
         try {
             CountByDongGetRes list = spaceService.getSpaceCount("light");
             return new ResponseEntity<CountByDongGetRes>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-
-    @ApiOperation(value = "cctv 상세정보 목록", notes = "동별 CCTV 상세정보를 목록으로 반환", response = List.class)
-    @GetMapping("/cctv/{dong}")
-    public ResponseEntity<List<CctvInfoMapping>> getCCTVCount(@PathVariable Long dong) {
-        try {
-            List<CctvInfoMapping> list = cctvService.getCCTVInfoByDongId(dong);
-            return new ResponseEntity<List<CctvInfoMapping>>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-
-    @ApiOperation(value = "cctv 상관관계 정보", notes = "구별 CCTV 개수 목록, 구별 범죄 범거수 목록을 객체로 반환", response = List.class)
-    @GetMapping("/cctv/graph")
-    public ResponseEntity<SpaceCorrelationGetRes> getCCTVCorrelation() {
-        try {
-            SpaceCorrelationGetRes list = cctvService.getCCTVCorrelation();
-            return new ResponseEntity<SpaceCorrelationGetRes>(list, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
