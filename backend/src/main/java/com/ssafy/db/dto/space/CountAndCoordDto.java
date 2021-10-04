@@ -10,15 +10,17 @@ public class CountAndCoordDto {
     int count;
     double lat;
     double lng;
+    Long dongId;
 
     public CountAndCoordDto(){
 
     }
-    public CountAndCoordDto(String dong, int count, double lat, double lng){
+    public CountAndCoordDto(String dong, int count, double lat, double lng, Long dongId){
         this.dongname = dong;
         this.count = count;
         this.lat = lat;
         this.lng = lng;
+        this.dongId = dongId;
     }
 
 }
