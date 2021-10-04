@@ -11,7 +11,9 @@
           <!-- 범죄율 -->
           <div class="el">
             <p class="rateTitle">💡 범죄율</p>
-            <p class="rateDetail">총 {{totalCrime}} 건 중 {{guCrime}}건이 발생</p>
+            <p class="rateDetail">
+              총 {{ totalCrime }} 건 중 {{ guCrime }}건이 발생
+            </p>
             <div class="doughnut">
               <VueSvgGauge
                 class="mini-gauge"
@@ -19,15 +21,17 @@
                 :end-angle="360"
                 :min="0"
                 :max="100"
-                :value="(guCrime/totalCrime)*100"
+                :value="(guCrime / totalCrime) * 100"
                 :separator-step="0"
                 :scale-interval="0"
                 :inner-radius="85"
-                :gauge-color="[{ offset: 0, color: '#2F488A'}]"
+                :gauge-color="[{ offset: 0, color: '#F57272' }]"
                 base-Color="#EEEEEE"
               >
                 <div class="inner-text">
-                  <span>{{Math.round((guCrime/totalCrime)*100,2)}}%</span>
+                  <span>
+                    {{ Math.round((guCrime / totalCrime) * 100, 2) }}%
+                  </span>
                 </div>
               </VueSvgGauge>
             </div>
@@ -35,7 +39,9 @@
           <!-- 검거율 -->
           <div class="el">
             <p class="rateTitle">💡 검거율</p>
-            <p class="rateDetail">총 {{totalArrest}} 건 중 {{guArrest}}건이 발생</p>
+            <p class="rateDetail">
+              총 {{ guCrime }} 건 중 {{ guArrest }}건이 검거
+            </p>
             <div class="doughnut">
               <VueSvgGauge
                 class="mini-gauge"
@@ -43,17 +49,19 @@
                 :end-angle="360"
                 :min="0"
                 :max="100"
-                :value="(guArrest/totalArrest)*100"
+                :value="(guArrest / guCrime) * 100"
                 :separator-step="0"
                 :scale-interval="0"
                 :inner-radius="85"
-                :gauge-color="[{ offset: 0, color: '#F57272'}]"
+                :gauge-color="[{ offset: 0, color: '#6A7DAF' }]"
                 base-Color="#EEEEEE"
               >
                 <!-- 76줄은 단색  80줄은 그라데이션-->
                 <!-- :gauge-color="[{ offset: 0, color: '#de3a21'}, { offset: 100, color: '#f4c009'}]" -->
                 <div class="inner-text">
-                  <span>{{Math.round((guArrest/totalArrest)*100,2)}}%</span>
+                  <span>
+                    {{ Math.round((guArrest / guCrime) * 100, 2) }}%
+                  </span>
                 </div>
               </VueSvgGauge>
             </div>
@@ -64,7 +72,7 @@
             <vue-highcharts
               :options="chartTypeOfCrime"
               :highcharts="Highcharts"
-              ref="Highcharts"
+              ref="chartTypeOfCrime"
               style="height: 400px"
             ></vue-highcharts>
           </div>
@@ -75,10 +83,10 @@
                 class="crime-item"
                 v-for="(crime, idx) in crimeTypeList"
                 :key="crime.type"
-                @click="onCrimeDetail(crime.type,crime.typeIdx)"
+                @click="onCrimeDetail(crime.type, crime.typeIdx)"
               >
-                <div class="crimeDetail">{{ idx + 1 }}</div>
-                <div class="crime-content">
+                <div class="crime-detail" :id="'detail' + crime.typeIdx">{{ idx + 1 }}</div>
+                <div class="crime-content" :id="'content' + crime.typeIdx">
                   <p style="flex: 1; text-align: center">{{ crime.type }}</p>
                   <p>|</p>
                   <p style="flex: 1; text-align: center">{{ crime.num }}건</p>
@@ -86,30 +94,32 @@
               </div>
             </div>
           </div>
-          
           <!-- 유형에 따른 요일, 시간, 장소 -->
           <div class="el">
-            <p class="rateTitle">💡 {{type5Name}} 이/가 높은 요일</p>
+            <p class="rateTitle">💡 <span style="color: #F57272; font-weight: 700">{{ type5Name }}</span> 이/가 높은 요일</p>
             <highcharts :options="highestDay" style="height: 300px"></highcharts>
           </div>
           <div class="el">
-            <p class="rateTitle">💡 {{type5Name}} 이/가 높은 시간</p>
+            <p class="rateTitle">💡 <span style="color: #F57272; font-weight: 700">{{ type5Name }}</span> 이/가 높은 시간</p>
             <highcharts :options="highestTime" style="height: 300px"></highcharts>
           </div>
           <div class="el">
-            <p class="rateTitle">💡{{type5Name}} 이/가 높은 발생 장소</p>
+            <p class="rateTitle">💡 <span style="color: #F57272; font-weight: 700">{{ type5Name }}</span> 이/가 높은 발생 장소</p>
             <!-- <highcharts :options="highestSpot" style="height: 300px"></highcharts> -->
             <vue-highcharts
               :options="highestSpot"
               :highcharts="Highcharts"
-              ref="Highcharts"
-              style="height: 400px"
+              ref="highestSpot"
             ></vue-highcharts>
           </div>
         </div>
       </div>
       <div class="arrow-area" @click="extend">
-        <img class="arrow" :src="require(`@/assets/${arrowImg}.png`)" :width="20" />
+        <img
+          class="arrow"
+          :src="require(`@/assets/${arrowImg}.png`)"
+          :width="20"
+        />
       </div>
       <!-- 오른쪽 범죄예측 모달창 -->
       <div style="flex: 1"></div>
@@ -174,13 +184,13 @@ export default {
       expandWidth: "450px",
       arrowImg: "ic-arrow-right",
 
-      guSelected:"",
+      guSelected: "",
       totalCrime: "",
       guCrime: "",
       totalArrest: "",
-      guArrest:"",
-      type5Name:"살인",
-      type5Idx:"1",
+      guArrest: "",
+      type5Name: "",
+      type5Idx: "",
 
       chartTypeOfCrime: {
         chart: {
@@ -188,7 +198,7 @@ export default {
           type: "variablepie",
         },
         title: {
-          text: ""
+          text: "",
         },
         credits: {
           enabled: false,
@@ -198,9 +208,7 @@ export default {
             innerSize: "20%",
             zMin: 0,
             name: "범죄유형",
-            
-            data: [
-            ],
+            data: [],
           },
         ],
       },
@@ -212,6 +220,7 @@ export default {
         title: {
           text: "",
         },
+        colors: ["#6A7DAF"],
         xAxis: {
           categories: ["월", "화", "수", "목", "금", "토", "일"],
           labels: {
@@ -260,11 +269,12 @@ export default {
       highestTime:{
         chart: {
           backgroundColor: "rgba(0,0,0,0)",
-          type: 'areaspline'
+          type: 'areaspline',
         },
         title: {
           text: "",
         },
+        colors: ["#6A7DAF"],
         xAxis: {
           categories: [
             '00:00~02:59',
@@ -320,7 +330,7 @@ export default {
       },
       highestSpot: {
         chart: {
-          renderTo : 'highestSpot',
+          renderTo: 'highestSpot',
           backgroundColor: "rgba(0,0,0,0)",
           type: 'column',
           options3d: {
@@ -328,16 +338,16 @@ export default {
             alpha: 15,
             beta: 15,
             depth: 50,
-            viewDistance: 25
-          }
+            viewDistance: 25,
+          },
         },
         title: {
           text: "",
         },
         plotOptions: {
           column: {
-            depth: 25
-          }
+            depth: 25,
+          },
         },
         legend: {
           enabled: false,
@@ -345,8 +355,11 @@ export default {
         credits: {
           enabled: false,
         },
+        colors: ["#6A7DAF"],
         xAxis: {
-          categories: [],
+          categories: [
+            'PC방', '고속도로', '공사장광산', '공장', '공중화장실', '공지', '구금장소', '금융기관', '기타', '기타교통수단내', '노상', '단독주택', '대형할인매장', '백화점', '부대', '사무실', '산야', '상점', '숙박업소 목욕탕', '슈퍼마켓', '시장노점', '아파트 연립다세대', '역대합실', '유원지', '유흥접객업소', '의료기관', '종교기관', '주차장', '지하철', '창고', '편의점', '학교', '해상', '흥행장'
+          ],
           gridLineColor: "rgba(0,0,0,0)",
           labels: {
             style: {
@@ -362,7 +375,7 @@ export default {
               color: "#ffffff",
             },
           },
-          gridLineColor: "rgba(0,0,0,0)",
+          gridLineColor: "rgb(255, 255, 255)",
           labels: {
             style: {
               color: "#ffffff",
@@ -370,8 +383,8 @@ export default {
           },
         },
         tooltip: {
-            shared: true,
-            valueSuffix: ' 건'
+          shared: true,
+          valueSuffix: ' 건',
         },
         series: [
           {
@@ -381,255 +394,69 @@ export default {
         ]
       },
 
-      crimeTypeList:[],
-      predictList:[],
+      crimeTypeList: [],
+      predictList: [],
     };
-  },
-  mounted(){
-    this.onCrimeDetail("살인","1");
   },
   watch: {
     gu: function (val) {
-      //구가 바뀌면 다시 통신
-      this.guSelected=this.gu;
-      if(val!="전체"){
-      //범죄율, 검거율
-      console.log(val);
-      let type55 = this.$refs.Highcharts;
-      $axios
-      .get("/crime/rate",{
-        params:{
-          gu: this.gu,
-          year : this.year,
-        }
-      })
-      .then((response) =>{
-        this.totalCrime=response.data.getRateDto.totalCrimeCount
-        this.guCrime=response.data.getRateDto.guCrimeCount
-        this.totalArrest=response.data.getRateDto.totalArrestCount
-        this.guArrest=response.data.getRateDto.guArrestCount
-        console.log(response.data);
-      })
-      .catch(() => {
-        console.log("오류가 발생했습니다.");
-      });
-
-      //예측분석
-      $axios
-      .get("/crime/forecast/"+this.gu,{
-        params:{
-          sigungu: this.gu,
-        }
-      })
-      .then((response) =>{
-        this.predictList = response.data.list.map(
-          (item)=>{
-            return{
-              type:item.crimeType,
-              day:item.day,
-              spot:item.spot,
-              time:item.time,
-              idx:item.prtds,
-            };
-          }
-        )
-        console.log(response.data);
-      })
-      .catch(() => {
-        console.log("오류가 발생했습니다.");
-      });
-      
-      //범죄유형
-      $axios
-      .get("/crime",{
-        params:{
-          gu: this.gu,
-          year : this.year,
-        }
-      })
-      .then((response) =>{
-        let len = 1000;
-
-        const crimeType = response.data.list.map(
-          (item, idx) => {
-            return {
-              name: item.crimeType,
-              y: item.count,
-              z: len-=100,
-              color: chartColor[(idx+2)%5],
-            };
-          }
-        );
-        console.log(response.data);
-        type55.addSeries({data:crimeType})
-        
-        this.crimeTypeList = response.data.list.map(
-          (item)=>{
-            return{
-              type:item.crimeType,
-              num:item.count,
-              typeIdx:item.crimeTypeId,
-            };
-          }
-        )
-        console.log(response.data);
-      })
-      .catch(() => {
-        console.log("오류가 발생했습니다.");
-      });
-
-      //장소
-      $axios
-      .get("/crime/spot",{
-        params:{
-          type: this.type5Idx,
-          year : this.year,
-        }
-      })
-      .then((response) =>{
-        const crimeSpot = response.data.list.map(
-          (item) => {
-            return {
-              categories:item.spot,
-              y: item.count,
-            };
-          }
-        );
-        console.log(response.data);
-        type55.addSeries({data:crimeSpot})
-      })
-      .catch(() => {
-        console.log("오류가 발생했습니다.");
-      });
-      
-
+      this.guSelected = this.gu;
       //년도 초기화해야함 => 2020년으로
       this.$emit("initYear");
+
+      this.isPredict = false;
+
+      if (val != "전체") {
+        //범죄율, 검거율
+        this.getCrimeArrestCount();
+
+        //범죄 유형
+        this.getCrimeType();
+
+        //예측분석
+        this.getCrimePrediction();
       }
     },
-    year: function (val) {
-      let type66 =this.$refs.Highcharts;
-      //년도가 바뀌면 다시 통신
-      $axios
-      .get("/crime/rate",{
-        params:{
-          gu: this.gu,
-          year : this.year,
-        }
-      })
-      .then((response) =>{
-        this.totalCrime=response.data.getRateDto.totalCrimeCount
-        this.guCrime=response.data.getRateDto.guCrimeCount
-        this.totalArrest=response.data.getRateDto.totalArrestCount
-        this.guArrest=response.data.getRateDto.guArrestCount
-        console.log(response.data);
-      })
-      .catch(() => {
-        console.log("오류가 발생했습니다.");
-      });
-      console.log(val);
+    year: function () {
+      this.isPredict = false;
+      //범죄율, 검거율
+      this.getCrimeArrestCount();
 
-      //요일
-      $axios
-      .get("/crime/day",{
-        params:{
-          type: this.type5Idx,
-          year : this.year,
-        }
-      })
-      .then((response) =>{
-        this.highestDay.series[0].data = response.data.list.map(
-          (item) => {
-            return {
-              y: item.count,
-            };
-          }
-        );
-        console.log(response.data);
-      })
-      .catch(() => {
-        console.log("오류가 발생했습니다.");
-      });
-      
-      //시간
-      $axios
-      .get("/crime/time",{
-        params:{
-          type: this.type5Idx,
-          year : this.year,
-        }
-      })
-      .then((response) =>{
-        this.highestTime.series[0].data = response.data.list.map(
-          (item) => {
-            return {
-              y: item.count,
-            };
-          }
-        );
-        console.log(response.data);
-      })
-      .catch(() => {
-        console.log("오류가 발생했습니다.");
-      });
-      
-      //년도 바뀌었을 때 update,
-      //그래프 위에 덮여서 그려짐.
+      //범죄 유형
+      this.getCrimeType();
 
-      //장소
-      $axios
-      .get("/crime/spot",{
-        params:{
-          type: this.type5Idx,
-          year : this.year,
-        }
-      })
-      .then((response) =>{
-        const crimeSpot = response.data.list.map(
-          (item) => {
-            return {
-              categories:item.spot,
-              y: item.count,
-            };
-          }
-        );
-        console.log(response.data);
-        type66.addSeries({data:crimeSpot})
-      })
-      .catch(() => {
-        console.log("오류가 발생했습니다.");
-      });
-      
+      //예측분석
+      this.getCrimePrediction();
     },
+  },
+  mounted() {
+    this.gu = 1;
+    this.year = "2020";
   },
   methods: {
     onClick(selected) {
       this.isPredict = true;
-      console.log(selected);
       //예측분석
       $axios
-      .get("/crime/forecast/"+selected,{
-        params:{
-          sigungu: selected,
-        }
-      })
-      .then((response) =>{
-        this.predictList = response.data.list.map(
-          (item)=>{
+        .get("/crime/forecast/" + selected, {
+          params: {
+            sigungu: selected,
+          },
+        })
+        .then((response) =>{
+          this.predictList = response.data.list.map((item) => {
             return{
-              type:item.crimeType,
-              day:item.day,
-              spot:item.spot,
-              time:item.time,
-              idx:item.prtds,
+              type: item.crimeType,
+              day: item.day,
+              spot: item.spot,
+              time: item.time,
+              idx: item.prtds,
             };
-          }
-        )
-        console.log(response.data);
-      })
-      .catch(() => {
-        console.log("오류가 발생했습니다.");
-      });
+          });
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
     },
     offClick() {
       this.isPredict = false;
@@ -645,76 +472,171 @@ export default {
       this.isExpand = !this.isExpand;
     },
     onCrimeDetail(name, idx) {
-      this.type5Name=name;
-      this.type5Idx=idx;
+      this.type5Name = name;
+      this.type5Idx = idx;
+      //색 바꾸기
+      document.getElementsByClassName("crime-detail").forEach((item) => {
+        item.style.backgroundColor = "#B8B8B8";
+      });
+      document.getElementsByClassName("crime-content").forEach((item) => {
+        item.style.backgroundColor = "#B8B8B8";
+      });
+      document.getElementById("detail" + idx).style.backgroundColor = "#F57272";
+      document.getElementById("content" + idx).style.backgroundColor = "#F57272";
 
       //요일
-      $axios
-      .get("/crime/day",{
-        params:{
-          type: this.type5Idx,
-          year : this.year,
-        }
-      })
-      .then((response) =>{
-        this.highestDay.series[0].data = response.data.list.map(
-          (item) => {
-            return {
-              y: item.count,
-            };
-          }
-        );
-        console.log(response.data);
-      })
-      .catch(() => {
-        console.log("오류가 발생했습니다.");
-      });
+      this.getCrimeDay();
       //시간
-      $axios
-      .get("/crime/time",{
-        params:{
-          type: this.type5Idx,
-          year : this.year,
-        }
-      })
-      .then((response) =>{
-        this.highestTime.series[0].data = response.data.list.map(
-          (item) => {
-            return {
-              y: item.count,
-            };
-          }
-        );
-        console.log(response.data);
-      })
-      .catch(() => {
-        console.log("오류가 발생했습니다.");
-      });
-
+      this.getCrimeTime();
       //장소
+      this.getCrimeSpot();
+    },
+    getCrimeArrestCount() {
+      //범죄율, 검거율
       $axios
-      .get("/crime/spot",{
-        params:{
-          type: this.type5Idx,
-          year : this.year,
-        }
-      })
-      .then((response) =>{
-        this.highestSpot.xAxis.categories = response.data.list.map(
-          (item) => item.spot
-        );
-        this.highestSpot.series[0].data = response.data.list.map(
-          (item) => {
+        .get("/crime/rate", {
+          params: {
+            gu: this.gu,
+            year: this.year,
+          },
+        })
+        .then((response) => {
+          this.totalCrime = response.data.getRateDto.totalCrimeCount;
+          this.guCrime = response.data.getRateDto.guCrimeCount;
+          this.totalArrest = response.data.getRateDto.totalArrestCount;
+          this.guArrest = response.data.getRateDto.guArrestCount;
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    getCrimeType() {
+      let chartTypeOfCrime = this.$refs.chartTypeOfCrime;
+      chartTypeOfCrime.removeSeries();
+      //범죄유형
+      $axios
+        .get("/crime", {
+          params: {
+            gu: this.gu,
+            year: this.year,
+          },
+        })
+        .then((response) => {
+          let len = response.data.list.length * 200;
+
+          const crimeType = response.data.list.map((item, idx) => {
+            return {
+              name: item.crimeType,
+              y: item.count,
+              z: (len -= 150),
+              color: chartColor[idx % 5],
+            };
+          });
+          chartTypeOfCrime.addSeries({ data: crimeType });
+
+          this.crimeTypeList = response.data.list.map((item) => {
+            return {
+              type: item.crimeType,
+              num: item.count,
+              typeIdx: item.crimeTypeId,
+            };
+          });
+
+          //1위 유형
+          this.type5Name = response.data.list[0].crimeType;
+          this.type5Idx = response.data.list[0].crimeTypeId;
+
+          this.onCrimeDetail(this.type5Name, this.type5Idx);
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    getCrimeDay() {
+      $axios
+        .get("/crime/day", {
+          params: {
+            type: this.type5Idx,
+            year: this.year,
+          },
+        })
+        .then((response) => {
+          this.highestDay.series[0].data = response.data.list.map((item) => {
             return {
               y: item.count,
             };
-          }
-        );
-        console.log(response.data);
-      })
-      .catch(() => {
-        console.log("오류가 발생했습니다.");
-      });
+          });
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    getCrimeTime() {
+      $axios
+        .get("/crime/time", {
+          params: {
+            type: this.type5Idx,
+            year: this.year,
+          },
+        })
+        .then((response) => {
+          this.highestTime.series[0].data = response.data.list.map((item) => {
+            return {
+              y: item.count,
+            };
+          });
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    getCrimeSpot() {
+      const highestSpot = this.$refs.highestSpot;
+      highestSpot.removeSeries();
+      $axios
+        .get("/crime/spot", {
+          params: {
+            type: this.type5Idx,
+            year: this.year,
+          },
+        })
+        .then((response) => {
+          this.highestSpot.xAxis.categories = response.data.list.map(
+            (item) => item.spot
+          );
+          const data = response.data.list.map((item) => {
+            return {
+              name: item.spot,
+              y: item.count,
+            };
+          });
+          highestSpot.addSeries({ data: data });
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    getCrimePrediction() {
+      $axios
+        .get("/crime/forecast/" + this.gu, {
+          params: {
+            sigungu: this.gu,
+          },
+        })
+        .then((response) => {
+          this.predictList = response.data.list.map((item) => {
+            return{
+              type: item.crimeType,
+              day: item.day,
+              spot: item.spot,
+              time: item.time,
+              idx: item.prtds,
+            };
+          });
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
     },
   },
 };
@@ -826,7 +748,10 @@ export default {
   display: flex;
   margin-bottom: 8px;
 }
-.crimeDetail {
+.crime-item:hover {
+  cursor: pointer;
+}
+.crime-detail {
   background-color: #B8B8B8;
   padding: 8px 12px;
   border-radius: 4px;
@@ -840,12 +765,12 @@ export default {
   display: flex;
 }
 th {
-  padding:10px;
+  padding: 10px;
   background-color: #B8B8B8;
   border-radius: 5px;
 }
 td {
-  padding:10px;
+  padding: 10px;
   background-color: #FF9D9D;
   border-radius: 5px;
   text-align: center;
