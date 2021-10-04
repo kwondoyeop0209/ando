@@ -51,6 +51,8 @@ public class SpaceController {
     @ApiOperation(value = "space type(cctv, bar, police, light, guard) 개수 목록", notes = "동별 space type(cctv, bar, police, light, guard)  개수 목록", response = List.class)
     @GetMapping("")
     public ResponseEntity<CountByDongGetRes> getSpaceCountList(@RequestParam String type) {
+        if(!type.equals("cctv") && !type.equals("guard") && !type.equals("police") && !type.equals("bar") && !type.equals("light"))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
             CountByDongGetRes list = spaceService.getSpaceCount(type);
             return new ResponseEntity<CountByDongGetRes>(list, HttpStatus.OK);
@@ -62,6 +64,8 @@ public class SpaceController {
     @ApiOperation(value = "space type(cctv, bar, police, light, guard) 상세정보 목록", notes = " space type(cctv, bar, police, light, guard) 상세정보를 목록으로 반환", response = List.class)
     @GetMapping("/detail")
     public ResponseEntity<?> getSpaceInfo(@RequestParam String type, @RequestParam Long id) {
+        if(!type.equals("cctv") && !type.equals("guard") && !type.equals("police") && !type.equals("bar") && !type.equals("light"))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if(id < 1 || id > 426) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
             if(type.equals("cctv")) {
@@ -90,6 +94,8 @@ public class SpaceController {
     @ApiOperation(value = "space 상관관계 정보", notes = "구별 space type(cctv, bar, police, light, guard) 개수 목록, 구별 범죄 범거수 목록/ 발생수 목록을 객체로 반환", response = List.class)
     @GetMapping("/graph")
     public ResponseEntity<SpaceCorrelationGetRes> getSpaceCorrelation(@RequestParam String type) {
+        if(!type.equals("cctv") && !type.equals("guard") && !type.equals("police") && !type.equals("bar") && !type.equals("light"))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
             SpaceCorrelationGetRes list = spaceService.getSpaceCorrelation(type);
             return new ResponseEntity<SpaceCorrelationGetRes>(list, HttpStatus.OK);
@@ -101,6 +107,8 @@ public class SpaceController {
     @ApiOperation(value = "space type 동별, 구별 개수 정보", notes = "해당 동,구 space type 개수 반환", response = List.class)
     @GetMapping("/count")
     public ResponseEntity<SpaceCountGetRes> getSpaceCount(@RequestParam String type, @RequestParam Long id) {
+        if(!type.equals("cctv") && !type.equals("guard") && !type.equals("police") && !type.equals("bar") && !type.equals("light"))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if(id < 1 || id > 426) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
             SpaceCountGetRes spaceCountGetRes = spaceService.getSpaceCount(type, id);
@@ -113,6 +121,8 @@ public class SpaceController {
     @ApiOperation(value = "space 주변 순위 5개", notes = "해당 동 space 개수 순위 주변 5개 개수정보", response = List.class)
     @GetMapping("/ranking")
     public ResponseEntity<Space5RankingGetRes> getSpace5Ranking(@RequestParam String type, @RequestParam Long id) {
+        if(!type.equals("cctv") && !type.equals("guard") && !type.equals("police") && !type.equals("bar") && !type.equals("light"))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         if(id < 1 || id > 426) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
             Space5RankingGetRes spaceCountGetRes = spaceService.getSpaceCount5List(type,id);
