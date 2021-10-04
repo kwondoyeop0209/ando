@@ -116,4 +116,17 @@ export default {
   margin-left: 8px;
   padding: 8px 16px;
 }
+.select::-webkit-scrollbar {
+  width: 10px;
+}
+.select::-webkit-scrollbar-thumb {
+  background-color: darkgray;
+  border-radius: 24px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+.select::-webkit-scrollbar-track {
+  background-color: #454d5e;
+  border-radius: 24px;
+}
 </style>
