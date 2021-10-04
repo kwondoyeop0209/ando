@@ -19,7 +19,8 @@
 
        <!-- 갯수 보여주는 공간 -->
        <div class = "space-info" v-show="isSpace">
-      <p style="margin-bottom:10px; font-size:30px; font-weight: 600"> {{space}} 비율 <br> </p>
+      <p style="margin-bottom:10px; font-size:30px; font-weight: 600">{{selectDong}}<span style="font-size: 20px">의</span>
+      {{space}} 비율 <br> </p>
       <p style="margin-bottom:10px;">{{selectGu.gu}} 내
         <span style="font-size:20px; font-weight: 400"> 총 {{this.spaceData.guCnt}}개 중
           <br> {{this.spaceData.dongCnt}}개 </span> 설치가 되어 있어요!
@@ -33,7 +34,7 @@
                 :end-angle="360"
                 :min="0"
                 :max="100"
-                :value="(this.spaceData.guCnt / this.spaceData.dongCnt)"
+                :value="(this.spaceData.dongCnt / this.spaceData.guCnt)*100"
                 :separator-step="0"
                 :scale-interval="0"
                 :inner-radius="85"
@@ -41,23 +42,25 @@
                 base-Color="#EEEEEE"
               >
                 <div class="inner-text" style="padding:45%">
-                  <span >{{Math.round((this.spaceData.guCnt / this.spaceData.dongCnt),2)}}%</span>
+                  <span >{{Math.round((this.spaceData.dongCnt / this.spaceData.guCnt)*100,2)}}%</span>
                 </div>
               </VueSvgGauge>
             </div> <br>
-
+        
        <div>
         <p style="margin-bottom:10px; font-size:20px; font-weight: 400"> {{selectGu.gu}} 내에서 {{this.rankData.ranking}}위를 차지했어요! <br> </p>
       </div>
-
+      
       <!-- 5개 순위 보여주는 그래프(값 수정 필요) -->
       <div class="rank-info">
        <highcharts
               :options="highestSpot"
               :highcharts="Highcharts"
               ref="Highcharts"
-              style="height: 400px"
+              style="height: 200px"
             ></highcharts>
+
+            <p style="padding-left: 30%"> &lt; 주변 환경 요소 Top5&gt; </p><br><br>
       </div>
 
       <!-- 상관관계 보여주는 공간 (수정 필요) -->
@@ -146,7 +149,7 @@ export default {
           enabled: false,
         },
         xAxis: {
-          categories: ["a동", "b동", "c동", "d동", "e동"],
+          categories: [],
           gridLineColor: "rgba(0,0,0,0)",
           labels: {
             style: {
@@ -157,7 +160,7 @@ export default {
         },
         yAxis: {
           title: {
-            text: "건수",
+            text: "갯수",
             style: {
               color: "#ffffff",
             },
@@ -171,12 +174,12 @@ export default {
         },
         tooltip: {
             shared: true,
-            valueSuffix: ' 건'
+            valueSuffix: ' 개'
         },
         series: [
           {
-            name: '발생건수',
-            data: [29.9, 71.5, 106.4, 129.2, 144.0],
+            name: '갯수',
+            data: [],
           }
         ]
       },
@@ -185,7 +188,7 @@ export default {
   },
 
   mounted() {
-    //처음에 구 가져오기 위한 코드
+    // 검색을 위해 구 목록 리턴
       axios
       .get("http://j5a305.p.ssafy.io:8080/api/v1/main/sigungu")
       .then(respon => {
@@ -203,7 +206,7 @@ export default {
   methods: {
     changeGu() {
        const guSelect = this.selectGu;
-      if (guSelect === "자치구") {
+      if (guSelect == "자치구") {
         this.isMain = true;
         this.isGu = false;
       } else {
@@ -212,8 +215,6 @@ export default {
       }
 
       //선택한 구랑 구 아이디 저장
-      //console.log(this.selectGu.gu)
-      //console.log(this.GuList)
       for (let i=0; i<this.GuList.length; i++) {
         if(this.GuList[i].gu == guSelect.gu) {
           const GuID =  this.GuList[i].id;
@@ -221,6 +222,7 @@ export default {
           //console.log(this.selectGuID)
         }
       }
+      
     },
 
     getSpaceList(val) {
@@ -238,31 +240,53 @@ export default {
 
       //환경 지수의 갯수 구하는 부분(구별, 동별) 
       axios
-      .get("http://j5a305.p.ssafy.io:8080/api/v1/space/" + val + "/count/" + this.selectDongID)
+      .get("http://j5a305.p.ssafy.io:8080/api/v1/space/count?id=" + this.selectDongID + "&type=" + val)
       .then(re => {
         this.spaceData = re.data
         console.log(this.spaceData)
+        
       })
       .catch(e => {
           console.log('error : ', e)
-          })
+      })
     
 
-    //순위 구하는 부분
+    // 해당 동 space 개수 순위 주변 5개 개수정보
+    
       axios
-      .get("http://j5a305.p.ssafy.io:8080/api/v1/space/" + val + "/ranking/" + this.selectDongID)
+      .get("http://j5a305.p.ssafy.io:8080/api/v1/space/ranking?id=" + this.selectDongID + "&type=" + val)
       .then(r => {
+        //x축 y축 초기화를 시켜줘야 그래프가 계속 5개씩 나옴!
+        this.highestSpot.series[0].data = []
+        this.highestSpot.xAxis.categories = []
         this.rankData = r.data
         console.log(this.rankData)
+        const fiveDong = this.rankData.list
+        for(var i=0; i<fiveDong.length; i++) {
+          this.highestSpot.xAxis.categories.push(fiveDong[i].dongname);
+          this.highestSpot.series[0].data.push(fiveDong[i].count);
+
+        //특정 값에 대한 색상 지정이 잘 안돼..
+          if(this.highestSpot.xAxis.categories[i] == this.selectDong) {
+            this.highestSpot.chart.colors = "rgba(255,0,0,0.2)"
+          }
+
+        }
+        //console.log(this.rankData)
+        //console.log(this.highestSpot.xAxis.categories)
+       
+
       })
       .catch(e => {
           console.log('error : ', e)
-          })
+      })
+
+      
     
     
-    //그래프 구하는 부분()
+    //space 상관관계 정보
       axios
-      .get("http://j5a305.p.ssafy.io:8080/api/v1/space/" + val + "/graph")
+      .get("http://j5a305.p.ssafy.io:8080/api/v1/space/graph?type=" + this.selectDongID)
       .then(rs => {
         this.graphData = rs.data
         console.log(this.graphData)
@@ -270,16 +294,18 @@ export default {
       .catch(e => {
           console.log('error : ', e)
           })
+
+        
     },
 
   },
 
   watch: {
       selectGuID: function (val) {
+        
         // 해당 구의 행정동 리스트 가져오기
-        this.DongList = []
-        //console.log(val)
-        //console.log(this.DongList)
+      this.DongList = []
+      
       axios
       .get("http://j5a305.p.ssafy.io:8080/api/v1/main/dong/" + val)
       .then(respond => {
@@ -290,6 +316,7 @@ export default {
           this.DongList.push(dongName)
         }
         //console.log(this.DongList)
+        
 
         }
       )
@@ -304,12 +331,13 @@ export default {
       console.log(val)
       this.isSpace = true;
       this.selectSpaceName = val;
+      
     },
 
     isSpace: function (val) {
+      //console.log(val)
       if (!val) {
         this.getSpaceList("cctv");
-        this.removeCustom();
       }
     },
 
@@ -332,6 +360,18 @@ export default {
   width: 150px;
   font-size: 16px;
 }
+.doughnut {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-top: 36px;
+}
+
+.mini-gauge {
+  max-width: 50%;
+}
+
 
 
 

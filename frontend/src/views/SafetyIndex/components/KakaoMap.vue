@@ -119,7 +119,7 @@ export default {
     },
     getSpaceList(val) {
       $axios
-        .get(`/space/${val}`)
+        .get("/space?type=" + val)
         .then((response) => {
           this.overlayCustom(response.data.list);
         })
