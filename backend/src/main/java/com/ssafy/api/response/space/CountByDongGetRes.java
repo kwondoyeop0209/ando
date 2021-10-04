@@ -16,7 +16,7 @@ public class CountByDongGetRes {
     public List<CountAndCoordDto> ofCCTV(List<Dong> dongList){
         list = new ArrayList<CountAndCoordDto>();
         for(Dong d : dongList){
-            this.list.add(new CountAndCoordDto(d.getDong(), d.getCctvCnt(),d.getLat(),d.getLng()));
+            this.list.add(new CountAndCoordDto(d.getDong(), d.getCctvCnt(),d.getLat(),d.getLng(),d.getId()));
         }
         return list;
     }
@@ -24,7 +24,7 @@ public class CountByDongGetRes {
     public List<CountAndCoordDto> ofBar(List<Dong> dongList){
         list = new ArrayList<CountAndCoordDto>();
         for(Dong d : dongList){
-            this.list.add(new CountAndCoordDto(d.getDong(), d.getBarCnt(),d.getLat(),d.getLng()));
+            this.list.add(new CountAndCoordDto(d.getDong(), d.getBarCnt(),d.getLat(),d.getLng(),d.getId()));
         }
         return list;
     }
@@ -32,7 +32,7 @@ public class CountByDongGetRes {
     public List<CountAndCoordDto> ofPolice(List<Dong> dongList){
         list = new ArrayList<CountAndCoordDto>();
         for(Dong d : dongList){
-            this.list.add(new CountAndCoordDto(d.getDong(), d.getPoliceCnt(),d.getLat(),d.getLng()));
+            this.list.add(new CountAndCoordDto(d.getDong(), d.getPoliceCnt(),d.getLat(),d.getLng(),d.getId()));
         }
         return list;
     }
@@ -40,7 +40,7 @@ public class CountByDongGetRes {
     public List<CountAndCoordDto> ofGuard(List<Dong> dongList){
         list = new ArrayList<CountAndCoordDto>();
         for(Dong d : dongList){
-            this.list.add(new CountAndCoordDto(d.getDong(), d.getGuardHouseCnt(),d.getLat(),d.getLng()));
+            this.list.add(new CountAndCoordDto(d.getDong(), d.getGuardHouseCnt(),d.getLat(),d.getLng(),d.getId()));
         }
         return list;
     }
@@ -48,7 +48,7 @@ public class CountByDongGetRes {
     public List<CountAndCoordDto> ofLight(List<Dong> dongList){
         list = new ArrayList<CountAndCoordDto>();
         for(Dong d : dongList){
-            this.list.add(new CountAndCoordDto(d.getDong(), d.getLightCnt(),d.getLat(),d.getLng()));
+            this.list.add(new CountAndCoordDto(d.getDong(), d.getLightCnt(),d.getLat(),d.getLng(),d.getId()));
         }
         return list;
     }
