@@ -1,8 +1,9 @@
 <template>
   <div class="safety-detail">
+
     <!-- 순위 테이블 -->
     <div v-show="isRankSafety">
-      <p>안전 지수</p><br />
+      <p style="font-size:30px; font-weight: 600">💡 안전 지수</p><br />
       <div class="rank-table">
         <div
           class="rank-item"
@@ -19,9 +20,10 @@
         </div>
       </div>
     </div>
+
     <!-- 표에서 셀 클릭하면 나오는 상세화면 -->
     <div v-show="isDongSafety">
-      <span style="font-size:24px; font-weight: 400">{{dong}} 안전지수</span>
+      <span style="font-size:25px; font-weight: 400">{{dong}} 안전지수</span>
       <br /><br />
       <div class="doughnut">
         <VueSvgGauge
@@ -43,14 +45,15 @@
         </VueSvgGauge>
       </div>
       <div class=rankDetail >
-        <p style="margin-bottom:10px">구 내에서 <span style="font-size:30px; font-weight: 600">{{this.rankingData.rankingOfGu}} 위</span></p>
-        <p>전체에서 <span style="font-size:30px; font-weight: 600">{{this.rankingData.rankingOfSeoul}} 위</span></p>
+        <p style="margin-bottom:10px">{{this.guData}} 내에서 <span style="font-size:30px; font-weight: 600">{{this.rankingData.rankingOfGu}}위</span></p>
+        <p>전체에서 <span style="font-size:30px; font-weight: 600">{{this.rankingData.rankingOfSeoul}}위</span></p>
       </div><br />
       <hr class="one"><br />
       <div>
-        <!-- Crime에 똑같은 거 있음 복붙하면 됨 -->
-        <p> CCTV 보유 현황 <span style="font-size:30px; font-weight: 600">{{this.spaceData.cctvRanking}} 위</span></p>
-        <p> 유흥지 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.barRanking}} 위</span></p>
+
+        <!-- 차트? 그거 추가해야함!! -->
+        <p> CCTV 보유 현황 <span style="font-size:30px; font-weight: 600">{{this.spaceData.cctvRanking}}위</span></p>
+        <p> 유흥지 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.barRanking}}위</span></p>
         <p> 파출소 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.policeRanking}}위</span></p>
         <p> 보안등 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.lightRanking}}위</span></p>
       </div>
@@ -78,6 +81,7 @@ export default {
       dongID: "",
       rankingData:[],
       spaceData:[],
+      guData:"",
       safetyIndex: "",
       safetyScore: {
         title: {
@@ -131,11 +135,12 @@ export default {
     };
   },
   mounted() {
+    //안전지수 상위 10개 목록
       axios
       .get("http://j5a305.p.ssafy.io:8080/api/v1/safety/top")
       .then(res => {
         this.rankList = res.data.getTopSafetyListDtoList
-        console.log(this.rankList)
+        //console.log(this.rankList)
       })
     
   },
@@ -147,12 +152,12 @@ export default {
       this.isDongSafety = true;
       this.isRankSafety = false;
 
-      //안전지수 순위 보여주기
+      //해당 동의 안전지수, 구 순위, 전체 순위 반환
       axios
       .get("http://j5a305.p.ssafy.io:8080/api/v1/safety/point/"+ this.dongID)
       .then(res => {
         this.rankingData = res.data
-        console.log(this.rankingData)
+        //console.log(this.rankingData)
       })
       .catch(e => {
           console.log('error : ', e)
@@ -164,12 +169,27 @@ export default {
       .get("http://j5a305.p.ssafy.io:8080/api/v1/safety/detail/"+ this.dongID)
       .then(response => {
         this.spaceData = response.data
-        console.log(this.spaceData)
+        //console.log(this.spaceData)
+      })
+      .catch(e => {
+          console.log('error : ', e)
+          })
+
+
+      // 해당 동이 속해있는 구 이름 반환
+      axios
+      .get("http://j5a305.p.ssafy.io:8080/api/v1/safety/gu/"+ this.dongID)
+      .then(respond => {
+        this.guData = respond.data
+        //console.log(this.guData)
       })
       .catch(e => {
           console.log('error : ', e)
           })
     }
+
+
+
   },
 };
 </script>
@@ -190,6 +210,8 @@ export default {
   margin-left: 8px;
   flex: 1;
   display: flex;
+  font-size: 20px;
+  font-weight: 200;
 }
 .doughnut{
   margin-top: 50px;
