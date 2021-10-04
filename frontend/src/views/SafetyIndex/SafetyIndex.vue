@@ -1,8 +1,8 @@
 <template>
   <div class="safety-index">
     <div class="info">
-      <safety-detail v-show="isSafety"  />
-      <space-detail v-show="isSpace" :space="space"/>
+      <safety-detail v-show="isSafety" :isSafety="isSafety" :dong="dong" :dongId="dongId" @selectDongId="selectDongId" />
+      <space-detail v-show="isSpace" :isSpace="isSpace" :space="space" :dong="dong" :dongId="dongId" @selectDongId="selectDongId" />
     </div>
     <div class="map">
       <!-- 탭-->
@@ -20,8 +20,7 @@
           <p class="tab-items" @click="selectSpace('guard')">🏠 지킴이집</p>
         </div>
       </div>
-      <kakao-map :space="space" :isSpace="isSpace" />
-    
+      <kakao-map :space="space" :isSpace="isSpace" :dongId="dongId" @selectDong="selectDong" @selectDongId="selectDongId"/>
     </div>
   </div>
 </template>
@@ -43,13 +42,15 @@ export default {
       isSpace: false,
       isCctv: false,
       space: "",
+      dong: "",
+      dongId: -1,
     };
   },
   methods: {
     onSpace() {
       this.isSpace = true;
       this.isSafety = false;
-      this.space = "";
+      this.space = "cctv";
     },
     onSafety() {
       this.isSpace = false;
@@ -59,6 +60,12 @@ export default {
     selectSpace(val) {
       this.space = val;
       console.log(val);
+    },
+    selectDong(val) {
+      this.dong = val;
+    },
+    selectDongId(val) {
+      this.dongId = val;
     },
   },
 };
@@ -92,8 +99,9 @@ export default {
   background-color: #454d5e;
   margin-left: 16px;
   border-radius: 8px;
-  padding: 8px 24px;
+  padding: 8px 12px;
   align-items: center;
+  box-shadow: 0px 0px 16px 3px rgba(26, 31, 41, 0.45);
 }
 .tab-items {
   margin: 0 8px;
@@ -106,7 +114,8 @@ export default {
   background-color: #454d5e;
   margin-left: 16px;
   border-radius: 8px;
-  padding: 0 24px;
+  padding: 0 12px;
   align-items: center;
+  box-shadow: 0px 0px 16px 3px rgba(26, 31, 41, 0.45);
 }
 </style>

@@ -3,18 +3,18 @@
     <!-- 구 동 선택하는 공간 -->
     <div class="select-region">
       <select class="select" @change="changeGu" v-model="selectGu">
-              <option selected value="자치구">자치구</option>
-              <option v-for="(gu, idx) in GuList" :key="idx" :value="gu">
-                {{ gu.gu }}
-              </option>
-            </select>&nbsp;
+        <option selected value="자치구">자치구</option>
+        <option v-for="(gu, idx) in GuList" :key="idx" :value="gu">
+          {{ gu.gu }}
+        </option>
+      </select>&nbsp;
 
-       <select class="select" v-show="isGu" v-model="selectDong">
-         <option selected value="행정동">행정동</option>
-              <option v-for="(dong, idx) in DongList" :key="idx" :value="dong">
-                {{ dong }}
-              </option>
-       </select>
+      <select class="select" v-show="isGu" v-model="selectDong">
+        <option selected value="행정동">행정동</option>
+            <option v-for="(dong, idx) in DongList" :key="idx" :value="dong">
+              {{ dong }}
+            </option>
+      </select>
        <br /><br />
 
        <!-- 갯수 보여주는 공간 -->
@@ -93,7 +93,9 @@ export default {
   name: "SpaceDetail",
   props: {
     space: String,
-    isSpace: Boolean
+    isSpace: Boolean,
+    dong: String,
+    dongId: Number,
   },
   components: {
     highcharts: Chart,
