@@ -1,14 +1,18 @@
 package com.ssafy.api.controller;
 
 
+import com.ssafy.api.response.space.Space5RankingGetRes;
 import com.ssafy.api.response.space.SpaceCorrelationGetRes;
 import com.ssafy.api.response.space.CountByDongGetRes;
+import com.ssafy.api.response.space.SpaceCountGetRes;
 import com.ssafy.api.service.bar.BarService;
+import com.ssafy.api.service.cctv.CCTVService;
 import com.ssafy.api.service.guardhouse.GuardHouseService;
 import com.ssafy.api.service.police.PoliceService;
 import com.ssafy.api.service.securitylight.SecurityLightService;
 import com.ssafy.api.service.space.SpaceService;
 import com.ssafy.db.mapping.BarInfoMapping;
+import com.ssafy.db.mapping.CctvInfoMapping;
 import com.ssafy.db.mapping.GuardHouseInfoMapping;
 import com.ssafy.db.mapping.PoliceInfoMapping;
 import com.ssafy.db.mapping.SecurityLightInfoMapping;
@@ -22,6 +26,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @CrossOrigin(origins = { "*" }, maxAge = 6000)
@@ -33,6 +38,8 @@ public class SpaceController {
     @Autowired
     SpaceService spaceService;
     @Autowired
+    CCTVService cctvService;
+    @Autowired
     BarService barService;
     @Autowired
     PoliceService policeService;
@@ -41,132 +48,79 @@ public class SpaceController {
     @Autowired
     SecurityLightService securityLightService;
 
-    @ApiOperation(value = "bar개수 목록", notes = "동별 bar 개수 목록", response = List.class)
-    @GetMapping("/bar")
-    public ResponseEntity<CountByDongGetRes> getBarCount() {
+    @ApiOperation(value = "space type(cctv, bar, police, light, guard) 개수 목록", notes = "동별 space type(cctv, bar, police, light, guard)  개수 목록", response = List.class)
+    @GetMapping("")
+    public ResponseEntity<CountByDongGetRes> getSpaceCountList(@RequestParam String type) {
         try {
-            CountByDongGetRes list = spaceService.getSpaceCount("bar");
-            return new ResponseEntity<CountByDongGetRes>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-    @ApiOperation(value = "파출소개수 목록", notes = "동별 파출소 개수 목록", response = List.class)
-    @GetMapping("/police")
-    public ResponseEntity<CountByDongGetRes> getPoliceCount() {
-        try {
-            CountByDongGetRes list = spaceService.getSpaceCount("police");
-            return new ResponseEntity<CountByDongGetRes>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-    @ApiOperation(value = "지킴이집개수 목록", notes = "동별 지킴이집 개수 목록", response = List.class)
-    @GetMapping("/guard")
-    public ResponseEntity<CountByDongGetRes> getGuardHouseCount() {
-        try {
-            CountByDongGetRes list = spaceService.getSpaceCount("guard");
-            return new ResponseEntity<CountByDongGetRes>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-    @ApiOperation(value = "보안등개수 목록", notes = "동별 보안등 개수 목록", response = List.class)
-    @GetMapping("/light")
-    public ResponseEntity<CountByDongGetRes> getSecurityLightCount() {
-        try {
-            CountByDongGetRes list = spaceService.getSpaceCount("light");
+            CountByDongGetRes list = spaceService.getSpaceCount(type);
             return new ResponseEntity<CountByDongGetRes>(list, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
-    @ApiOperation(value = "bar 상세정보 목록", notes = "동별 bar 상세정보를 목록으로 반환", response = List.class)
-    @GetMapping("/bar/{dong}")
-    public ResponseEntity<List<BarInfoMapping>> getBarCount(@PathVariable Long dong) {
+    @ApiOperation(value = "space type(cctv, bar, police, light, guard) 상세정보 목록", notes = " space type(cctv, bar, police, light, guard) 상세정보를 목록으로 반환", response = List.class)
+    @GetMapping("/detail")
+    public ResponseEntity<?> getSpaceInfo(@RequestParam String type, @RequestParam Long id) {
+        if(id < 1 || id > 426) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
-            List<BarInfoMapping> list = barService.getBarInfoByDongId(dong);
-            return new ResponseEntity<List<BarInfoMapping>>(list, HttpStatus.OK);
+            if(type.equals("cctv")) {
+                List<CctvInfoMapping> list = cctvService.getCCTVInfoByDongId(id);
+                return new ResponseEntity<List<CctvInfoMapping>>(list, HttpStatus.OK);
+            }else if(type.equals("police")){
+                List<PoliceInfoMapping> list = policeService.getPoliceInfoByDongId(id);
+                return new ResponseEntity<List<PoliceInfoMapping>>(list, HttpStatus.OK);
+            }else if(type.equals("bar")){
+                List<BarInfoMapping> list = barService.getBarInfoByDongId(id);
+                return new ResponseEntity<List<BarInfoMapping>>(list, HttpStatus.OK);
+            }else if(type.equals("light")){
+                List<SecurityLightInfoMapping> list = securityLightService.getSecurityLightInfoByDongId(id);
+                return new ResponseEntity<List<SecurityLightInfoMapping>>(list, HttpStatus.OK);
+            }else if(type.equals("guard")){
+                List<GuardHouseInfoMapping> list = guardHouseService.getGuardHouseInfoByDongId(id);
+                return new ResponseEntity<List<GuardHouseInfoMapping>>(list, HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
-    @ApiOperation(value = "bar 상관관계 정보", notes = "구별 bar 개수 목록, 구별 범죄 발생수 목록을 객체로 반환", response = List.class)
-    @GetMapping("/bar/graph")
-    public ResponseEntity<SpaceCorrelationGetRes> getBarCorrelation() {
+    @ApiOperation(value = "space 상관관계 정보", notes = "구별 space type(cctv, bar, police, light, guard) 개수 목록, 구별 범죄 범거수 목록/ 발생수 목록을 객체로 반환", response = List.class)
+    @GetMapping("/graph")
+    public ResponseEntity<SpaceCorrelationGetRes> getSpaceCorrelation(@RequestParam String type) {
         try {
-            SpaceCorrelationGetRes list = barService.getBarCorrelation();
+            SpaceCorrelationGetRes list = spaceService.getSpaceCorrelation(type);
             return new ResponseEntity<SpaceCorrelationGetRes>(list, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
-    @ApiOperation(value = "파출소 상세정보 목록", notes = "동별 파출소 상세정보를 목록으로 반환", response = List.class)
-    @GetMapping("/police/{dong}")
-    public ResponseEntity<List<PoliceInfoMapping>> getPoliceCount(@PathVariable Long dong) {
+    @ApiOperation(value = "space type 동별, 구별 개수 정보", notes = "해당 동,구 space type 개수 반환", response = List.class)
+    @GetMapping("/count")
+    public ResponseEntity<SpaceCountGetRes> getSpaceCount(@RequestParam String type, @RequestParam Long id) {
+        if(id < 1 || id > 426) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
-            List<PoliceInfoMapping> list = policeService.getPoliceInfoByDongId(dong);
-            return new ResponseEntity<List<PoliceInfoMapping>>(list, HttpStatus.OK);
+            SpaceCountGetRes spaceCountGetRes = spaceService.getSpaceCount(type, id);
+            return new ResponseEntity<SpaceCountGetRes>(spaceCountGetRes, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
-    @ApiOperation(value = "police 상관관계 정보", notes = "구별 police 개수 목록, 구별 범죄 범거수 목록을 객체로 반환", response = List.class)
-    @GetMapping("/police/graph")
-    public ResponseEntity<SpaceCorrelationGetRes> getPoliceCorrelation() {
+    @ApiOperation(value = "space 주변 순위 5개", notes = "해당 동 space 개수 순위 주변 5개 개수정보", response = List.class)
+    @GetMapping("/ranking")
+    public ResponseEntity<Space5RankingGetRes> getSpace5Ranking(@RequestParam String type, @RequestParam Long id) {
+        if(id < 1 || id > 426) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         try {
-            SpaceCorrelationGetRes list = policeService.getPoliceCorrelation();
-            return new ResponseEntity<SpaceCorrelationGetRes>(list, HttpStatus.OK);
+            Space5RankingGetRes spaceCountGetRes = spaceService.getSpaceCount5List(type,id);
+            return new ResponseEntity<Space5RankingGetRes>(spaceCountGetRes, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
     }
 
-    @ApiOperation(value = "지킴이집 상세정보 목록", notes = "동별 지킴이집 상세정보를 목록으로 반환", response = List.class)
-    @GetMapping("/guard/{dong}")
-    public ResponseEntity<List<GuardHouseInfoMapping>> getGuardHouseCount(@PathVariable Long dong) {
-        try {
-            List<GuardHouseInfoMapping> list = guardHouseService.getGuardHouseInfoByDongId(dong);
-            return new ResponseEntity<List<GuardHouseInfoMapping>>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
 
-    @ApiOperation(value = "지킴이집 상관관계 정보", notes = "구별 지킴이집 개수 목록, 구별 범죄 발생수 목록을 객체로 반환", response = List.class)
-    @GetMapping("/guard/graph")
-    public ResponseEntity<SpaceCorrelationGetRes> getGuardHouseCorrelation() {
-        try {
-            SpaceCorrelationGetRes list = guardHouseService.getGuardHouseCorrelation();
-            return new ResponseEntity<SpaceCorrelationGetRes>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-
-    @ApiOperation(value = "보안등 상세정보 목록", notes = "동별 보안등 상세정보를 목록으로 반환", response = List.class)
-    @GetMapping("/light/{dong}")
-    public ResponseEntity<List<SecurityLightInfoMapping>> getSecurityLightCount(@PathVariable Long dong) {
-        try {
-            List<SecurityLightInfoMapping> list = securityLightService.getSecurityLightInfoByDongId(dong);
-            return new ResponseEntity<List<SecurityLightInfoMapping>>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
-
-    @ApiOperation(value = "보안등 상관관계 정보", notes = "구별 보안등 개수 목록, 구별 범죄 발생수 목록을 객체로 반환", response = List.class)
-    @GetMapping("/light/graph")
-    public ResponseEntity<SpaceCorrelationGetRes> getSecurityLightCorrelation() {
-        try {
-            SpaceCorrelationGetRes list = securityLightService.getSecurityLightCorrelation();
-            return new ResponseEntity<SpaceCorrelationGetRes>(list, HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-        }
-    }
 }
