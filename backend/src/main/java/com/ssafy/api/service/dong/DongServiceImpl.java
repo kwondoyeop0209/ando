@@ -69,29 +69,27 @@ public class DongServiceImpl implements DongService{
     @Override
     public SpaceRankingGetRes getSpaceRanking(Long id) throws NotFoundException {
         SpaceRankingGetRes spaceRankingGetRes = new SpaceRankingGetRes();
-        System.out.println(1);
 
         Optional<Dong> dong = dongRepository.findById(id);
-        System.out.println(2);
 
         if(dong.isPresent()) {
-            spaceRankingGetRes.setCctvRanking(dongRepositorySupport.getSpaceRanking("cctv",id));
-            spaceRankingGetRes.setPoliceRanking(dongRepositorySupport.getSpaceRanking("police",id));
-            spaceRankingGetRes.setBarRanking(dongRepositorySupport.getSpaceRanking("bar",id));
-            spaceRankingGetRes.setLightRanking(dongRepositorySupport.getSpaceRanking("light",id));
-        System.out.println(3);
+            spaceRankingGetRes.setCctvRanking(dongRepositorySupport.getSpaceRankingDistinct("cctv",id));
+            spaceRankingGetRes.setPoliceRanking(dongRepositorySupport.getSpaceRankingDistinct("police",id));
+            spaceRankingGetRes.setBarRanking(dongRepositorySupport.getSpaceRankingDistinct("bar",id));
+            spaceRankingGetRes.setLightRanking(dongRepositorySupport.getSpaceRankingDistinct("light",id));
+            spaceRankingGetRes.setGuardRanking(dongRepositorySupport.getSpaceRankingDistinct("guard",id));
 
             spaceRankingGetRes.setCctvAvg(dongRepositorySupport.getSpaceAvg("cctv"));
             spaceRankingGetRes.setPoliceAvg(dongRepositorySupport.getSpaceAvg("police"));
             spaceRankingGetRes.setBarAvg(dongRepositorySupport.getSpaceAvg("bar"));
             spaceRankingGetRes.setLightAvg(dongRepositorySupport.getSpaceAvg("light"));
-        System.out.println(4);
+            spaceRankingGetRes.setGuardAvg(dongRepositorySupport.getSpaceAvg("guard"));
 
             spaceRankingGetRes.setCctv(dong.get().getCctvCnt());
             spaceRankingGetRes.setBar(dong.get().getBarCnt());
             spaceRankingGetRes.setPolice(dong.get().getPoliceCnt());
             spaceRankingGetRes.setLight(dong.get().getLightCnt());
-        System.out.println(5);
+            spaceRankingGetRes.setGuard(dong.get().getGuardHouseCnt());
         }else{
             throw new NotFoundException("Dong id Empty");
         }
