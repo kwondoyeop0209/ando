@@ -71,7 +71,7 @@
 <script>
 import { Chart } from "highcharts-vue";
 import { VueSvgGauge } from "vue-svg-gauge";
-import axios from "axios";
+import $axios from "axios";
 
 export default {
   name: "SafetyDetail",
@@ -160,7 +160,7 @@ export default {
   },
   mounted() {
     //안전지수 상위 10개 목록
-    axios.get("http://j5a305.p.ssafy.io:8080/api/v1/safety/top").then((res) => {
+    $axios.get("/safety/top").then((res) => {
       this.rankList = res.data.getTopSafetyListDtoList;
       //console.log(this.rankList)
     });
@@ -175,8 +175,8 @@ export default {
       this.isRankSafety = false;
 
       //해당 동의 안전지수, 구 순위, 전체 순위 반환
-      axios
-        .get("http://j5a305.p.ssafy.io:8080/api/v1/safety/point/" + this.dongID)
+      $axios
+        .get("/safety/point/" + this.dongID)
         .then((res) => {
           this.rankingData = res.data;
           this.safetyIndex = res.data.safetyIndex;
@@ -187,8 +187,8 @@ export default {
         });
 
       //환경 요소 순위 보여주기
-      axios
-        .get("http://j5a305.p.ssafy.io:8080/api/v1/safety/detail/" + this.dongID)
+      $axios
+        .get("/safety/detail/" + this.dongID)
         .then((response) => {
           this.spaceData = response.data;
           //console.log(this.spaceData)
@@ -198,8 +198,8 @@ export default {
         });
 
       // 해당 동이 속해있는 구 이름 반환
-      axios
-        .get("http://j5a305.p.ssafy.io:8080/api/v1/safety/gu/" + this.dongID)
+      $axios
+        .get("/safety/gu/" + this.dongID)
         .then((respond) => {
           this.guData = respond.data;
           //console.log(this.guData)
