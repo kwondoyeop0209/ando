@@ -49,7 +49,7 @@ export default {
     onSpace() {
       this.isSpace = true;
       this.isSafety = false;
-      this.space = "";
+      this.space = "cctv";
     },
     onSafety() {
       this.isSpace = false;
@@ -78,8 +78,8 @@ export default {
 }
 .info {
   width: 400px;
+  height: 100%;
   background-color: #454d5e;
-  padding: 18px;
 }
 .map {
   flex-grow: 1;

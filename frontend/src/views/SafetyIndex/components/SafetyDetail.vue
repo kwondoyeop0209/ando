@@ -47,22 +47,101 @@
         </VueSvgGauge>
       </div>
       <div class="rankDetail">
-        <p style="margin-bottom: 10px">
+        <p style="margin: 5px 30px">
           {{ this.guData }} 내에서
           <span style="font-size: 28px; font-weight: 600">
             {{ this.rankingData.rankingOfGu }}위
           </span>
         </p>
-        <p>전체 행정동에서 <span style="font-size:28px; font-weight: 600">{{this.rankingData.rankingOfSeoul}}위</span></p>
-      </div><br />
-      <hr class="one"><br />
-      <div>
-
-        <!-- 차트? 그거 추가해야함!! -->
-        <p> CCTV 보유 현황 <span style="font-size:30px; font-weight: 600">{{this.spaceData.cctvRanking}}위</span></p>
-        <p> 유흥지 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.barRanking}}위</span></p>
-        <p> 파출소 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.policeRanking}}위</span></p>
-        <p> 보안등 분포 <span style="font-size:30px; font-weight: 600">{{this.spaceData.lightRanking}}위</span></p>
+        <p style="margin: 5px 30px 35px">
+          전체 행정동에서
+          <span style="font-size: 28px; font-weight: 600">
+            {{ this.rankingData.rankingOfSeoul }}위
+          </span>
+        </p>
+      </div>
+      <div class="space-rank">
+        <div class="space-rank-explain">
+          <div class="blue-circle"></div>
+          <div style="margin: 0 8px">평균</div>
+          <div class="red-circle"></div>
+          <div style="margin: 0 8px">우리동네</div>
+        </div>
+        <div class="space-rank-item" style="margin-top: 25px">
+          <p>📹 CCTV 보유 현황
+            <span style="font-size: 30px; font-weight: 600">
+              {{ this.spaceData.cctvRanking }}위
+            </span>
+          </p>
+          <div style="font-size: 12px; text-align: end; margin-top: 15px">
+            평균 : {{ this.spaceData.cctvAvg }}개, 우리동네 : {{ this.dongSpaceCnt.cctv }}개
+          </div>
+          <div style="margin: 20px 0; position: relative">
+            <div class="chart-line"></div>
+            <div class="blue-circle chart-avg chart-avg-cctv"></div>
+            <div class="red-circle chart-dong chart-dong-cctv"></div>
+          </div>
+        </div>
+        <div class="space-rank-item">
+          <p>🍺 유흥지 현황
+            <span style="font-size: 30px; font-weight: 600">
+              {{ this.spaceData.barRanking }}위
+            </span>
+          </p>
+          <div style="font-size: 12px; text-align: end; margin-top: 15px">
+            평균 : {{ this.spaceData.barAvg }}개, 우리동네 : {{ this.dongSpaceCnt.bar }}개
+          </div>
+          <div style="margin: 20px 0; position: relative">
+            <div class="chart-line"></div>
+            <div class="blue-circle chart-avg chart-avg-bar"></div>
+            <div class="red-circle chart-dong chart-dong-bar"></div>
+          </div>
+        </div>
+        <div class="space-rank-item">
+          <p>🚨 파출소 현황
+            <span style="font-size: 30px; font-weight: 600">
+              {{ this.spaceData.policeRanking }}위
+            </span>
+          </p>
+          <div style="font-size: 12px; text-align: end; margin-top: 15px">
+            평균 : {{ this.spaceData.policeAvg }}개, 우리동네 : {{ this.dongSpaceCnt.police }}개
+          </div>
+          <div style="margin: 20px 0; position: relative">
+            <div class="chart-line"></div>
+            <div class="blue-circle chart-avg chart-avg-police"></div>
+            <div class="red-circle chart-dong chart-dong-police"></div>
+          </div>
+        </div>
+        <div class="space-rank-item">
+          <p>💡 보안등 보유 현황
+            <span style="font-size: 30px; font-weight: 600">
+              {{ this.spaceData.lightRanking }}위
+            </span>
+          </p>
+          <div style="font-size: 12px; text-align: end; margin-top: 15px">
+            평균 : {{ this.spaceData.lightAvg }}개, 우리동네 : {{ this.dongSpaceCnt.light }}개
+          </div>
+          <div style="margin: 20px 0; position: relative">
+            <div class="chart-line"></div>
+            <div class="blue-circle chart-avg chart-avg-light"></div>
+            <div class="red-circle chart-dong chart-dong-light"></div>
+          </div>
+        </div>
+        <div class="space-rank-item">
+          <p>🏠 지킴이집 현황
+            <span style="font-size: 30px; font-weight: 600">
+              {{ this.spaceData.guardRanking }}위
+            </span>
+          </p>
+          <div style="font-size: 12px; text-align: end; margin-top: 15px">
+            평균 : {{ this.spaceData.guardAvg }}개, 우리동네 : {{ this.dongSpaceCnt.guard }}개
+          </div>
+          <div style="margin: 20px 0; position: relative">
+            <div class="chart-line"></div>
+            <div class="blue-circle chart-avg chart-avg-guard"></div>
+            <div class="red-circle chart-dong chart-dong-guard"></div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -105,6 +184,13 @@ export default {
       dongID: "",
       rankingData: [],
       spaceData: [],
+      dongSpaceCnt: {
+        cctv: -1,
+        bar: -1,
+        police: -1,
+        light: -1,
+        guard: -1,
+      },
       guData: "",
       safetyIndex: "",
       safetyScore: {
@@ -191,7 +277,11 @@ export default {
         .get("/safety/detail/" + this.dongID)
         .then((response) => {
           this.spaceData = response.data;
-          //console.log(this.spaceData)
+          this.drawLineChart("cctv", this.spaceData.cctvAvg);
+          this.drawLineChart("bar", this.spaceData.barAvg);
+          this.drawLineChart("police", this.spaceData.policeAvg);
+          this.drawLineChart("light", this.spaceData.lightAvg);
+          this.drawLineChart("guard", this.spaceData.guardAvg);
         })
         .catch(e => {
           console.log('error : ', e);
@@ -202,7 +292,6 @@ export default {
         .get("/safety/gu/" + this.dongID)
         .then((respond) => {
           this.guData = respond.data;
-          //console.log(this.guData)
         })
         .catch(e => {
           console.log('error : ', e);
@@ -215,10 +304,94 @@ export default {
       this.$emit("selectDongId", -1);
       this.$emit("selectDong", "");
     },
+    drawLineChart(type, avg) {
+      this.getDongSpaceCnt(type);
+      let min = -1;
+      let max = -1;
+      let cal2 = -1;
+      const width = document.querySelector(".chart-line").offsetWidth;
+
+      if (type === "cctv") {
+        min = 3;
+        max = 753;
+        cal2 = width * ((this.dongSpaceCnt.cctv - min) / (max - min));
+      } else if (type === "bar") {
+        min = 0;
+        max = 191;
+        cal2 = width * ((this.dongSpaceCnt.bar - min) / (max - min));
+      } else if (type === "police") {
+        min = 0;
+        max = 5;
+        cal2 = width * ((this.dongSpaceCnt.police - min) / (max - min));
+      } else if (type === "light") {
+        min = 0;
+        max = 2169;
+        cal2 = width * ((this.dongSpaceCnt.light - min) / (max - min));
+      } else {
+        min = 0;
+        max = 33;
+        cal2 = width * ((this.dongSpaceCnt.guard - min) / (max - min));
+      }
+
+      const cal = width * ((avg - 0) / (max - min));
+      //평균
+      let result1 = Math.round(cal);
+      result1 = result1 > width ? width : result1;
+      result1 = result1 < 0 ? 0 : result1;
+      document.querySelector(".chart-avg-" + type).style = "left: " + result1 + "px";
+      //우리동네
+      let result2 = Math.round(cal2);
+      result2 = result2 > width ? width : result2;
+      result2 = result2 < 0 ? 0 : result2;
+      document.querySelector(".chart-dong-" + type).style = "left: " + result2 + "px";
+    },
+    getDongSpaceCnt(type) {
+      $axios
+        .get("/space/count", {
+          params: {
+            id: this.dongId,
+            type: type,
+          },
+        })
+        .then((response) => {
+          if (type === "cctv") {
+            this.dongSpaceCnt.cctv = response.data.dongCnt;
+          } else if (type === "bar") {
+            this.dongSpaceCnt.bar = response.data.dongCnt;
+          } else if (type === "police") {
+            this.dongSpaceCnt.police = response.data.dongCnt;
+          } else if (type === "light") {
+            this.dongSpaceCnt.light = response.data.dongCnt;
+          } else {
+            this.dongSpaceCnt.guard = response.data.dongCnt;
+          }
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
   },
 };
 </script>
 <style scoped>
+.safety-detail {
+  padding: 18px;
+  height: calc(100% - 36px);
+  overflow: auto;
+}
+.safety-detail::-webkit-scrollbar {
+  width: 10px;
+}
+.safety-detail::-webkit-scrollbar-thumb {
+  background-color: darkgray;
+  border-radius: 24px;
+  background-clip: padding-box;
+  border: 2px solid transparent;
+}
+.safety-detail::-webkit-scrollbar-track {
+  background-color: #454d5e;
+  border-radius: 24px;
+}
 .rank-item {
   display: flex;
   margin-bottom: 8px;
@@ -261,13 +434,56 @@ export default {
   font-weight: bold;
 }
 .rankDetail {
-  margin-left: 45px;
+  margin: 0 18px;
   font-size: 22px;
+  border-bottom: 0.5px solid #888888;
 }
 .back {
   margin-right: 8px;
 }
 .back:hover {
   cursor: pointer;
+}
+.space-rank {
+  margin: 0 18px;
+  font-size: 18px;
+}
+.space-rank-explain {
+  display: flex;
+  justify-content: end;
+  margin: 10px 0;
+  align-items: center;
+  font-size: 14px;
+}
+.blue-circle {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background-color: #6A7DAF;
+}
+.red-circle {
+  width: 13px;
+  height: 13px;
+  border-radius: 50%;
+  background-color: #F57272;
+}
+.space-rank-item {
+  margin: 55px 30px;
+}
+.chart-line {
+  background-color: #C4C4C4;
+  width: 100%;
+  height: 4px;
+  border-radius: 8px;
+  position: absolute;
+  top: 4px;
+}
+.chart-avg {
+  z-index: 999;
+  position: absolute;
+}
+.chart-dong {
+  z-index: 999;
+  position: absolute;
 }
 </style>

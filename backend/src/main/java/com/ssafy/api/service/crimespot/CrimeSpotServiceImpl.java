@@ -16,7 +16,7 @@ public class CrimeSpotServiceImpl implements CrimeSpotService{
 
     @Override
     public List<CrimeSpotMapping> getCrimeSpotList(Long crimeId, int year) throws NotFoundException {
-        List<CrimeSpotMapping> list = crimeSpotRepository.findAllByCrimeType_IdAndYear(crimeId,year);
+        List<CrimeSpotMapping> list = crimeSpotRepository.findTop7ByCrimeType_IdAndYearOrderByCountDesc(crimeId,year);
         if(list.isEmpty())
             throw new NotFoundException("CrimeSpotList is empty!");
         return list;
