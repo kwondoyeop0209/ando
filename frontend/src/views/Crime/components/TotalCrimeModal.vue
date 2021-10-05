@@ -2,7 +2,7 @@
   <div class="charts">
     <div class="left-content">
       <p class="chart-subtitle">최근 3년간 서울시 범죄 발생</p>
-      <p class="white highlight">296,177건</p>
+      <p class="white highlight">{{String(totalCrimeNum).replace(/\B(?=(\d{3})+(?!\d))/g, ",")}}건</p>
       <p class="chart-subtitle"><b>검거율</b>이 높은 지역 (건수)</p>
       <highcharts :options="chartArrest" style="height: 300px"></highcharts>
       <p class="chart-subtitle"><b>범죄율</b>이 높은 지역 (건수)</p>
@@ -52,6 +52,7 @@ export default {
   },
   data() {
     return {
+      totalCrimeNum : 0,
       chartArrest: {
         title: {
           text: "",
@@ -253,6 +254,11 @@ export default {
         this.chartLatest.xAxis.categories = response.data.list.map(
           (item) => item.year
         );
+
+        const content = response.data.list;
+          for(var i=0;i<content.length;i++){
+            this.totalCrimeNum += Number(content[i].count);
+          }
         //데이터 반환
         this.chartLatest.series[0].data = response.data.list.map(
           (item) => {

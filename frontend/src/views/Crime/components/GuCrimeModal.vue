@@ -5,7 +5,7 @@
         <div class="modal-title">
           <p style="font-size: 24px; font-weight: 600">범죄 현황</p>
           <div style="flex: 1"></div>
-          <p id="detail_btn" @click="onClick(guSelected)">예측 분석 보기 ></p>
+          <p id="detail_btn" @click="onClick(guSelected)" style="font-weight:600">범죄발생 위험군 보기</p>
         </div>
         <div class="state-content">
           <!-- 범죄율 -->
@@ -125,7 +125,7 @@
       <div style="flex: 1"></div>
       <div class="predict-modal" v-show="isPredict">
         <div class="predict-title">
-          <p> 범죄 예측 분석</p>
+          <p> 범죄 유형별 위험군</p>
           <div style="flex: 1"></div>
           <img src="@/assets/ic-close.png" width="20" @click="offClick" />
         </div>
@@ -137,16 +137,21 @@
               <th style="width: 60px">요일</th>
               <th style="width: 100px">장소</th>
               <th style="width: 100px">시간</th>
-              <th style="width: 80px">위험 지수</th>
+              <th style="width: 100px">범죄발생 지수</th>
             </tr>
             <tr v-for="pItem in predictList" :key="pItem.type">
-              <td><span v-html="pItem.type"></span></td>
+              <td style="background-color: #B8B8B8"><span v-html="pItem.type"></span></td>
               <td><span v-html="pItem.day"></span></td>
               <td><span v-html="pItem.spot"></span></td>
               <td><span v-html="pItem.time"></span></td>
               <td><span v-html="pItem.idx"></span></td>
             </tr>
           </table>
+          <div class="explain">
+          ※ 범죄발생 지수 : 조건별(지역, 장소, 요일, 시간) 위험지수에 기반한 수치
+          <br />
+          <span class ="maxminavg" style="color:#A4B5E2;">최댓값: 2.8762, 최솟값: 0.7163, 평균값 : 1.464</span>
+          </div>
         </div>
       </div>
     </div>
@@ -191,6 +196,7 @@ export default {
       guArrest: "",
       type5Name: "",
       type5Idx: "",
+      spotList:[],
 
       chartTypeOfCrime: {
         chart: {
@@ -357,9 +363,7 @@ export default {
         },
         colors: ["#6A7DAF"],
         xAxis: {
-          categories: [
-            'PC방', '고속도로', '공사장광산', '공장', '공중화장실', '공지', '구금장소', '금융기관', '기타', '기타교통수단내', '노상', '단독주택', '대형할인매장', '백화점', '부대', '사무실', '산야', '상점', '숙박업소 목욕탕', '슈퍼마켓', '시장노점', '아파트 연립다세대', '역대합실', '유원지', '유흥접객업소', '의료기관', '종교기관', '주차장', '지하철', '창고', '편의점', '학교', '해상', '흥행장'
-          ],
+          categories: [],
           gridLineColor: "rgba(0,0,0,0)",
           labels: {
             style: {
@@ -593,6 +597,7 @@ export default {
     getCrimeSpot() {
       const highestSpot = this.$refs.highestSpot;
       highestSpot.removeSeries();
+      //this.highestSpot.xAxis.categories=[]
       $axios
         .get("/crime/spot", {
           params: {
@@ -601,9 +606,16 @@ export default {
           },
         })
         .then((response) => {
-          this.highestSpot.xAxis.categories = response.data.list.map(
-            (item) => item.spot
-          );
+          console.log(response.data.list)
+
+          this.highestSpot.xAxis.categories.splice(0)
+          
+          const hotSpot = response.data.list
+          for (var i=0; i<7; i++) {
+            this.highestSpot.xAxis.categories.push(hotSpot[i].spot)
+          }
+          console.log(this.highestSpot.xAxis.categories)
+
           const data = response.data.list.map((item) => {
             return {
               name: item.spot,
@@ -681,6 +693,9 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
+.explain{
+  margin-top : 10px;
+}
 .el {
   width: 400px;
 }
@@ -733,8 +748,8 @@ export default {
 }
 .predict-modal {
   z-index: 888;
-  width: 500px;
-  height: 300px;
+  width: 520px;
+  height: 320px;
   background: #454d5e;
   border-radius: 5px;
   box-shadow: 0px 0px 16px 3px rgba(26, 31, 41, 0.45);
@@ -743,6 +758,7 @@ export default {
 .predict-title {
   display: flex;
   font-size: 18px;
+  font-weight: 600;
 }
 .crime-item {
   display: flex;
@@ -766,7 +782,7 @@ export default {
 }
 th {
   padding: 10px;
-  background-color: #B8B8B8;
+  background-color: #999999;
   border-radius: 5px;
 }
 td {
