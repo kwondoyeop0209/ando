@@ -126,8 +126,8 @@ export default {
           let ic = "";
           if (this.space === "cctv") ic = "📹";
           else if (this.space === "bar") ic = "🍺";
-          else if (this.space === "bar") ic = "🚨";
-          else if (this.space === "bar") ic = "💡";
+          else if (this.space === "police") ic = "🚨";
+          else if (this.space === "light") ic = "💡";
           else ic = "🏠";
           span1.innerText = ic + " " + item.count;
           content.appendChild(span1);
@@ -184,6 +184,7 @@ export default {
             fillOpacity: 0.3
           });
           this.polygon.setMap(this.map);
+          console.log("overlayPolygon", this.polygon);
         })
         .catch(() => {
           console.log("오류가 발생했습니다.");
@@ -218,6 +219,7 @@ export default {
             this.markerList.push(marker);
             marker.setMap(this.map);
           });
+          console.log("overlayMarker", this.markerList);
         })
         .catch(() => {
           console.log("오류가 발생했습니다.");
