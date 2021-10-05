@@ -141,10 +141,10 @@ export default {
 <style scoped>
 .home {
   background-color: #454d5e;
-  min-width: 1450px;
+  min-width: 1500px;
 }
 .main {
-  width: 1450px;
+  width: 1500px;
   margin: 0 auto;
   position: relative;
   padding: 72px 0;
