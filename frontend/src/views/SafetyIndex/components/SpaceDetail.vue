@@ -347,9 +347,6 @@ export default {
           console.log('error : ', e);
         });
     },
-    findDongName() {
-
-    },
     back() {
       this.dongId = -1;
       this.selectGuID = -1;
@@ -408,6 +405,7 @@ export default {
 
     isSpace: function (val) {
       this.isDong = false;
+      console.log("space", this.space);
       if (!val) {
         this.getSpaceList("cctv");
         this.dongId = -1;
