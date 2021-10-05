@@ -49,7 +49,7 @@ export default {
     onSpace() {
       this.isSpace = true;
       this.isSafety = false;
-      this.space = "";
+      this.space = "cctv";
     },
     onSafety() {
       this.isSpace = false;

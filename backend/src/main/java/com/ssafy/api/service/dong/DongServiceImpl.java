@@ -74,11 +74,11 @@ public class DongServiceImpl implements DongService{
         Optional<Dong> dong = dongRepository.findById(id);
 
         if(dong.isPresent()) {
-            spaceRankingGetRes.setCctvRanking(dongRepositorySupport.getSpaceRanking("cctv",id));
-            spaceRankingGetRes.setPoliceRanking(dongRepositorySupport.getSpaceRanking("police",id));
-            spaceRankingGetRes.setBarRanking(dongRepositorySupport.getSpaceRanking("bar",id));
-            spaceRankingGetRes.setLightRanking(dongRepositorySupport.getSpaceRanking("light",id));
-            spaceRankingGetRes.setGuardRanking(dongRepositorySupport.getSpaceRanking("guard",id));
+            spaceRankingGetRes.setCctvRanking(dongRepositorySupport.getSpaceRankingDistinct("cctv",id));
+            spaceRankingGetRes.setPoliceRanking(dongRepositorySupport.getSpaceRankingDistinct("police",id));
+            spaceRankingGetRes.setBarRanking(dongRepositorySupport.getSpaceRankingDistinct("bar",id));
+            spaceRankingGetRes.setLightRanking(dongRepositorySupport.getSpaceRankingDistinct("light",id));
+            spaceRankingGetRes.setGuardRanking(dongRepositorySupport.getSpaceRankingDistinct("guard",id));
 
             spaceRankingGetRes.setCctvAvg(dongRepositorySupport.getSpaceAvg("cctv"));
             spaceRankingGetRes.setPoliceAvg(dongRepositorySupport.getSpaceAvg("police"));

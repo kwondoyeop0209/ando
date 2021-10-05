@@ -241,4 +241,49 @@ public class dongRepositorySupport extends QuerydslRepositorySupport {
                 ).orderBy(qDong.barCnt.desc()).offset(start).limit(5).fetch();
         }
     }
+
+    public Long getSpaceRankingDistinct(String type, Long id){
+        BooleanBuilder builder = new BooleanBuilder();
+
+        if (type.equals("cctv")) {
+            return jpaQueryFactory.select(qDong.cctvCnt.countDistinct().add(1).as("ranking"))
+                .from(qDong)
+                .where(qDong.cctvCnt
+                    .gtAll(JPAExpressions.select(qDong.cctvCnt)
+                        .from(qDong)
+                        .where(qDong.id.eq(id)))).fetchOne();
+        }
+        else if (type.equals("police")) {
+            return jpaQueryFactory.select(qDong.policeCnt.countDistinct().add(1).as("ranking"))
+                .from(qDong)
+            .where(qDong.policeCnt
+                .gtAll(JPAExpressions.select(qDong.policeCnt)
+                    .from(qDong)
+                    .where(qDong.id.eq(id)))).fetchOne();
+        }
+        else if (type.equals("light")) {
+            return jpaQueryFactory.select(qDong.lightCnt.countDistinct().add(1).as("ranking"))
+                .from(qDong)
+                .where(qDong.lightCnt
+                    .gtAll(JPAExpressions.select(qDong.lightCnt)
+                        .from(qDong)
+                        .where(qDong.id.eq(id)))).fetchOne();
+        }
+        else if (type.equals("guard")) {
+            return jpaQueryFactory.select(qDong.guardHouseCnt.countDistinct().add(1).as("ranking"))
+                .from(qDong)
+                .where(qDong.guardHouseCnt
+                    .gtAll(JPAExpressions.select(qDong.guardHouseCnt)
+                        .from(qDong)
+                        .where(qDong.id.eq(id)))).fetchOne();
+        }
+        else {
+            return jpaQueryFactory.select(qDong.barCnt.countDistinct().add(1).as("ranking"))
+                .from(qDong)
+                .where(qDong.barCnt
+                    .gtAll(JPAExpressions.select(qDong.barCnt)
+                        .from(qDong)
+                        .where(qDong.id.eq(id)))).fetchOne();
+        }
+    }
 }
