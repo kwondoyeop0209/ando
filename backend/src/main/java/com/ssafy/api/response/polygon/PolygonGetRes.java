@@ -6,17 +6,19 @@ import com.ssafy.db.mapping.PolygonMapping;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
+
 @Getter
 @Setter
 public class PolygonGetRes extends BaseResponseBody {
-    PolygonMapping polygon;
+    List<String> polygonList;
     LatLngMapping dongLatLng;
 
-    public static PolygonGetRes of(Integer statusCode, String message,PolygonMapping polygon,LatLngMapping dongLatLng){
+    public static PolygonGetRes of(Integer statusCode, String message,List<String> polygon,LatLngMapping dongLatLng){
         PolygonGetRes polygonGetRes = new PolygonGetRes();
         polygonGetRes.setStatusCode(statusCode);
         polygonGetRes.setMessage(message);
-        polygonGetRes.setPolygon(polygon);
+        polygonGetRes.setPolygonList(polygon);
         polygonGetRes.setDongLatLng(dongLatLng);
         return polygonGetRes;
     }
