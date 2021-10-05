@@ -4,6 +4,7 @@ import com.ssafy.api.response.dong.SafetyRankingGetRes;
 import com.ssafy.api.response.dong.SpaceRankingGetRes;
 import com.ssafy.db.dto.dong.GetDongListDto;
 import com.ssafy.db.entity.Dong;
+import com.ssafy.db.mapping.DongNameMapping;
 import com.ssafy.db.mapping.DongRanking;
 import com.ssafy.db.mapping.DongSafetyIndex;
 import com.ssafy.db.mapping.LatLngMapping;
@@ -29,10 +30,10 @@ public class DongServiceImpl implements DongService{
     dongRepositorySupport dongRepositorySupport;
 
     @Override
-    public String getGuNameByDong(Long id) throws NotFoundException {
-        Optional<Dong> dong = dongRepository.findById(id);
+    public DongNameMapping getGuNameByDong(Long id) throws NotFoundException {
+        Optional<DongNameMapping> dong = dongRepository.findById(id,DongNameMapping.class);
         if(dong.isPresent()){
-            return dong.get().getSiGunGu().getGu();
+            return dong.get();
         }else{
             throw new NotFoundException("Dong is Empty");
         }
