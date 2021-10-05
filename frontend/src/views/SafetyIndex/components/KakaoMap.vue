@@ -32,9 +32,12 @@ export default {
       }
     },
     dongId: function (val) {
-      if(val === -1) {
+      if (val === -1) {
         this.removePolygon();
         this.getSpaceList("cctv");
+      } else {
+        this.removeCustom();
+        this.overlayPolygon(val);
       }
     },
   },
@@ -83,6 +86,12 @@ export default {
         });
     },
     overlayCustom(data) {
+      this.container = document.querySelector("#map");
+      this.options = {
+        center: new kakao.maps.LatLng(37.532612, 126.990182),
+        level: 7,
+      };
+      this.map = new kakao.maps.Map(this.container, this.options);
       this.removeCustom();
       data.forEach((item) => {
         const content = document.createElement("div");
@@ -129,14 +138,17 @@ export default {
       $axios
         .get("/main/polygon/" + val)
         .then((response) => {
+          this.options = {
+            center: new kakao.maps.LatLng(response.data.dongLatLng.lat, response.data.dongLatLng.lng),
+            level: 4,
+          };
+          this.map = new kakao.maps.Map(this.container, this.options);
           let polygonPath = [];
 
-          const data = response.data.polygon.coordinates.split("-");
-
-          data.forEach((item) => {
+          response.data.polygonList.forEach((item) => {
             let tmp = item.split(",");
-            tmp[0] = tmp[0].replace('[', '');
-            tmp[1] = tmp[1].replace(']', '');
+            tmp[0] = tmp[0].replace("[", "");
+            tmp[1] = tmp[1].replace("]", "");
 
             polygonPath.push(new kakao.maps.LatLng(tmp[1], tmp[0]));
           });

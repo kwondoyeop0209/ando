@@ -167,6 +167,8 @@ export default {
   },
   methods: {
     onSafetyDong(val, val3) {
+      this.$emit("selectDongId", val3);
+      this.$emit("selectDong", val);
       this.dong = val;
       this.dongID = val3;
       this.isDongSafety = true;
@@ -211,6 +213,7 @@ export default {
       this.isDongSafety = false;
       this.isRankSafety = true;
       this.$emit("selectDongId", -1);
+      this.$emit("selectDong", "");
     },
   },
 };

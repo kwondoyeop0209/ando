@@ -1,8 +1,8 @@
 <template>
   <div class="safety-index">
     <div class="info">
-      <safety-detail v-show="isSafety" :isSafety="isSafety" :dong="dong" :dongId="dongId" @selectDongId="selectDongId" />
-      <space-detail v-show="isSpace" :isSpace="isSpace" :space="space" :dong="dong" :dongId="dongId" @selectDongId="selectDongId" />
+      <safety-detail v-show="isSafety" :isSafety="isSafety" :dong="dong" :dongId="dongId" @selectDong="selectDong" @selectDongId="selectDongId" />
+      <space-detail v-show="isSpace" :isSpace="isSpace" :space="space" :dong="dong" :dongId="dongId" @selectDong="selectDong" @selectDongId="selectDongId" />
     </div>
     <div class="map">
       <!-- 탭-->
@@ -65,6 +65,7 @@ export default {
     },
     selectDongId(val) {
       this.dongId = val;
+      console.log(val);
     },
   },
 };

@@ -12,15 +12,18 @@ public class SpaceRankingGetRes extends BaseResponseBody {
     Long barRanking;
     Long policeRanking;
     Long lightRanking;
+    Long guardRanking;
 
     double cctvAvg;
     double barAvg;
     double policeAvg;
     double lightAvg;
+    double guardAvg;
 
     int cctv;
     int police;
     int bar;
     int light;
+    int guard;
 
 }
