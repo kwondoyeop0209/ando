@@ -17,16 +17,23 @@ export default {
       map: undefined,
       overlayList: [],
       polygon: undefined,
-    }
+      markerList: [],
+    };
   },
   watch: {
     space: function (val) {
-      this.removePolygon();
+      if (this.polygon != undefined) {
+        this.removePolygon();
+      }
+      this.removeMarker();
       this.getSpaceList(val);
     },
     isSpace: function (val) {
       if (!val) {
-        this.removePolygon();
+        if (this.polygon != undefined) {
+          this.removePolygon();
+        }
+        this.removeMarker();
         this.getSpaceList("cctv");
         this.removeCustom();
       }
@@ -37,7 +44,7 @@ export default {
         this.getSpaceList("cctv");
       } else {
         this.removeCustom();
-        this.overlayPolygon(val);
+        this.overlayMarker(val);
       }
     },
   },
@@ -48,7 +55,7 @@ export default {
       const script = document.createElement("script");
       script.onload = () => kakao.maps.load(this.initMap);
       script.src =
-        "http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=f4b6845e3f93731cc1cbedd752449bd5";
+        "http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=23763f349d4c914839b08d29272dfb2d";
       document.head.appendChild(script);
     }
   },
@@ -171,6 +178,41 @@ export default {
     removePolygon() {
       this.polygon.setMap(null);
       this.$emit("selectDongId", -1);
+    },
+    overlayMarker(val) {
+      $axios
+        .get("/space/detail", {
+          params: {
+            id: val,
+            type: this.space,
+          },
+        })
+        .then((response) => {
+          this.removeMarker();
+          const imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png";
+          const imageSize = new kakao.maps.Size(30, 30);
+          const imageOption = { offset: new kakao.maps.Point(27, 69) };
+
+          const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+          response.data.forEach((item) => {
+            const markerPosition = new kakao.maps.LatLng(item.lat, item.lng);
+            const marker = new kakao.maps.Marker({
+              position: markerPosition,
+              image: markerImage,
+            });
+            this.markerList.push(marker);
+            marker.setMap(this.map);
+          });
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    removeMarker() {
+      this.markerList.forEach((item) => {
+        item.setMap(null);
+      });
     },
   },
 };

@@ -3,7 +3,12 @@
     <!-- 구 동 선택하는 공간 -->
     <div>
       <div class="space-title">
-        <img src="@/assets/ic-search.png" :width="30" :height="30" style="margin-left: 8px" />
+        <img
+          src="@/assets/ic-search.png"
+          :width="30"
+          :height="30"
+          style="margin-left: 8px"
+        />
         <p style="margin-left: 8px">{{ spaceTitle }}</p>
       </div>
       <div class="select-region">
@@ -14,9 +19,9 @@
           </option>
         </select>
 
-        <select class="select" v-show="isGu" v-model="selectDong">
+        <select class="select" v-show="isGu" v-model="selectDongID">
           <option selected value="행정동">행정동</option>
-          <option v-for="(dong, idx) in DongList" :key="idx" :value="dong">
+          <option v-for="(dong, idx) in DongList" :key="idx" :value="selectDongID">
             {{ dong }}
           </option>
         </select>
@@ -25,7 +30,7 @@
 
     <!-- 갯수 보여주는 공간 -->
     <div class="space-info" v-show="isDong">
-      <p style="margin-bottom: 10px; font-size: 30px; font-weight: 600">💥{{selectDong}}<span style="font-size: 20px">의</span>
+      <p style="margin-bottom: 10px; font-size: 30px; font-weight: 600">💥{{ dong }}<span style="font-size: 20px">의</span>
       {{space}} 비율 <br> </p>
       <p style="margin-bottom:10px;">{{selectGu.gu}} 내
         <span style="font-size:20px; font-weight: 400"> 총 {{this.spaceData.guCnt}}개 중
@@ -280,31 +285,10 @@ export default {
         this.isMain = false;
         this.isGu = true;
       }
-
-      //선택한 구랑 구 아이디 저장
-      for (let i = 0; i < this.GuList.length; i++) {
-        if (this.GuList[i].gu == guSelect.gu) {
-          const GuID = this.GuList[i].id;
-          this.selectGuID = GuID;
-          //console.log(this.selectGuID)
-        }
-      }
     },
 
     getSpaceList(val) {
-      //동 아이디도 저장!
-      const dongSelect = this.selectDong;
-      //console.log(this.dongList)
-      //console.log(dongSelect)
-      for (let i = 0; i < this.dongList.length; i++) {
-        if (this.dongList[i].dong == dongSelect) {
-          const DongID = this.dongList[i].id;
-          this.selectDongID = DongID;
-          console.log(this.selectDongID);
-        }
-      }
       this.isDong = true;
-      console.log(this.space);
 
       //환경 지수의 갯수 구하는 부분(구별, 동별)
       $axios
@@ -385,10 +369,9 @@ export default {
     },
 
     space: function (val) {
-      this.getSpaceList(val);
-      console.log(val);
       this.isSpace = true;
       this.selectSpaceName = val;
+      this.isDong = false;
       if (val === "cctv") {
         this.spaceTitle = "📹 CCTV";
       } else if (val === "bar") {
@@ -403,14 +386,17 @@ export default {
     },
 
     isSpace: function (val) {
-      console.log(val)
+      this.isDong = false;
       if (!val) {
         this.getSpaceList("cctv");
       }
     },
+    dongId: function (val) {
+      this.selectDongID = val;
+      if (val != -1) this.getSpaceList(this.space);
+    },
   }
 };
-
 </script>
 <style scoped>
 .space-detail {
