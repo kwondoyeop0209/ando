@@ -83,7 +83,7 @@ import Highcharts from "highcharts";
 import Variablepie from "highcharts/modules/variable-pie";
 import Highcharts3D from "highcharts/highcharts-3d";
 import { VueSvgGauge } from "vue-svg-gauge";
-
+import $axios from "axios";
 
 Variablepie(Highcharts);
 Highcharts3D(Highcharts);
@@ -99,7 +99,6 @@ export default {
   },
   components: {
     highcharts: Chart,
-    
     VueSvgGauge,
   },
 
@@ -257,8 +256,8 @@ export default {
 
   mounted() {
     // 검색을 위해 구 목록 리턴
-      axios
-      .get("http://j5a305.p.ssafy.io:8080/api/v1/main/sigungu")
+      $axios
+      .get("/main/sigungu")
       .then(respon => {
         this.guList = respon.data.guList
         for(const idx in this.guList) {
@@ -309,8 +308,8 @@ export default {
         console.log(this.space)
   
       //환경 지수의 갯수 구하는 부분(구별, 동별) 
-      axios
-      .get("http://j5a305.p.ssafy.io:8080/api/v1/space/count?id=" + this.selectDongID + "&type=" + val)
+      $axios
+      .get("/space/count?id=" + this.selectDongID + "&type=" + val)
       .then(re => {
         this.spaceData = re.data
         //console.log(this.spaceData)
@@ -323,8 +322,8 @@ export default {
 
     // 해당 동 space 개수 순위 주변 5개 개수정보
     
-      axios
-      .get("http://j5a305.p.ssafy.io:8080/api/v1/space/ranking?id=" + this.selectDongID + "&type=" + val)
+      $axios
+      .get("/space/ranking?id=" + this.selectDongID + "&type=" + val)
       .then(r => {
         //x축 y축 초기화를 시켜줘야 그래프가 계속 5개씩 나옴!
         this.rankSpot.series[0].data = []
@@ -348,14 +347,11 @@ export default {
       })
       .catch(e => {
           console.log('error : ', e)
-      })
-
-      
-    
+      })   
     
     //space 상관관계 정보
-      axios
-      .get("http://j5a305.p.ssafy.io:8080/api/v1/space/graph?type=" + val)
+      $axios
+      .get("/space/graph?type=" + val)
       .then(respons => {
         this.crimeRelation.xAxis.categories = []
         this.crimeRelation.series[0].data = []
@@ -370,8 +366,6 @@ export default {
           this.crimeRelation.series[0].data.push(graphValue[i].cnt *3) //발생건수
           this.crimeRelation.series[1].data.push(graphValue2[i].cnt) //체포건수
         }
-
-
 
 
       })
@@ -391,7 +385,7 @@ export default {
       this.DongList = []
       
       axios
-      .get("http://j5a305.p.ssafy.io:8080/api/v1/main/dong/" + val)
+      .get("/main/dong/" + val)
       .then(respond => {
         this.dongList = respond.data.getDongListDtoList
         //console.log(this.dongList)
