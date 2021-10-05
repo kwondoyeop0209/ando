@@ -40,11 +40,16 @@ export default {
     },
     dongId: function (val) {
       if (val === -1) {
-        this.removePolygon();
+        if (this.polygon != undefined) {
+          this.removePolygon();
+        }
         this.getSpaceList("cctv");
       } else {
         this.removeCustom();
-        this.overlayMarker(val);
+        this.overlayPolygon(val);
+        if (this.isSpace) {
+          this.overlayMarker(val);
+        }
       }
     },
   },
@@ -189,7 +194,7 @@ export default {
         })
         .then((response) => {
           this.removeMarker();
-          const imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png";
+          const imageSrc = "https://ggomzirakimg.s3.ap-northeast-2.amazonaws.com/ando/ic-"+ this.space +".png";
           const imageSize = new kakao.maps.Size(30, 30);
           const imageOption = { offset: new kakao.maps.Point(27, 69) };
 

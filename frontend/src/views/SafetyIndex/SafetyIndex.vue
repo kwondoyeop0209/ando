@@ -58,14 +58,12 @@ export default {
     },
     selectSpace(val) {
       this.space = val;
-      console.log(val);
     },
     selectDong(val) {
       this.dong = val;
     },
     selectDongId(val) {
       this.dongId = val;
-      console.log(val);
     },
   },
 };
@@ -73,7 +71,7 @@ export default {
 
 <style scoped>
 .safety-index {
-  height: 950px;
+  height: 960px;
   display: flex;
 }
 .info {

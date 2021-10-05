@@ -48,7 +48,7 @@
       </div>
       <div class="rankDetail">
         <p style="margin: 5px 30px">
-          {{ this.guData }} 내에서
+          {{ this.guData.guName }} 내에서
           <span style="font-size: 28px; font-weight: 600">
             {{ this.rankingData.rankingOfGu }}위
           </span>
