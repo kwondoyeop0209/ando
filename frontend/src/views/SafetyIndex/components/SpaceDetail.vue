@@ -3,22 +3,22 @@
     <!-- 구 동 선택하는 공간 -->
     <div class="select-region">
       <select class="select" @change="changeGu" v-model="selectGu">
-        <option selected value="자치구">자치구</option>
-        <option v-for="(gu, idx) in GuList" :key="idx" :value="gu">
-          {{ gu.gu }}
-        </option>
-      </select>&nbsp;
+              <option selected value="자치구">자치구</option>
+              <option v-for="(gu, idx) in GuList" :key="idx" :value="gu">
+                {{ gu.gu }}
+              </option>
+            </select>&nbsp;
 
-      <select class="select" v-show="isGu" v-model="selectDong">
-        <option selected value="행정동">행정동</option>
-            <option v-for="(dong, idx) in DongList" :key="idx" :value="dong">
-              {{ dong }}
-            </option>
-      </select>
+       <select class="select" v-show="isGu" v-model="selectDong">
+         <option selected value="행정동">행정동</option>
+              <option v-for="(dong, idx) in DongList" :key="idx" :value="dong">
+                {{ dong }}
+              </option>
+       </select>
        <br /><br />
 
        <!-- 갯수 보여주는 공간 -->
-       <div class = "space-info" v-show="isSpace">
+       <div class = "space-info" v-show="isDong">
       <p style="margin-bottom:10px; font-size:30px; font-weight: 600">💥{{selectDong}}<span style="font-size: 20px">의</span>
       {{space}} 비율 <br> </p>
       <p style="margin-bottom:10px;">{{selectGu.gu}} 내
@@ -244,7 +244,9 @@ export default {
             type: 'scatter',
             data: [],
             color: "rgba(119, 152, 191, .5)"
-          }
+          },
+          
+
         ],
       },
 
@@ -303,7 +305,9 @@ export default {
           console.log(this.selectDongID)
       }
         }
-
+        this.isDong = true;
+        console.log(this.space)
+  
       //환경 지수의 갯수 구하는 부분(구별, 동별) 
       axios
       .get("http://j5a305.p.ssafy.io:8080/api/v1/space/count?id=" + this.selectDongID + "&type=" + val)
@@ -363,7 +367,7 @@ export default {
         const graphValue2 = this.graphData.arrestList
         for(var i=0; i<graphValue.length; i++) {
           this.crimeRelation.xAxis.categories.push(graphValue[i].gu) //구역들 x축으로
-          this.crimeRelation.series[0].data.push(graphValue[i].cnt) //발생건수
+          this.crimeRelation.series[0].data.push(graphValue[i].cnt *3) //발생건수
           this.crimeRelation.series[1].data.push(graphValue2[i].cnt) //체포건수
         }
 
@@ -415,7 +419,7 @@ export default {
     },
 
     isSpace: function (val) {
-      //console.log(val)
+      console.log(val)
       if (!val) {
         this.getSpaceList("cctv");
       }
