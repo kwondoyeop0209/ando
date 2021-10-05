@@ -78,8 +78,8 @@ export default {
 }
 .info {
   width: 400px;
+  height: 100%;
   background-color: #454d5e;
-  padding: 18px;
 }
 .map {
   flex-grow: 1;
