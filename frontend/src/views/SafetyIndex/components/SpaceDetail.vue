@@ -355,13 +355,14 @@ export default {
       this.selectGuID = -1;
       this.isDong = false;
       this.$emit("selectDongId", -1);
+      this.dongList = [];
     }
   },
 
   watch: {
     selectGuID: function (val) {
       // 해당 구의 행정동 리스트 가져오기
-      this.DongList = [];
+      this.dongList = [];
       this.dongId = -1;
       if (val != -1) {
         axios
