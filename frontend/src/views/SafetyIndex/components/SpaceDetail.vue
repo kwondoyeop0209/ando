@@ -36,9 +36,10 @@
       </div>
       <p class="space-info-subtitle">{{ spaceTitle }} 비율</p>
       <p class="space-ratio">
-        {{ selectGu.guName }} 내
+        <span style="font-weight: 600">{{ selectGu.guName }}</span>
+        내
         <span>
-          총 {{ spaceData.guCnt }}개 중{{ this.spaceData.dongCnt }}개
+          총 {{ spaceData.guCnt }}개 중 {{ this.spaceData.dongCnt }}개
         </span>있네요!
       </p>
 

@@ -38,17 +38,19 @@ export default {
         this.removeCustom();
       }
     },
-    dongId: function (val) {
+    dongId: async function (val) {
       if (val === -1) {
         if (this.polygon != undefined) {
           this.removePolygon();
         }
-        this.getSpaceList("cctv");
+        this.getSpaceList(this.space);
       } else {
         this.removeCustom();
-        this.overlayPolygon(val);
+        const d = await this.overlayPolygon(val);
+        console.log(d);
         if (this.isSpace) {
-          this.overlayMarker(val);
+          const d2 = await this.overlayMarker(val);
+          console.log(d2);
         }
       }
     },
@@ -107,21 +109,21 @@ export default {
       this.removeCustom();
       data.forEach((item) => {
         const content = document.createElement("div");
-        content.style = "background-color:#6A7DAF; border: 1px solid #454D5E; border-radius: 16px; padding: 8px; font-size: 14px";
-        content.onclick = () => {
+        content.style = "background-color:#6A7DAF; border: 1px solid #454D5E; border-radius: 20px; padding: 8px 6px; font-size: 14px; display: flex; align-items: center";
+        content.onclick = async () => {
           this.$emit("selectDong", item.dongname);
           this.$emit("selectDongId", item.dongId);
 
           this.removeCustom();
           //행정동 다각형 그리기
-          this.overlayPolygon(item.dongId);
-          if (this.isSpace) {
-            this.overlayMarker(item.dongId);
-          }
+          // await this.overlayPolygon(item.dongId);
+          // if (this.isSpace) {
+          //   await this.overlayMarker(item.dongId);
+          // }
         };
 
         if (this.isSpace) {
-          const span1 = document.createElement("span");
+          const span1 = document.createElement("p");
           span1.style = "background-color: #ADADAD; border-radius: 16px; padding: 2px 8px; margin-right: 4px";
           let ic = "";
           if (this.space === "cctv") ic = "📹";
@@ -133,7 +135,7 @@ export default {
           content.appendChild(span1);
         }
 
-        const span2 = document.createElement("span");
+        const span2 = document.createElement("p");
         span2.innerText = item.dongname;
 
         content.appendChild(span2);
@@ -184,7 +186,6 @@ export default {
             fillOpacity: 0.3
           });
           this.polygon.setMap(this.map);
-          console.log("overlayPolygon", this.polygon);
         })
         .catch(() => {
           console.log("오류가 발생했습니다.");
@@ -219,7 +220,6 @@ export default {
             this.markerList.push(marker);
             marker.setMap(this.map);
           });
-          console.log("overlayMarker", this.markerList);
         })
         .catch(() => {
           console.log("오류가 발생했습니다.");
