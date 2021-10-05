@@ -5,7 +5,7 @@
         <div class="modal-title">
           <p style="font-size: 24px; font-weight: 600">범죄 현황</p>
           <div style="flex: 1"></div>
-          <p id="detail_btn" @click="onClick(guSelected)">범죄발생 위험군 보기</p>
+          <p id="detail_btn" @click="onClick(guSelected)" style="font-weight:600">범죄발생 위험군 보기</p>
         </div>
         <div class="state-content">
           <!-- 범죄율 -->
@@ -140,7 +140,7 @@
               <th style="width: 100px">범죄발생 지수</th>
             </tr>
             <tr v-for="pItem in predictList" :key="pItem.type">
-              <td style="background-color: #686868"><span v-html="pItem.type"></span></td>
+              <td style="background-color: #B8B8B8"><span v-html="pItem.type"></span></td>
               <td><span v-html="pItem.day"></span></td>
               <td><span v-html="pItem.spot"></span></td>
               <td><span v-html="pItem.time"></span></td>
@@ -196,6 +196,7 @@ export default {
       guArrest: "",
       type5Name: "",
       type5Idx: "",
+      spotList:[],
 
       chartTypeOfCrime: {
         chart: {
@@ -596,6 +597,7 @@ export default {
     getCrimeSpot() {
       const highestSpot = this.$refs.highestSpot;
       highestSpot.removeSeries();
+      //this.highestSpot.xAxis.categories=[]
       $axios
         .get("/crime/spot", {
           params: {
@@ -604,12 +606,18 @@ export default {
           },
         })
         .then((response) => {
-          // this.highestSpot.xAxis.categories = response.data.list.map(
-          //   (item) => item.spot
-          // );
+          console.log(response.data.list)
+
+          this.highestSpot.xAxis.categories.splice(0)
+          
+          const hotSpot = response.data.list
+          for (var i=0; i<7; i++) {
+            this.highestSpot.xAxis.categories.push(hotSpot[i].spot)
+          }
+          console.log(this.highestSpot.xAxis.categories)
+
           const data = response.data.list.map((item) => {
             return {
-              categories:item.spot,
               name: item.spot,
               y: item.count,
             };
@@ -774,7 +782,7 @@ export default {
 }
 th {
   padding: 10px;
-  background-color: #B8B8B8;
+  background-color: #999999;
   border-radius: 5px;
 }
 td {
