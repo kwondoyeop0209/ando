@@ -115,12 +115,21 @@ export default {
           this.removeCustom();
           //행정동 다각형 그리기
           this.overlayPolygon(item.dongId);
+          if (this.isSpace) {
+            this.overlayMarker(item.dongId);
+          }
         };
 
         if (this.isSpace) {
           const span1 = document.createElement("span");
           span1.style = "background-color: #ADADAD; border-radius: 16px; padding: 2px 8px; margin-right: 4px";
-          span1.innerText = item.count;
+          let ic = "";
+          if (this.space === "cctv") ic = "📹";
+          else if (this.space === "bar") ic = "🍺";
+          else if (this.space === "bar") ic = "🚨";
+          else if (this.space === "bar") ic = "💡";
+          else ic = "🏠";
+          span1.innerText = ic + " " + item.count;
           content.appendChild(span1);
         }
 
