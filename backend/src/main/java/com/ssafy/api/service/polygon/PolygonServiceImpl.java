@@ -6,7 +6,10 @@ import javassist.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.StringTokenizer;
 
 @Service
 @RequiredArgsConstructor
@@ -14,8 +17,15 @@ public class PolygonServiceImpl implements PolygonService{
     final PolygonRepository polygonRepository;
 
     @Override
-    public PolygonMapping getPolygon(Long id) throws NotFoundException {
+    public List<String> getPolygon(Long id) throws NotFoundException {
         PolygonMapping polygon = polygonRepository.findByDong_Id(id).orElseThrow(()->new NotFoundException(id+"Dong polygon Not Found!"));
-        return polygon;
+        StringTokenizer st = new StringTokenizer(polygon.getCoordinates(),"-");
+        List<String> polygonList = new ArrayList<>();
+        while (st.hasMoreTokens()){
+            polygonList.add(st.nextToken());
+        }
+        if(polygonList.isEmpty())
+            throw new NotFoundException(id+" Dong Polygon is empty!");
+        return polygonList;
     }
 }
