@@ -40,7 +40,6 @@ export default {
     return {
       isSafety: true,
       isSpace: false,
-      isCctv: false,
       space: "",
       dong: "",
       dongId: -1,
@@ -50,7 +49,7 @@ export default {
     onSpace() {
       this.isSpace = true;
       this.isSafety = false;
-      this.space = "cctv";
+      this.space = "";
     },
     onSafety() {
       this.isSpace = false;
