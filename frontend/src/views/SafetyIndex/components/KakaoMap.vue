@@ -79,16 +79,7 @@ export default {
       };
       this.map = new kakao.maps.Map(this.container, this.options);
 
-      // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
-      this.mapTypeControl = new kakao.maps.MapTypeControl();
-      this.map.addControl(this.mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-
-      // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
-      this.zoomControl = new kakao.maps.ZoomControl();
-      this.map.addControl(this.zoomControl, kakao.maps.ControlPosition.RIGHT);
-      //여기까지가 기본 지도 세팅 완료
-
-      if(!this.isSpace) { //안전지수 탭이면
+      if (!this.isSpace) { //안전지수 탭이면
         //행정동 마커 찍기
         this.getSpaceList("cctv");
       }
@@ -190,6 +181,7 @@ export default {
             fillOpacity: 0.3
           });
           this.polygon.setMap(this.map);
+          console.log("polygon");
         })
         .catch(() => {
           console.log("오류가 발생했습니다.");
@@ -224,6 +216,7 @@ export default {
             this.markerList.push(marker);
             marker.setMap(this.map);
           });
+          console.log("marker");
         })
         .catch(() => {
           console.log("오류가 발생했습니다.");
