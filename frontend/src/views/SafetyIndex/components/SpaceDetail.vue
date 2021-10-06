@@ -39,7 +39,7 @@
         <span style="font-weight: 600">{{ selectGu.guName }}</span>
         내
         <span>
-          총 {{ spaceData.guCnt }}개 중 {{ this.spaceData.dongCnt }}개
+          총 {{ spaceData.guCnt | comma }}개 중 {{ this.spaceData.dongCnt | comma }}개
         </span>있네요!
       </p>
 
@@ -413,7 +413,13 @@ export default {
         this.selectGuID = -1;
       }
     },
-  }
+  },
+
+  filters: {
+    comma(val) {
+      return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+  },
 };
 </script>
 <style scoped>
