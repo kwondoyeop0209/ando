@@ -405,8 +405,10 @@ export default {
   watch: {
     gu: function (val) {
       this.guSelected = this.gu;
-      //년도 초기화해야함 => 2020년으로
+
+      if(this.year == null) {
       this.$emit("initYear");
+      }
 
       this.isPredict = false;
 
