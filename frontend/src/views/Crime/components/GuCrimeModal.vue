@@ -5,14 +5,16 @@
         <div class="modal-title">
           <p style="font-size: 24px; font-weight: 600">범죄 현황</p>
           <div style="flex: 1"></div>
-          <p id="detail_btn" @click="onClick(guSelected)" style="font-weight:600">범죄발생 위험군 보기</p>
+          <p id="detail_btn" @click="onClick(guSelected)">
+            범죄발생 위험군 보기 >
+          </p>
         </div>
         <div class="state-content">
           <!-- 범죄율 -->
           <div class="el">
             <p class="rateTitle">💡 범죄율</p>
             <p class="rateDetail">
-              총 {{ totalCrime }} 건 중 {{ guCrime }}건이 발생
+              총 {{ totalCrime | comma }} 건 중 {{ guCrime | comma }}건이 발생
             </p>
             <div class="doughnut">
               <VueSvgGauge
@@ -40,7 +42,7 @@
           <div class="el">
             <p class="rateTitle">💡 검거율</p>
             <p class="rateDetail">
-              총 {{ guCrime }} 건 중 {{ guArrest }}건이 검거
+              총 {{ guCrime | comma }} 건 중 {{ guArrest | comma }}건이 검거
             </p>
             <div class="doughnut">
               <VueSvgGauge
@@ -89,7 +91,7 @@
                 <div class="crime-content" :id="'content' + crime.typeIdx">
                   <p style="flex: 1; text-align: center">{{ crime.type }}</p>
                   <p>|</p>
-                  <p style="flex: 1; text-align: center">{{ crime.num }}건</p>
+                  <p style="flex: 1; text-align: center">{{ crime.num | comma }}건</p>
                 </div>
               </div>
             </div>
@@ -127,7 +129,7 @@
         <div class="predict-title">
           <p> 범죄 유형별 위험군</p>
           <div style="flex: 1"></div>
-          <img src="@/assets/ic-close.png" width="20" @click="offClick" />
+          <img src="@/assets/ic-close.png" width="20" @click="offClick" class="close-btn"/>
         </div>
         <!-- 예측테이블 -->
         <div>
@@ -451,7 +453,7 @@ export default {
         })
         .then((response) =>{
           this.predictList = response.data.list.map((item) => {
-            return{
+            return {
               type: item.crimeType,
               day: item.day,
               spot: item.spot,
@@ -534,11 +536,17 @@ export default {
             return {
               name: item.crimeType,
               y: item.count,
-              z: (len -= 150),
+              z: (len -= 200),
               color: chartColor[idx % 5],
             };
           });
-          chartTypeOfCrime.addSeries({ data: crimeType });
+          chartTypeOfCrime.addSeries({
+            minPointSize: 10,
+            innerSize: "30%",
+            zMin: 0,
+            name: "범죄유형",
+            data: crimeType,
+          });
 
           this.crimeTypeList = response.data.list.map((item) => {
             return {
@@ -624,7 +632,10 @@ export default {
               y: item.count,
             };
           });
-          highestSpot.addSeries({ data: data });
+          highestSpot.addSeries({
+            name: "발생 장소",
+            data: data,
+          });
         })
         .catch(() => {
           console.log("오류가 발생했습니다.");
@@ -653,6 +664,11 @@ export default {
         });
     },
   },
+  filters: {
+    comma(val) {
+      return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+  },
 };
 </script>
 <style scoped>
@@ -669,6 +685,10 @@ export default {
 }
 #detail_btn {
   font-size: 16px;
+  font-weight: 600;
+}
+#detail_btn:hover {
+  cursor: pointer;
 }
 .rateTitle {
   font-size: 20px;
@@ -737,9 +757,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.arrow-arrea:hover {
-  cursor: pointer;
-}
 .arrow {
   padding: 24px 12px;
   background: #454d5e;
@@ -747,6 +764,12 @@ export default {
   border-bottom-right-radius: 8px;
   z-index: 999;
   box-shadow: 12px 0px 20px -7px rgba(26, 31, 41, 0.45);
+}
+.arrow:hover {
+  cursor: pointer;
+}
+.close-btn:hover {
+  cursor: pointer;
 }
 .predict-modal {
   z-index: 888;
