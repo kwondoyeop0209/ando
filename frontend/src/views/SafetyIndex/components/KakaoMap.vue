@@ -43,7 +43,11 @@ export default {
         if (this.polygon != undefined) {
           this.removePolygon();
         }
-        this.getSpaceList(this.space);
+        if (this.isSpace) {
+          this.getSpaceList(this.space);
+        } else {
+          this.getSpaceList("cctv");
+        }
       } else {
         this.removeCustom();
         const d = await this.overlayPolygon(val);
