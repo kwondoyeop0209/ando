@@ -13,5 +13,5 @@ public interface SpaceService {
 
     SpaceCountGetRes getSpaceCount(String type, Long id) throws NotFoundException;
 
-    Space5RankingGetRes getSpaceCount5List(String type, Long id);
+    Space5RankingGetRes getSpaceCount5List(String type, Long id) throws NotFoundException;
 }

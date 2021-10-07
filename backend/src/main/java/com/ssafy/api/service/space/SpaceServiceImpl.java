@@ -9,6 +9,8 @@ import com.ssafy.db.entity.Dong;
 import com.ssafy.db.repository.arrestRateRepository;
 import com.ssafy.db.repository.dongRepository;
 import com.ssafy.db.repository.dongRepositorySupport;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import javassist.NotFoundException;
@@ -85,7 +87,8 @@ public class SpaceServiceImpl implements SpaceService {
     }
 
     @Override
-    public Space5RankingGetRes getSpaceCount5List(String type, Long id) {
+    public Space5RankingGetRes getSpaceCount5List(String type, Long id) throws NotFoundException {
+        Optional<Dong> dong = dongRepository.findById(id);
         Space5RankingGetRes res = new Space5RankingGetRes();
         Long ranking = dongRepositorySupport.getSpaceRankingInGu(type,id);
         Long cnt = dongRepositorySupport.getDongCountInGu(id);
@@ -95,6 +98,29 @@ public class SpaceServiceImpl implements SpaceService {
         if(ranking > cnt-2) offset = cnt-5;
 
         List<CountByDong> list = dongRepositorySupport.get5List(type, offset,id);
+
+        boolean flag = false;
+        for(CountByDong cbd : list){
+            if(cbd.getDongname().equals(dong.get().getDong())) flag = true;
+        }
+        if(!flag){
+            CountByDong cbd = new CountByDong();
+            cbd.setDongname(dong.get().getDong());
+            if(type.equals("cctv"))
+                cbd.setCount(dong.get().getCctvCnt());
+            else if(type.equals("police"))
+                cbd.setCount(dong.get().getPoliceCnt());
+            else if(type.equals("guard"))
+                cbd.setCount(dong.get().getGuardHouseCnt());
+            else if(type.equals("light"))
+                cbd.setCount(dong.get().getLightCnt());
+            else if(type.equals("bar"))
+                cbd.setCount(dong.get().getBarCnt());
+            else throw new NotFoundException("type is wrong");
+            list.add(2,cbd);
+            list.remove(5);
+        }
+        Collections.sort(list);
         res.setList(list);
         res.setRanking(ranking);
         return res;
