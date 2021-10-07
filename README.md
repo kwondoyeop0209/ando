@@ -1,5 +1,3 @@
-build test11
-
 ## 🎥 프로젝트 개요
 
 ### 진행 기간
@@ -7,30 +5,17 @@ build test11
 - 2021.08.23 ~ 2021.10.07
 
 ### 주제
-<<<<<<< HEAD
-
 - 지역별(서울시) 범죄 분석과 공간 특성에 기반한 범죄 취약지 예측/안전지대 제안
-
-### 목표
-=======
-![image](/uploads/80d42c6e26f227cb2b38ba6c9bddcec3/image.png)  
-지역별(서울시) 범죄 분석과 공간 특성에 기반한 범죄 취약지 예측/안전지대 제안
 
 ### 목표
 ![image](/uploads/8152a969c4c9e854f63ba2285e2c90dd/image.png)  
 1. 서울시 범죄 분석과 공간 특성에 기반한 범죄 안전지대 제안  
 2. 서울시 지역별 범죄 발생 요인 분석 후 안전지대 제안  
->>>>>>> 542244a9ce5fba163a74b35ee68da201c00ca841
-
-1. 서울시 범죄 분석과 공간 특성에 기반한 범죄 안전지대 제안
-2. 서울시 지역별 범죄 발생 요인 분석 후 안전지대 제안
 
 ### 프로젝트 RULE
-<<<<<<< HEAD
 
-=======
 ![image](/uploads/61a819c1ed3781c5f2e0754ae2a0f174/image.png)  
->>>>>>> 542244a9ce5fba163a74b35ee68da201c00ca841
+
 1. JPA를 사용해서 DB와 백엔드를 연동한다.
 2. Jira를 사용하여 1주일 단위의 스프린트를 진행하고 프로젝트를 관리한다.
 3. 매일 오전, 오후 스크럼 미팅을 실시하고 Mattermost에 기록한다.
@@ -38,14 +23,7 @@ build test11
 5. 정한 git commit 규칙을 준수하여 프로젝트 형상 관리를 한다.
 
 ### 와이어프레임
-<<<<<<< HEAD
-
-![](/picture/UI.png)
-=======
 ![image](/uploads/aa66f80e4eda3d08d0cc7b43c1813196/image.png)  
-
-
->>>>>>> 542244a9ce5fba163a74b35ee68da201c00ca841
 <br>
 
 ## 🍀 핵심기능
@@ -86,8 +64,6 @@ build test11
 ![erd](picture/erd.png)
 
 ## 💻 개발환경
-<<<<<<< HEAD
-
 - JDK 1.8
 - nginx 1.21.3
 - Spring boot 2.5.5
@@ -101,16 +77,8 @@ build test11
 
 ## 💻 빌드 및 배포
 
-=======
-- Java : jdk1.8 (1.8.0_192)
-- node.js : 14.17.3
-- npm : 6.14.13
-- vue-cli : 4.5.13
-- IntelliJ : 2021.1.3
-- nginx :1.18.0 (Ubuntu)
-
 ## 💻 실행방법
->>>>>>> 542244a9ce5fba163a74b35ee68da201c00ca841
+
 ### Frontend
 
 ```bash=
