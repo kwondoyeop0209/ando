@@ -6,6 +6,8 @@
 - gradle 7.2
 - MySQL 8.0.26
 - Intellij IDEA Ultimate 2020.3.1
+- Node '14.17.4'
+- Npm '6.14.14'
 - Vue 2
 - VsCode 1.60.2
 - Jenkins 2.303.1
