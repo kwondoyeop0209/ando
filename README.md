@@ -4,7 +4,7 @@ build test11
 - 2021.08.23 ~ 2021.10.07
 
 ### 주제
-![image](/uploads/7d242508fb5b165f063213913856aaac/image.png)
+![image](/uploads/80d42c6e26f227cb2b38ba6c9bddcec3/image.png)
 - 지역별(서울시) 범죄 분석과 공간 특성에 기반한 범죄 취약지 예측/안전지대 제안
 
 ### 목표
