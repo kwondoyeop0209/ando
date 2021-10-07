@@ -8,5 +8,5 @@ import java.util.List;
 
 public interface RiskIndexRepository extends JpaRepository<RiskIndex,Long> {
 
-    List<RiskIndex> findBySiGunGu_Id(Long id);
+    List<RiskIndex> findBySiGunGu_IdOrderByPrtdsDesc(Long id);
 }

@@ -19,7 +19,7 @@ public class RiskIndexServiceImpl implements RiskIndexService {
 
     @Override
     public List<RiskIndexDto> getRiskIndexList(Long id) throws NotFoundException {
-        List<RiskIndex> list = riskIndexRepository.findBySiGunGu_Id(id);
+        List<RiskIndex> list = riskIndexRepository.findBySiGunGu_IdOrderByPrtdsDesc(id);
 
         if(list.isEmpty())
             throw new NotFoundException("RiskIndex is empty!");

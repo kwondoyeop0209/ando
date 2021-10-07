@@ -1,8 +1,8 @@
 <template>
   <div class="safety-index">
     <div class="info">
-      <safety-detail v-show="isSafety" />
-      <space-detail v-show="isSpace" />
+      <safety-detail v-show="isSafety" :isSafety="isSafety" :dong="dong" :dongId="dongId" @selectDong="selectDong" @selectDongId="selectDongId" />
+      <space-detail v-show="isSpace" :isSpace="isSpace" :space="space" :dong="dong" :dongId="dongId" @selectDong="selectDong" @selectDongId="selectDongId" />
     </div>
     <div class="map">
       <!-- 탭-->
@@ -13,14 +13,14 @@
           <p class="tab-items" @click="onSpace">환경 요소</p>
         </div>
         <div class="tab-bottom" v-show="isSpace">
-          <p class="tab-items" @click="onCctv" :isCctv="cctv"  >📹 CCTV</p>
-          <p class="tab-items">🍺 유흥지</p>
-          <p class="tab-items">🚨 파출소</p>
-          <p class="tab-items">💡 보안등</p>
-          <p class="tab-items">🏠 지킴이집</p>
+          <p class="tab-items" @click="selectSpace('cctv')">📹 CCTV</p>
+          <p class="tab-items" @click="selectSpace('bar')">🍺 유흥지</p>
+          <p class="tab-items" @click="selectSpace('police')">🚨 파출소</p>
+          <p class="tab-items" @click="selectSpace('light')">💡 보안등</p>
+          <p class="tab-items" @click="selectSpace('guard')">🏠 지킴이집</p>
         </div>
       </div>
-      <kakao-map />
+      <kakao-map :space="space" :isSpace="isSpace" :dongId="dongId" @selectDong="selectDong" @selectDongId="selectDongId"/>
     </div>
   </div>
 </template>
@@ -36,41 +36,48 @@ export default {
     SafetyDetail,
     SpaceDetail,
   },
-  
   data() {
     return {
       isSafety: true,
       isSpace: false,
-      isCctv: false,
+      space: "",
+      dong: "",
+      dongId: -1,
     };
   },
   methods: {
     onSpace() {
       this.isSpace = true;
       this.isSafety = false;
+      this.space = "cctv";
     },
     onSafety() {
       this.isSpace = false;
       this.isSafety = true;
+      this.space = "";
     },
-    onCctv() {
-      this.isCctv = true;
-      console.log("부모에서 보내는거")
-    }
-
+    selectSpace(val) {
+      this.space = val;
+    },
+    selectDong(val) {
+      this.dong = val;
+    },
+    selectDongId(val) {
+      this.dongId = val;
+    },
   },
 };
 </script>
 
 <style scoped>
 .safety-index {
-  height: 950px;
+  height: 960px;
   display: flex;
 }
 .info {
   width: 400px;
+  height: 100%;
   background-color: #454d5e;
-  padding: 18px;
 }
 .map {
   flex-grow: 1;
@@ -90,8 +97,9 @@ export default {
   background-color: #454d5e;
   margin-left: 16px;
   border-radius: 8px;
-  padding: 8px 24px;
+  padding: 8px 12px;
   align-items: center;
+  box-shadow: 0px 0px 16px 3px rgba(26, 31, 41, 0.45);
 }
 .tab-items {
   margin: 0 8px;
@@ -104,7 +112,8 @@ export default {
   background-color: #454d5e;
   margin-left: 16px;
   border-radius: 8px;
-  padding: 0 24px;
+  padding: 0 12px;
   align-items: center;
+  box-shadow: 0px 0px 16px 3px rgba(26, 31, 41, 0.45);
 }
 </style>

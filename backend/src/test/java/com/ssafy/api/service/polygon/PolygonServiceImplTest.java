@@ -17,9 +17,4 @@ class PolygonServiceImplTest {
     @Autowired
     PolygonService polygonService;
 
-
-    public void getPolygon() throws NotFoundException {
-        PolygonMapping polygonMapping = polygonService.getPolygon(Long.valueOf(1));
-        System.out.println(polygonMapping.getCoordinates());
-    }
 }

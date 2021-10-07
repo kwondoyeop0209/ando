@@ -37,6 +37,9 @@ dependencies {
 //    implementation "io.springfox:springfox-swagger-ui:3.0.0"
     implementation "io.springfox:springfox-boot-starter:3.0.0"
     implementation group: 'com.opencsv', name: 'opencsv', version: '4.4'
+    // https://mvnrepository.com/artifact/com.googlecode.json-simple/json-simple
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
 
 }
 

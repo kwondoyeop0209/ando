@@ -4,8 +4,10 @@ import com.ssafy.api.response.dong.SafetyRankingGetRes;
 import com.ssafy.api.response.dong.SpaceRankingGetRes;
 import com.ssafy.db.dto.dong.GetDongListDto;
 import com.ssafy.db.entity.Dong;
+import com.ssafy.db.mapping.DongNameMapping;
 import com.ssafy.db.mapping.DongRanking;
 import com.ssafy.db.mapping.DongSafetyIndex;
+import com.ssafy.db.mapping.LatLngMapping;
 import com.ssafy.db.repository.dongRepository;
 import com.ssafy.db.repository.dongRepositorySupport;
 import java.util.Optional;
@@ -26,6 +28,16 @@ public class DongServiceImpl implements DongService{
 
     @Autowired
     dongRepositorySupport dongRepositorySupport;
+
+    @Override
+    public DongNameMapping getGuNameByDong(Long id) throws NotFoundException {
+        Optional<DongNameMapping> dong = dongRepository.findById(id,DongNameMapping.class);
+        if(dong.isPresent()){
+            return dong.get();
+        }else{
+            throw new NotFoundException("Dong is Empty");
+        }
+    }
 
     @Override
     public List<GetDongListDto> getDongList(Long id) throws NotFoundException {
@@ -58,33 +70,37 @@ public class DongServiceImpl implements DongService{
     @Override
     public SpaceRankingGetRes getSpaceRanking(Long id) throws NotFoundException {
         SpaceRankingGetRes spaceRankingGetRes = new SpaceRankingGetRes();
-        System.out.println(1);
 
         Optional<Dong> dong = dongRepository.findById(id);
-        System.out.println(2);
 
         if(dong.isPresent()) {
-            spaceRankingGetRes.setCctvRanking(dongRepositorySupport.getSpaceRanking("cctv",id));
-            spaceRankingGetRes.setPoliceRanking(dongRepositorySupport.getSpaceRanking("police",id));
-            spaceRankingGetRes.setBarRanking(dongRepositorySupport.getSpaceRanking("bar",id));
-            spaceRankingGetRes.setLightRanking(dongRepositorySupport.getSpaceRanking("light",id));
-        System.out.println(3);
+            spaceRankingGetRes.setCctvRanking(dongRepositorySupport.getSpaceRankingDistinct("cctv",id));
+            spaceRankingGetRes.setPoliceRanking(dongRepositorySupport.getSpaceRankingDistinct("police",id));
+            spaceRankingGetRes.setBarRanking(dongRepositorySupport.getSpaceRankingDistinct("bar",id));
+            spaceRankingGetRes.setLightRanking(dongRepositorySupport.getSpaceRankingDistinct("light",id));
+            spaceRankingGetRes.setGuardRanking(dongRepositorySupport.getSpaceRankingDistinct("guard",id));
 
             spaceRankingGetRes.setCctvAvg(dongRepositorySupport.getSpaceAvg("cctv"));
             spaceRankingGetRes.setPoliceAvg(dongRepositorySupport.getSpaceAvg("police"));
             spaceRankingGetRes.setBarAvg(dongRepositorySupport.getSpaceAvg("bar"));
             spaceRankingGetRes.setLightAvg(dongRepositorySupport.getSpaceAvg("light"));
-        System.out.println(4);
+            spaceRankingGetRes.setGuardAvg(dongRepositorySupport.getSpaceAvg("guard"));
 
             spaceRankingGetRes.setCctv(dong.get().getCctvCnt());
             spaceRankingGetRes.setBar(dong.get().getBarCnt());
             spaceRankingGetRes.setPolice(dong.get().getPoliceCnt());
             spaceRankingGetRes.setLight(dong.get().getLightCnt());
-        System.out.println(5);
+            spaceRankingGetRes.setGuard(dong.get().getGuardHouseCnt());
         }else{
             throw new NotFoundException("Dong id Empty");
         }
         return spaceRankingGetRes;
+    }
+
+    @Override
+    public LatLngMapping getLatLng(Long id) throws NotFoundException {
+        LatLngMapping mapping =  dongRepository.findById(id,LatLngMapping.class).orElseThrow(()->new NotFoundException(id+"Dong Not Found!"));
+        return mapping;
     }
 
 }

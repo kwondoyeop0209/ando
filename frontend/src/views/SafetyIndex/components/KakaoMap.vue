@@ -2,21 +2,62 @@
   <div id="map"></div>
 </template>
 <script>
+import $axios from "axios";
 export default {
   name: "KakaoMap",
+  props: {
+    space: String,
+    isSpace: Boolean,
+    dongId: Number,
+  },
   data() {
     return {
-      markerPositions1: [
-        [37.499590490909185, 127.0263723554437],
-        [37.499427948430814, 127.02794423197847],
-        [37.498553760499505, 127.02882598822454],
-        [37.497625593121384, 127.02935713582038],
-        [37.49629291770947, 127.02587362608637],
-        [37.49754540521486, 127.02546694890695],
-        [37.49646391248451, 127.02675574250912],
-      ],
-      markers: [],
-    }
+      container: undefined,
+      options: undefined,
+      map: undefined,
+      overlayList: [],
+      polygon: undefined,
+      markerList: [],
+    };
+  },
+  watch: {
+    space: function (val) {
+      if (this.polygon != undefined) {
+        this.removePolygon();
+      }
+      this.removeMarker();
+      this.getSpaceList(val);
+    },
+    isSpace: function (val) {
+      if (!val) {
+        if (this.polygon != undefined) {
+          this.removePolygon();
+        }
+        this.removeMarker();
+        this.getSpaceList("cctv");
+        this.removeCustom();
+      }
+    },
+    dongId: async function (val) {
+      if (val === -1) {
+        if (this.polygon != undefined) {
+          this.removePolygon();
+        }
+        if (this.isSpace) {
+          this.getSpaceList(this.space);
+        } else {
+          this.getSpaceList("cctv");
+        }
+      } else {
+        this.removeCustom();
+        const d = await this.overlayPolygon(val);
+        console.log(d);
+        if (this.isSpace) {
+          const d2 = await this.overlayMarker(val);
+          console.log(d2);
+        }
+      }
+    },
   },
   mounted() {
     if (window.kakao && window.kakao.maps) {
@@ -25,89 +66,166 @@ export default {
       const script = document.createElement("script");
       script.onload = () => kakao.maps.load(this.initMap);
       script.src =
-        "http://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=f4b6845e3f93731cc1cbedd752449bd5";
+        "https://dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=23763f349d4c914839b08d29272dfb2d";
       document.head.appendChild(script);
     }
   },
   methods: {
     initMap() {
-      const container = document.querySelector("#map");
-      const options = {
-        center: new kakao.maps.LatLng(37.517353, 127.037164),
-        level: 3,
+      this.container = document.querySelector("#map");
+      this.options = {
+        center: new kakao.maps.LatLng(37.532612, 126.990182),
+        level: 7,
+      };
+      this.map = new kakao.maps.Map(this.container, this.options);
+
+      if (!this.isSpace) { //안전지수 탭이면
+        //행정동 마커 찍기
+        this.getSpaceList("cctv");
       }
-      const map = new kakao.maps.Map(container, options);
-      const markerPosition = new kakao.maps.LatLng(37.517353, 127.037164);
-
-      const marker = new kakao.maps.Marker({
-        position: markerPosition,
-      });
-      marker.setMap(map);
-      
-      // 여기는 마커를 세팅하는 부분!! (이제 실제로 데이터들 받게되면 좌표들을 리스트로 쫙 풀고 한번에 보여주면 됨!)
-      // 마커를 표시할 위치와 title 객체 배열입니다
-      const positions = [
-        {
-          title: '여긴어디지',
-          latlng: new kakao.maps.LatLng(37.517353,127.037164)
-        },
-        {
-          title: '호잇',
-          latlng: new kakao.maps.LatLng(37.499590490909185, 127.0263723554437)
-        },
-        {
-          title: '공원',
-          latlng: new kakao.maps.LatLng(37.499427948430814, 127.02794423197847)
-        },
-        {
-          title: '뭐야 이건어디일까나',
-          latlng: new kakao.maps.LatLng(37.498553760499505, 127.02882598822454)
-        }
-      ];
-
-      // 마커 이미지의 이미지 주소입니다
-      const imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/markerStar.png";
-      for (var i = 0; i < positions.length; i++) {
-        // 마커 이미지의 이미지 크기 입니다
-        const imageSize = new kakao.maps.Size(24, 35);
-        // 마커 이미지를 생성합니다
-        const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize);
-        
-        // 마커를 생성합니다
-        this.marker = new kakao.maps.Marker({
-          map: this.map, // 마커를 표시할 지도
-          position: positions[i].latlng, // 마커를 표시할 위치
-          title: positions[i].title, // 마커의 타이틀, 마커에 마우스를 올리면 타이틀이 표시됩니다
-          image: markerImage, // 마커 이미지
+    },
+    getSpaceList(val) {
+      $axios
+        .get("/space?type=" + val)
+        .then((response) => {
+          this.overlayCustom(response.data.list);
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
         });
-      }
+    },
+    overlayCustom(data) {
+      this.container = document.querySelector("#map");
+      this.options = {
+        center: new kakao.maps.LatLng(37.532612, 126.990182),
+        level: 7,
+      };
+      this.map = new kakao.maps.Map(this.container, this.options);
+      this.removeCustom();
+      data.forEach((item) => {
+        const content = document.createElement("div");
+        content.style = "background-color:#6A7DAF; border: 1px solid #454D5E; border-radius: 20px; padding: 8px 6px; font-size: 14px; display: flex; align-items: center";
+        content.onclick = async () => {
+          this.$emit("selectDong", item.dongname);
+          this.$emit("selectDongId", item.dongId);
 
-      // 여기는 오버레이랑 기타 컨트롤러 등을 세팅하는 부분!!
+          this.removeCustom();
+          //행정동 다각형 그리기
+          // await this.overlayPolygon(item.dongId);
+          // if (this.isSpace) {
+          //   await this.overlayMarker(item.dongId);
+          // }
+        };
 
-      // 커스텀 오버레이에 표시할 내용입니다
-      // HTML 문자열 또는 Dom Element 입니다
-      const content = '<div class ="label"><span class="left"></span><span class="center" style="color:black;">안전!</span><span class="right"></span></div>';
+        if (this.isSpace) {
+          const span1 = document.createElement("p");
+          span1.style = "background-color: #ADADAD; border-radius: 16px; padding: 2px 8px; margin-right: 4px";
+          let ic = "";
+          if (this.space === "cctv") ic = "📹";
+          else if (this.space === "bar") ic = "🍺";
+          else if (this.space === "police") ic = "🚨";
+          else if (this.space === "light") ic = "💡";
+          else ic = "🏠";
+          span1.innerText = ic + " " + item.count;
+          content.appendChild(span1);
+        }
 
-      // 커스텀 오버레이가 표시될 위치입니다 
-      const position = new kakao.maps.LatLng(37.517353, 127.037164);
+        const span2 = document.createElement("p");
+        span2.innerText = item.dongname;
 
-      // 커스텀 오버레이를 생성합니다
-      var customOverlay = new kakao.maps.CustomOverlay({
-        position: position,
-        content: content,
+        content.appendChild(span2);
+
+        const position = new kakao.maps.LatLng(item.lat, item.lng);
+
+        const overlay = new kakao.maps.CustomOverlay({
+          map: this.map,
+          clickable: true,
+          position: position,
+          content: content,
+          yAnchor: 1,
+        });
+        this.overlayList.push(overlay);
       });
+    },
+    removeCustom() {
+      this.overlayList.forEach((item) => {
+        item.setMap(null);
+      });
+    },
+    overlayPolygon(val) {
+      $axios
+        .get("/main/polygon/" + val)
+        .then((response) => {
+          this.options = {
+            center: new kakao.maps.LatLng(response.data.dongLatLng.lat, response.data.dongLatLng.lng),
+            level: 4,
+          };
+          this.map = new kakao.maps.Map(this.container, this.options);
+          let polygonPath = [];
 
-      // 커스텀 오버레이를 지도에 표시합니다
-      customOverlay.setMap(this.map);
+          response.data.polygonList.forEach((item) => {
+            let tmp = item.split(",");
+            tmp[0] = tmp[0].replace("[", "");
+            tmp[1] = tmp[1].replace("]", "");
 
-      // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
-      this.mapTypeControl = new kakao.maps.MapTypeControl();
-      this.map.addControl(this.mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
+            polygonPath.push(new kakao.maps.LatLng(tmp[1], tmp[0]));
+          });
 
-      // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
-      this.zoomControl = new kakao.maps.ZoomControl();
-      this.map.addControl(this.zoomControl, kakao.maps.ControlPosition.RIGHT);
-      //여기까지가 기본 지도 세팅 완료
+          this.polygon = new kakao.maps.Polygon({
+            path: polygonPath,
+            strokeWeight: 3,
+            strokeColor: '#454D5E',
+            strokeOpacity: 0.8,
+            strokeStyle: 'longdash', 
+            fillColor: '#454D5E',
+            fillOpacity: 0.3
+          });
+          this.polygon.setMap(this.map);
+          console.log("polygon");
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    removePolygon() {
+      this.polygon.setMap(null);
+      this.$emit("selectDongId", -1);
+    },
+    overlayMarker(val) {
+      $axios
+        .get("/space/detail", {
+          params: {
+            id: val,
+            type: this.space,
+          },
+        })
+        .then((response) => {
+          this.removeMarker();
+          const imageSrc = "https://ggomzirakimg.s3.ap-northeast-2.amazonaws.com/ando/ic-"+ this.space +".png";
+          const imageSize = new kakao.maps.Size(30, 30);
+          const imageOption = { offset: new kakao.maps.Point(27, 69) };
+
+          const markerImage = new kakao.maps.MarkerImage(imageSrc, imageSize, imageOption);
+
+          response.data.forEach((item) => {
+            const markerPosition = new kakao.maps.LatLng(item.lat, item.lng);
+            const marker = new kakao.maps.Marker({
+              position: markerPosition,
+              image: markerImage,
+            });
+            this.markerList.push(marker);
+            marker.setMap(this.map);
+          });
+          console.log("marker");
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    removeMarker() {
+      this.markerList.forEach((item) => {
+        item.setMap(null);
+      });
     },
   },
 };

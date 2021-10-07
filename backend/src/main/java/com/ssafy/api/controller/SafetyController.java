@@ -6,6 +6,7 @@ import com.ssafy.api.response.safety.TopSafetyGetRes;
 import com.ssafy.api.service.dong.DongService;
 import com.ssafy.api.service.safety.SafetyService;
 import com.ssafy.db.dto.dong.GetTopSafetyListDto;
+import com.ssafy.db.mapping.DongNameMapping;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,6 +47,7 @@ public class SafetyController {
     @ApiOperation(value = "동 안전지수 정보", notes = "해당 동의 안전지수, 구 순위, 전체 순위 반환", response = List.class)
     @GetMapping("/point/{id}")
     public ResponseEntity<SafetyRankingGetRes> getSafetyInfo(@PathVariable Long id) {
+        if(id < 1 || id > 426) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         SafetyRankingGetRes safetyRankingGetRes;
         try {
             //점수, 구 순위, 시 순위
@@ -59,10 +61,24 @@ public class SafetyController {
     @ApiOperation(value = "동 환경요소 순위 정보", notes = "해당 동의 환경요소 순위와 평균 값 반환", response = List.class)
     @GetMapping("/detail/{id}")
     public ResponseEntity<SpaceRankingGetRes> getSpaceInfo(@PathVariable Long id) {
+        if(id < 1 || id > 426) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         SpaceRankingGetRes spaceRankingGetRes;
         try {
             spaceRankingGetRes = dongService.getSpaceRanking(id);
             return ResponseEntity.status(HttpStatus.OK).body(spaceRankingGetRes);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+    }
+
+    @ApiOperation(value = "해당동의 구 정보", notes = "해당 동이 속해있는 구 이름 반환", response = List.class)
+    @GetMapping("/gu/{id}")
+    public ResponseEntity<DongNameMapping> getGuNameByDong(@PathVariable Long id) {
+        if(id < 1 || id > 426) return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        DongNameMapping guName;
+        try {
+            guName = dongService.getGuNameByDong(id);
+            return ResponseEntity.status(HttpStatus.OK).body(guName);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }

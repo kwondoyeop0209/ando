@@ -5,13 +5,17 @@
         <div class="modal-title">
           <p style="font-size: 24px; font-weight: 600">범죄 현황</p>
           <div style="flex: 1"></div>
-          <p id="detail_btn" @click="onClick">예측 분석 보기 ></p>
+          <p id="detail_btn" @click="onClick(guSelected)">
+            범죄발생 위험군 보기 >
+          </p>
         </div>
         <div class="state-content">
           <!-- 범죄율 -->
           <div class="el">
             <p class="rateTitle">💡 범죄율</p>
-            <p class="rateDetail">총 몇 건 중 몇 00건이 발생</p>
+            <p class="rateDetail">
+              총 {{ totalCrime | comma }} 건 중 {{ guCrime | comma }}건이 발생
+            </p>
             <div class="doughnut">
               <VueSvgGauge
                 class="mini-gauge"
@@ -19,15 +23,17 @@
                 :end-angle="360"
                 :min="0"
                 :max="100"
-                :value="25"
+                :value="(guCrime / totalCrime) * 100"
                 :separator-step="0"
                 :scale-interval="0"
                 :inner-radius="85"
-                :gauge-color="[{ offset: 0, color: '#2F488A'}]"
+                :gauge-color="[{ offset: 0, color: '#F57272' }]"
                 base-Color="#EEEEEE"
               >
                 <div class="inner-text">
-                  <span>25%</span>
+                  <span>
+                    {{ Math.round((guCrime / totalCrime) * 100, 2) }}%
+                  </span>
                 </div>
               </VueSvgGauge>
             </div>
@@ -35,7 +41,9 @@
           <!-- 검거율 -->
           <div class="el">
             <p class="rateTitle">💡 검거율</p>
-            <p class="rateDetail">총 몇 건 중 몇 00건이 발생</p>
+            <p class="rateDetail">
+              총 {{ guCrime | comma }} 건 중 {{ guArrest | comma }}건이 검거
+            </p>
             <div class="doughnut">
               <VueSvgGauge
                 class="mini-gauge"
@@ -43,17 +51,19 @@
                 :end-angle="360"
                 :min="0"
                 :max="100"
-                :value="25"
+                :value="(guArrest / guCrime) * 100"
                 :separator-step="0"
                 :scale-interval="0"
                 :inner-radius="85"
-                :gauge-color="[{ offset: 0, color: '#F57272'}]"
+                :gauge-color="[{ offset: 0, color: '#6A7DAF' }]"
                 base-Color="#EEEEEE"
               >
                 <!-- 76줄은 단색  80줄은 그라데이션-->
                 <!-- :gauge-color="[{ offset: 0, color: '#de3a21'}, { offset: 100, color: '#f4c009'}]" -->
                 <div class="inner-text">
-                  <span>25%</span>
+                  <span>
+                    {{ Math.round((guArrest / guCrime) * 100, 2) }}%
+                  </span>
                 </div>
               </VueSvgGauge>
             </div>
@@ -64,6 +74,7 @@
             <vue-highcharts
               :options="chartTypeOfCrime"
               :highcharts="Highcharts"
+              ref="chartTypeOfCrime"
               style="height: 400px"
             ></vue-highcharts>
           </div>
@@ -74,48 +85,51 @@
                 class="crime-item"
                 v-for="(crime, idx) in crimeTypeList"
                 :key="crime.type"
-                @click="onCrimeDetail(crime.type)"
+                @click="onCrimeDetail(crime.type, crime.typeIdx)"
               >
-                <div class="crimeDetail">{{ idx + 1 }}</div>
-                <div class="crime-content">
+                <div class="crime-detail" :id="'detail' + crime.typeIdx">{{ idx + 1 }}</div>
+                <div class="crime-content" :id="'content' + crime.typeIdx">
                   <p style="flex: 1; text-align: center">{{ crime.type }}</p>
                   <p>|</p>
-                  <p style="flex: 1; text-align: center">{{ crime.num }}건</p>
+                  <p style="flex: 1; text-align: center">{{ crime.num | comma }}건</p>
                 </div>
               </div>
             </div>
           </div>
-          
           <!-- 유형에 따른 요일, 시간, 장소 -->
           <div class="el">
-            <p class="rateTitle">💡 00 이/가 높은 요일</p>
+            <p class="rateTitle">💡 <span style="color: #F57272; font-weight: 700">{{ type5Name }}</span> 이/가 높은 요일</p>
             <highcharts :options="highestDay" style="height: 300px"></highcharts>
           </div>
           <div class="el">
-            <p class="rateTitle">💡 00 이/가 높은 시간</p>
+            <p class="rateTitle">💡 <span style="color: #F57272; font-weight: 700">{{ type5Name }}</span> 이/가 높은 시간</p>
             <highcharts :options="highestTime" style="height: 300px"></highcharts>
           </div>
           <div class="el">
-            <p class="rateTitle">💡 00 이/가 높은 발생 장소</p>
+            <p class="rateTitle">💡 <span style="color: #F57272; font-weight: 700">{{ type5Name }}</span> 이/가 높은 발생 장소</p>
             <!-- <highcharts :options="highestSpot" style="height: 300px"></highcharts> -->
             <vue-highcharts
               :options="highestSpot"
               :highcharts="Highcharts"
-              style="height: 400px"
+              ref="highestSpot"
             ></vue-highcharts>
           </div>
         </div>
       </div>
       <div class="arrow-area" @click="extend">
-        <img class="arrow" :src="require(`@/assets/${arrowImg}.png`)" :width="20" />
+        <img
+          class="arrow"
+          :src="require(`@/assets/${arrowImg}.png`)"
+          :width="20"
+        />
       </div>
       <!-- 오른쪽 범죄예측 모달창 -->
       <div style="flex: 1"></div>
       <div class="predict-modal" v-show="isPredict">
         <div class="predict-title">
-          <p><span style="color:#A4B5E2; font-size:18px; font-weight: 600">{{gu}}</span> 범죄 예측 분석</p>
+          <p> 범죄 유형별 위험군</p>
           <div style="flex: 1"></div>
-          <img src="@/assets/ic-close.png" width="20" @click="offClick" />
+          <img src="@/assets/ic-close.png" width="20" @click="offClick" class="close-btn"/>
         </div>
         <!-- 예측테이블 -->
         <div>
@@ -124,15 +138,22 @@
               <th style="width: 60px">유형</th>
               <th style="width: 60px">요일</th>
               <th style="width: 100px">장소</th>
-              <th style="width: 80px">위험 지수</th>
+              <th style="width: 100px">시간</th>
+              <th style="width: 100px">범죄발생 지수</th>
             </tr>
             <tr v-for="pItem in predictList" :key="pItem.type">
-              <td><span v-html="pItem.type"></span></td>
+              <td style="background-color: #B8B8B8"><span v-html="pItem.type"></span></td>
               <td><span v-html="pItem.day"></span></td>
               <td><span v-html="pItem.spot"></span></td>
+              <td><span v-html="pItem.time"></span></td>
               <td><span v-html="pItem.idx"></span></td>
             </tr>
           </table>
+          <div class="explain">
+          ※ 범죄발생 지수 : 조건별(지역, 장소, 요일, 시간) 위험지수에 기반한 수치
+          <br />
+          <span class ="maxminavg" style="color:#A4B5E2;">최댓값: 2.8762, 최솟값: 0.7163, 평균값 : 1.464</span>
+          </div>
         </div>
       </div>
     </div>
@@ -145,6 +166,8 @@ import Highcharts from "highcharts";
 import Variablepie from "highcharts/modules/variable-pie";
 import Highcharts3D from "highcharts/highcharts-3d";
 import { VueSvgGauge } from "vue-svg-gauge";
+import $axios from "axios";
+const chartColor = ["#6A7DAF", "#8F9FC8", "#AFBBD9", "#CED6EA", "#E9EDF5"];
 
 Variablepie(Highcharts);
 Highcharts3D(Highcharts);
@@ -157,7 +180,7 @@ export default {
     VueSvgGauge,
   },
   props: {
-    gu: String,
+    gu: Number,
     year: String,
   },
   data() {
@@ -167,13 +190,23 @@ export default {
       isExpand: false,
       expandWidth: "450px",
       arrowImg: "ic-arrow-right",
+
+      guSelected: "",
+      totalCrime: "",
+      guCrime: "",
+      totalArrest: "",
+      guArrest: "",
+      type5Name: "",
+      type5Idx: "",
+      spotList:[],
+
       chartTypeOfCrime: {
         chart: {
           backgroundColor: "rgba(0,0,0,0)",
           type: "variablepie",
         },
         title: {
-          text: ""
+          text: "",
         },
         credits: {
           enabled: false,
@@ -183,38 +216,7 @@ export default {
             innerSize: "20%",
             zMin: 0,
             name: "범죄유형",
-            data: [
-              {
-                name: '폭력',
-                y: 505370,
-                z: 92.9,
-                color: '#6A7DAF'
-              },
-              {
-                name: '절도',
-                y: 551500,
-                z: 118.7,
-                color: '#8F9FC8'
-              },
-              {
-                name: '강제추행',
-                y: 312685,
-                z: 124.6,
-                color: '#AFBBD9'
-              },
-              {
-                name: '강도',
-                y: 78867,
-                z: 137.5,
-                color: '#CED6EA'
-              },
-              {
-                name: '살해',
-                y: 301340,
-                z: 201.8,
-                color: '#E9EDF5'
-              },
-            ],
+            data: [],
           },
         ],
       },
@@ -226,6 +228,7 @@ export default {
         title: {
           text: "",
         },
+        colors: ["#6A7DAF"],
         xAxis: {
           categories: ["월", "화", "수", "목", "금", "토", "일"],
           labels: {
@@ -267,18 +270,19 @@ export default {
         series: [
           {
             name: '발생건수',
-            data: [3, 4, 3, 5, 4, 10, 12],
+            data: [],
           },
         ],
       },
       highestTime:{
         chart: {
           backgroundColor: "rgba(0,0,0,0)",
-          type: 'areaspline'
+          type: 'areaspline',
         },
         title: {
           text: "",
         },
+        colors: ["#6A7DAF"],
         xAxis: {
           categories: [
             '00:00~02:59',
@@ -328,13 +332,13 @@ export default {
         series: [
           {
             name: '발생건수',
-            data: [10, 4, 2, 5, 4, 10, 12, 12],
+            data: [],
           },
         ],
       },
       highestSpot: {
         chart: {
-          renderTo : 'highestSpot',
+          renderTo: 'highestSpot',
           backgroundColor: "rgba(0,0,0,0)",
           type: 'column',
           options3d: {
@@ -342,16 +346,16 @@ export default {
             alpha: 15,
             beta: 15,
             depth: 50,
-            viewDistance: 25
-          }
+            viewDistance: 25,
+          },
         },
         title: {
           text: "",
         },
         plotOptions: {
           column: {
-            depth: 25
-          }
+            depth: 25,
+          },
         },
         legend: {
           enabled: false,
@@ -359,8 +363,9 @@ export default {
         credits: {
           enabled: false,
         },
+        colors: ["#6A7DAF"],
         xAxis: {
-          categories: ["a동", "b동", "c동", "d동", "e동"],
+          categories: [],
           gridLineColor: "rgba(0,0,0,0)",
           labels: {
             style: {
@@ -376,7 +381,7 @@ export default {
               color: "#ffffff",
             },
           },
-          gridLineColor: "rgba(0,0,0,0)",
+          gridLineColor: "rgb(255, 255, 255)",
           labels: {
             style: {
               color: "#ffffff",
@@ -384,49 +389,82 @@ export default {
           },
         },
         tooltip: {
-            shared: true,
-            valueSuffix: ' 건'
+          shared: true,
+          valueSuffix: ' 건',
         },
         series: [
           {
             name: '발생건수',
-            data: [29.9, 71.5, 106.4, 129.2, 144.0, 176.0, 135.6, 148.5, 216.4, 194.1, 95.6, 54.4],
+            data: [],
           }
         ]
       },
 
-      crimeTypeList:[
-        { type: '폭력', num:'145' },
-        { type: '절도', num:'125' },
-        { type: '강간', num:'80' },
-        { type: '강도', num:'65' },
-        { type: '살해', num:'15' },
-      ],
-      predictList:[
-        { type: '폭력', day:'토요일', spot:'노상', idx:'1.95' },
-        { type: '절도', day:'토요일', spot:'노상', idx:'1.95' },
-        { type: '살해', day:'토요일', spot:'노상', idx:'1.95' },
-        { type: '강도', day:'토요일', spot:'노상', idx:'1.95' },
-        { type: '추행', day:'토요일', spot:'노상', idx:'1.95' },
-      ]
+      crimeTypeList: [],
+      predictList: [],
     };
   },
   watch: {
     gu: function (val) {
-      //구가 바뀌면 다시 통신
-      console.log(val);
+      this.guSelected = this.gu;
 
-      //년도 초기화해야함 => 2020년으로
+      if(this.year == null) {
       this.$emit("initYear");
+      }
+
+      this.isPredict = false;
+
+      if (val != "전체") {
+        //범죄율, 검거율
+        this.getCrimeArrestCount();
+
+        //범죄 유형
+        this.getCrimeType();
+
+        //예측분석
+        this.getCrimePrediction();
+      }
     },
-    year: function (val) {
-      //년도가 바뀌면 다시 통신
-      console.log(val);
+    year: function () {
+      this.isPredict = false;
+      //범죄율, 검거율
+      this.getCrimeArrestCount();
+
+      //범죄 유형
+      this.getCrimeType();
+
+      //예측분석
+      this.getCrimePrediction();
     },
   },
+  mounted() {
+    this.gu = 1;
+    this.year = "2020";
+  },
   methods: {
-    onClick() {
+    onClick(selected) {
       this.isPredict = true;
+      //예측분석
+      $axios
+        .get("/crime/forecast/" + selected, {
+          params: {
+            sigungu: selected,
+          },
+        })
+        .then((response) =>{
+          this.predictList = response.data.list.map((item) => {
+            return {
+              type: item.crimeType,
+              day: item.day,
+              spot: item.spot,
+              time: item.time,
+              idx: item.prtds,
+            };
+          });
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
     },
     offClick() {
       this.isPredict = false;
@@ -441,8 +479,194 @@ export default {
       }
       this.isExpand = !this.isExpand;
     },
-    onCrimeDetail() {
-      // 00에 전달하는 값
+    onCrimeDetail(name, idx) {
+      this.type5Name = name;
+      this.type5Idx = idx;
+      //색 바꾸기
+      document.getElementsByClassName("crime-detail").forEach((item) => {
+        item.style.backgroundColor = "#B8B8B8";
+      });
+      document.getElementsByClassName("crime-content").forEach((item) => {
+        item.style.backgroundColor = "#B8B8B8";
+      });
+      document.getElementById("detail" + idx).style.backgroundColor = "#F57272";
+      document.getElementById("content" + idx).style.backgroundColor = "#F57272";
+
+      //요일
+      this.getCrimeDay();
+      //시간
+      this.getCrimeTime();
+      //장소
+      this.getCrimeSpot();
+    },
+    getCrimeArrestCount() {
+      //범죄율, 검거율
+      $axios
+        .get("/crime/rate", {
+          params: {
+            gu: this.gu,
+            year: this.year,
+          },
+        })
+        .then((response) => {
+          this.totalCrime = response.data.getRateDto.totalCrimeCount;
+          this.guCrime = response.data.getRateDto.guCrimeCount;
+          this.totalArrest = response.data.getRateDto.totalArrestCount;
+          this.guArrest = response.data.getRateDto.guArrestCount;
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    getCrimeType() {
+      let chartTypeOfCrime = this.$refs.chartTypeOfCrime;
+      chartTypeOfCrime.removeSeries();
+      //범죄유형
+      $axios
+        .get("/crime", {
+          params: {
+            gu: this.gu,
+            year: this.year,
+          },
+        })
+        .then((response) => {
+          let len = response.data.list.length * 200;
+
+          const crimeType = response.data.list.map((item, idx) => {
+            return {
+              name: item.crimeType,
+              y: item.count,
+              z: (len -= 200),
+              color: chartColor[idx % 5],
+            };
+          });
+          chartTypeOfCrime.addSeries({
+            minPointSize: 10,
+            innerSize: "30%",
+            zMin: 0,
+            name: "범죄유형",
+            data: crimeType,
+          });
+
+          this.crimeTypeList = response.data.list.map((item) => {
+            return {
+              type: item.crimeType,
+              num: item.count,
+              typeIdx: item.crimeTypeId,
+            };
+          });
+
+          //1위 유형
+          this.type5Name = response.data.list[0].crimeType;
+          this.type5Idx = response.data.list[0].crimeTypeId;
+
+          this.onCrimeDetail(this.type5Name, this.type5Idx);
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    getCrimeDay() {
+      $axios
+        .get("/crime/day", {
+          params: {
+            type: this.type5Idx,
+            year: this.year,
+          },
+        })
+        .then((response) => {
+          this.highestDay.series[0].data = response.data.list.map((item) => {
+            return {
+              y: item.count,
+            };
+          });
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    getCrimeTime() {
+      $axios
+        .get("/crime/time", {
+          params: {
+            type: this.type5Idx,
+            year: this.year,
+          },
+        })
+        .then((response) => {
+          this.highestTime.series[0].data = response.data.list.map((item) => {
+            return {
+              y: item.count,
+            };
+          });
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    getCrimeSpot() {
+      const highestSpot = this.$refs.highestSpot;
+      highestSpot.removeSeries();
+      //this.highestSpot.xAxis.categories=[]
+      $axios
+        .get("/crime/spot", {
+          params: {
+            type: this.type5Idx,
+            year: this.year,
+          },
+        })
+        .then((response) => {
+          console.log(response.data.list)
+
+          this.highestSpot.xAxis.categories.splice(0)
+          
+          const hotSpot = response.data.list
+          for (var i=0; i<7; i++) {
+            this.highestSpot.xAxis.categories.push(hotSpot[i].spot)
+          }
+          console.log(this.highestSpot.xAxis.categories)
+
+          const data = response.data.list.map((item) => {
+            return {
+              name: item.spot,
+              y: item.count,
+            };
+          });
+          highestSpot.addSeries({
+            name: "발생 장소",
+            data: data,
+          });
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+    getCrimePrediction() {
+      $axios
+        .get("/crime/forecast/" + this.gu, {
+          params: {
+            sigungu: this.gu,
+          },
+        })
+        .then((response) => {
+          this.predictList = response.data.list.map((item) => {
+            return{
+              type: item.crimeType,
+              day: item.day,
+              spot: item.spot,
+              time: item.time,
+              idx: item.prtds,
+            };
+          });
+        })
+        .catch(() => {
+          console.log("오류가 발생했습니다.");
+        });
+    },
+  },
+  filters: {
+    comma(val) {
+      return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
   },
 };
@@ -461,6 +685,10 @@ export default {
 }
 #detail_btn {
   font-size: 16px;
+  font-weight: 600;
+}
+#detail_btn:hover {
+  cursor: pointer;
 }
 .rateTitle {
   font-size: 20px;
@@ -487,6 +715,9 @@ export default {
   display: flex;
   flex-wrap: wrap;
 }
+.explain{
+  margin-top : 10px;
+}
 .el {
   width: 400px;
 }
@@ -508,7 +739,7 @@ export default {
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 36px;
+  margin-top: 24px;
 }
 .mini-gauge {
   max-width: 180px;
@@ -526,9 +757,6 @@ export default {
   justify-content: center;
   align-items: center;
 }
-.arrow-arrea:hover {
-  cursor: pointer;
-}
 .arrow {
   padding: 24px 12px;
   background: #454d5e;
@@ -537,10 +765,16 @@ export default {
   z-index: 999;
   box-shadow: 12px 0px 20px -7px rgba(26, 31, 41, 0.45);
 }
+.arrow:hover {
+  cursor: pointer;
+}
+.close-btn:hover {
+  cursor: pointer;
+}
 .predict-modal {
   z-index: 888;
-  width: 400px;
-  height: 300px;
+  width: 520px;
+  height: 320px;
   background: #454d5e;
   border-radius: 5px;
   box-shadow: 0px 0px 16px 3px rgba(26, 31, 41, 0.45);
@@ -549,12 +783,16 @@ export default {
 .predict-title {
   display: flex;
   font-size: 18px;
+  font-weight: 600;
 }
 .crime-item {
   display: flex;
   margin-bottom: 8px;
 }
-.crimeDetail {
+.crime-item:hover {
+  cursor: pointer;
+}
+.crime-detail {
   background-color: #B8B8B8;
   padding: 8px 12px;
   border-radius: 4px;
@@ -568,12 +806,12 @@ export default {
   display: flex;
 }
 th {
-  padding:10px;
-  background-color: #B8B8B8;
+  padding: 10px;
+  background-color: #999999;
   border-radius: 5px;
 }
 td {
-  padding:10px;
+  padding: 10px;
   background-color: #FF9D9D;
   border-radius: 5px;
   text-align: center;
