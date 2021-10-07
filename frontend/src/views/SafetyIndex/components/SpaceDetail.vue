@@ -11,18 +11,18 @@
         />
         <p style="margin-left: 8px">{{ spaceTitle }}</p>
       </div>
-      <div class="select-region">
-        <select class="select" @change="changeGu" v-model="selectGu">
-          <option selected value="자치구">자치구</option>
-          <option v-for="(gu, idx) in GuList" :key="idx" :value="gu">
+      <div class="select-region" v-show="!isDong">
+        <select class="select" v-model="selectGuID">
+          <option selected value="-1">자치구</option>
+          <option v-for="(gu, idx) in guList" :key="idx" :value="gu.id">
             {{ gu.gu }}
           </option>
         </select>
 
-        <select class="select" v-show="isGu" v-model="selectDongID">
-          <option selected value="행정동">행정동</option>
-          <option v-for="(dong, idx) in DongList" :key="idx" :value="selectDongID">
-            {{ dong }}
+        <select class="select" v-model="dongId">
+          <option selected value="-1">행정동</option>
+          <option v-for="(dong, idx) in dongList" :key="idx" :value="dong.id">
+            {{ dong.dong }}
           </option>
         </select>
       </div>
@@ -30,11 +30,17 @@
 
     <!-- 갯수 보여주는 공간 -->
     <div class="space-info" v-show="isDong">
-      <p style="margin-bottom: 10px; font-size: 30px; font-weight: 600">💥{{ dong }}<span style="font-size: 20px">의</span>
-      {{space}} 비율 <br> </p>
-      <p style="margin-bottom:10px;">{{selectGu.gu}} 내
-        <span style="font-size:20px; font-weight: 400"> 총 {{this.spaceData.guCnt}}개 중
-          <br> {{this.spaceData.dongCnt}}개 </span> 설치가 되어 있어요!
+      <div style="display: flex">
+        <img src="@/assets/ic-arrow-left.png" width="26" class="back" @click="back"/>
+        <p style="font-size: 24px;"><span style="color: #A4B5E2; font-weight: 700">{{ selectGu.dong }}</span> 환경요소</p>
+      </div>
+      <p class="space-info-subtitle">{{ spaceTitle }} 비율</p>
+      <p class="space-ratio">
+        <span style="font-weight: 600">{{ selectGu.guName }}</span>
+        내
+        <span>
+          총 {{ spaceData.guCnt | comma }}개 중 {{ this.spaceData.dongCnt | comma }}개
+        </span>있네요!
       </p>
 
       <!-- 비율 보여주는 그래프 -->
@@ -45,24 +51,26 @@
           :end-angle="360"
           :min="0"
           :max="100"
-          :value="(this.spaceData.dongCnt / this.spaceData.guCnt)*100"
+          :value="(this.spaceData.dongCnt / this.spaceData.guCnt) * 100"
           :separator-step="0"
           :scale-interval="0"
           :inner-radius="85"
-          :gauge-color="[{ offset: 0, color: '#2F488A'}]"
+          :gauge-color="[{ offset: 0, color: '#6A7DAF'}]"
           base-Color="#EEEEEE"
         >
-          <div class="inner-text" style="padding:45%">
+          <div class="inner-text">
             <span >{{Math.round((this.spaceData.dongCnt / this.spaceData.guCnt)*100,2)}}%</span>
           </div>
         </VueSvgGauge>
       </div>
 
-      <div>
-        <p style="margin-bottom:10px; font-size:20px; font-weight: 400"> {{selectGu.gu}} 내에서 {{this.rankData.ranking}}위를 차지했어요! <br> </p>
+      <div style="margin: 24px">
+        <p style="font-size: 16px">
+          <span style="font-weight: 600">{{ selectGu.guName }}</span>
+          내에서 {{ rankData.ranking }}위를 차지했어요!
+        </p>
       </div>
 
-      <!-- 5개 순위 보여주는 그래프 -->
       <div class="rank-info">
         <highcharts
           :options="rankSpot"
@@ -70,13 +78,11 @@
           ref="Highcharts"
           style="height: 200px"
         ></highcharts>
-
-        <p style="padding-left: 30%"> &lt; 주변 환경 요소 Top5 &gt; </p>
       </div>
 
       <!-- 상관관계 보여주는 공간 -->
       <div class="graph-info">
-      <p style="margin-bottom:10px; font-size:30px; font-weight: 600"> 💥범죄와의 상관 관계 </p> <br>
+      <p style="margin-bottom:10px; font-size: 18px;"> 💥 범죄와의 상관 관계 </p> <br>
       <highcharts :options="crimeRelation" style="height: 300px"></highcharts>
       </div>
     </div>
@@ -114,14 +120,11 @@ export default {
     return {
       Highcharts,
       selectGu: "자치구",
-      selectGuID: "",
+      selectGuID: -1,
       selectDong: "행정동",
-      selectDongID: "",
-      isMain: true,
-      isGu: false,
       isDong: false,
-      GuList: [],
-      DongList: [],
+      guList: [],
+      dongList: [],
       spaceData: [],
       rankData: [],
       graphData: [],
@@ -141,6 +144,7 @@ export default {
             viewDistance: 25
           }
         },
+        colors: ["#6A7DAF"],
         title: {
           text: "",
         },
@@ -265,37 +269,26 @@ export default {
       .get("/main/sigungu")
       .then((respon) => {
         this.guList = respon.data.guList;
-        for (const idx in this.guList) {
-          const guName = this.guList[idx];
-          this.GuList.push(guName);
-        }
       })
       .catch((e) => {
-        console.log('error : ', e)
+        console.log('error : ', e);
       });
   },
 
   methods: {
-    changeGu() {
-      const guSelect = this.selectGu;
-      if (guSelect == "자치구") {
-        this.isMain = true;
-        this.isGu = false;
-      } else {
-        this.isMain = false;
-        this.isGu = true;
-      }
+    setGuName(val) {
+      this.selectGu = val;
     },
-
+    setDongName(val) {
+      this.selectDong = val;
+    },
     getSpaceList(val) {
       this.isDong = true;
-
       //환경 지수의 갯수 구하는 부분(구별, 동별)
       $axios
-        .get("/space/count?id=" + this.selectDongID + "&type=" + val)
+        .get("/space/count?id=" + this.dongId + "&type=" + val)
         .then((re) => {
           this.spaceData = re.data;
-          //console.log(this.spaceData)
         })
         .catch((e) => {
           console.log('error : ', e);
@@ -303,7 +296,7 @@ export default {
 
       // 해당 동 space 개수 순위 주변 5개 개수정보
       $axios
-        .get("/space/ranking?id=" + this.selectDongID + "&type=" + val)
+        .get("/space/ranking?id=" + this.dongId + "&type=" + val)
         .then((r) => {
           //x축 y축 초기화를 시켜줘야 그래프가 계속 5개씩 나옴!
           this.rankSpot.series[0].data = [];
@@ -331,11 +324,10 @@ export default {
           this.crimeRelation.xAxis.categories = []
           this.crimeRelation.series[0].data = []
           this.crimeRelation.series[1].data = []
-          this.graphData = respons.data
-          console.log(this.graphData)
+          this.graphData = respons.data;
 
-          const graphValue = this.graphData.countList
-          const graphValue2 = this.graphData.arrestList
+          const graphValue = this.graphData.countList;
+          const graphValue2 = this.graphData.arrestList;
           for(var i=0; i<graphValue.length; i++) {
             this.crimeRelation.xAxis.categories.push(graphValue[i].gu) //구역들 x축으로
             this.crimeRelation.series[0].data.push(graphValue[i].cnt *3) //발생건수
@@ -346,26 +338,53 @@ export default {
           console.log('error : ', e)
         });
     },
+    getGuName() {
+      $axios
+        .get("/safety/gu/" + this.dongId)
+        .then((response) => {
+          this.selectGu = response.data;
+        })
+        .catch((e) => {
+          console.log('error : ', e);
+        });
+    },
+    back() {
+      this.dongId = -1;
+      this.selectGuID = -1;
+      this.isDong = false;
+      this.$emit("selectDongId", -1);
+      this.dongList = [];
+    }
   },
 
   watch: {
     selectGuID: function (val) {
       // 해당 구의 행정동 리스트 가져오기
-      this.DongList = [];
-
-      axios
-        .get("/main/dong/" + val)
-        .then((respond) => {
-          this.dongList = respond.data.getDongListDtoList;
-          //console.log(this.dongList)
-          for (const idx in this.dongList) {
-            const dongName = this.dongList[idx].dong;
-            this.DongList.push(dongName);
-          }
-        })
-        .catch((e) => {
-          console.log('error : ', e);
-        });
+      this.dongList = [];
+      this.dongId = -1;
+      if (val != -1) {
+        axios
+          .get("/main/dong/" + val)
+          .then((respond) => {
+            this.dongList = respond.data.getDongListDtoList;
+            this.isDong = false;
+          })
+          .catch((e) => {
+            console.log('error : ', e);
+          });
+      } else {
+        this.$emit("selectDongId", -1);
+        this.isDong = false;
+      }
+    },
+    dongId: function (val) {
+      if (val != -1 && this.isSpace) {
+        this.getGuName();
+        this.getSpaceList(this.space);
+        this.$emit("selectDongId", val);
+      } else {
+        this.isDong = false;
+      }
     },
 
     space: function (val) {
@@ -387,19 +406,26 @@ export default {
 
     isSpace: function (val) {
       this.isDong = false;
+      console.log("space", this.space);
       if (!val) {
         this.getSpaceList("cctv");
+        this.dongId = -1;
+        this.selectGuID = -1;
       }
     },
-    dongId: function (val) {
-      this.selectDongID = val;
-      if (val != -1) this.getSpaceList(this.space);
+  },
+
+  filters: {
+    comma(val) {
+      return String(val).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     },
-  }
+  },
 };
 </script>
 <style scoped>
 .space-detail {
+  height: calc(100% - 36px);
+  overflow: auto;
   padding: 18px;
 }
 
@@ -417,31 +443,51 @@ export default {
   font-size: 16px;
 }
 
-.select::-webkit-scrollbar {
+.space-detail::-webkit-scrollbar {
   width: 10px;
 }
-.select::-webkit-scrollbar-thumb {
+.space-detail::-webkit-scrollbar-thumb {
   background-color: darkgray;
   border-radius: 24px;
   background-clip: padding-box;
   border: 2px solid transparent;
 }
-.select::-webkit-scrollbar-track {
+.space-detail::-webkit-scrollbar-track {
   background-color: #454d5e;
   border-radius: 24px;
 }
+.space-info {
+  margin-top: 16px;
+}
 
+.space-info-subtitle {
+  font-size: 18px;
+  margin-top: 24px;
+  margin-bottom: 18px;
+}
+
+.space-ratio {
+  font-size: 16px;
+  margin-left: 24px;
+}
 
 .doughnut {
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 36px;
+  margin-top: 24px;
 }
-
+.inner-text {
+  display: flex;
+  margin-top: 80px;
+  align-items: center;
+  justify-content: center;
+  font-size: 35px;
+  font-weight: bold;
+}
 .mini-gauge {
-  max-width: 30%;
+  max-width: 180px;
 }
 
 .space-title {
@@ -453,5 +499,12 @@ export default {
   font-weight: 700;
   align-items: center;
   margin-bottom: 10px;
+}
+.back {
+  margin-left: -4px;
+  margin-right: 8px;
+}
+.back:hover {
+  cursor: pointer;
 }
 </style>

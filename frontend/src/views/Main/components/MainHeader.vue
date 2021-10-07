@@ -29,15 +29,15 @@ export default {
 
 <style scoped>
 .header {
-  min-width: 1450px;
+  min-width: 1500px;
   background-color: #454d5e;
   height: 59px;
   border-bottom: 1px solid #6d6d6d;
   font-size: 18px;
   color: white;
+  padding: 0 24px;
 }
 .blank {
-  width: 1450px;
   height: 100%;
   margin: 0 auto;
   display: flex;

@@ -9,7 +9,7 @@
           class="rank-item"
           v-for="(item, idx) in rankList"
           :key="idx"
-          @click="onSafetyDong(item.dong, item.id)"
+          @click="selectDong(item.dong, item.id)"
         >
           <div class="rank">{{ idx + 1 }}</div>
           <div class="rank-content">
@@ -48,7 +48,7 @@
       </div>
       <div class="rankDetail">
         <p style="margin: 5px 30px">
-          {{ this.guData }} 내에서
+          {{ this.guData.guName }} 내에서
           <span style="font-size: 28px; font-weight: 600">
             {{ this.rankingData.rankingOfGu }}위
           </span>
@@ -74,7 +74,10 @@
             </span>
           </p>
           <div style="font-size: 12px; text-align: end; margin-top: 15px">
-            평균 : {{ this.spaceData.cctvAvg }}개, 우리동네 : {{ this.dongSpaceCnt.cctv }}개
+            <span class="white-blue">평균</span>
+            : {{ this.spaceData.cctvAvg }}개,
+            <span class="light-red">우리동네</span>
+            : {{ this.dongSpaceCnt.cctv }}개
           </div>
           <div style="margin: 20px 0; position: relative">
             <div class="chart-line"></div>
@@ -89,7 +92,10 @@
             </span>
           </p>
           <div style="font-size: 12px; text-align: end; margin-top: 15px">
-            평균 : {{ this.spaceData.barAvg }}개, 우리동네 : {{ this.dongSpaceCnt.bar }}개
+            <span class="white-blue">평균</span>
+            : {{ this.spaceData.barAvg }}개,
+            <span class="light-red">우리동네</span>
+            : {{ this.dongSpaceCnt.bar }}개
           </div>
           <div style="margin: 20px 0; position: relative">
             <div class="chart-line"></div>
@@ -104,7 +110,10 @@
             </span>
           </p>
           <div style="font-size: 12px; text-align: end; margin-top: 15px">
-            평균 : {{ this.spaceData.policeAvg }}개, 우리동네 : {{ this.dongSpaceCnt.police }}개
+            <span class="white-blue">평균</span>
+            : {{ this.spaceData.policeAvg }}개,
+            <span class="light-red">우리동네</span>
+            : {{ this.dongSpaceCnt.police }}개
           </div>
           <div style="margin: 20px 0; position: relative">
             <div class="chart-line"></div>
@@ -119,7 +128,10 @@
             </span>
           </p>
           <div style="font-size: 12px; text-align: end; margin-top: 15px">
-            평균 : {{ this.spaceData.lightAvg }}개, 우리동네 : {{ this.dongSpaceCnt.light }}개
+            <span class="white-blue">평균</span>
+            : {{ this.spaceData.lightAvg }}개,
+            <span class="light-red">우리동네</span>
+            : {{ this.dongSpaceCnt.light }}개
           </div>
           <div style="margin: 20px 0; position: relative">
             <div class="chart-line"></div>
@@ -134,7 +146,10 @@
             </span>
           </p>
           <div style="font-size: 12px; text-align: end; margin-top: 15px">
-            평균 : {{ this.spaceData.guardAvg }}개, 우리동네 : {{ this.dongSpaceCnt.guard }}개
+            <span class="white-blue">평균</span>
+            : {{ this.spaceData.guardAvg }}개,
+            <span class="light-red">우리동네</span>
+            : {{ this.dongSpaceCnt.guard }}개
           </div>
           <div style="margin: 20px 0; position: relative">
             <div class="chart-line"></div>
@@ -277,6 +292,12 @@ export default {
         .get("/safety/detail/" + this.dongID)
         .then((response) => {
           this.spaceData = response.data;
+          this.spaceData.cctvAvg = this.spaceData.cctvAvg.toFixed(2);
+          this.spaceData.barAvg = this.spaceData.barAvg.toFixed(2);
+          this.spaceData.policeAvg = this.spaceData.policeAvg.toFixed(2);
+          this.spaceData.lightAvg = this.spaceData.lightAvg.toFixed(2);
+          this.spaceData.guardAvg = this.spaceData.guardAvg.toFixed(2);
+
           this.drawLineChart("cctv", this.spaceData.cctvAvg);
           this.drawLineChart("bar", this.spaceData.barAvg);
           this.drawLineChart("police", this.spaceData.policeAvg);
@@ -304,8 +325,8 @@ export default {
       this.$emit("selectDongId", -1);
       this.$emit("selectDong", "");
     },
-    drawLineChart(type, avg) {
-      this.getDongSpaceCnt(type);
+    async drawLineChart(type, avg) {
+      const d = await this.getDongSpaceCnt(type);
       let min = -1;
       let max = -1;
       let cal2 = -1;
@@ -332,7 +353,6 @@ export default {
         max = 33;
         cal2 = width * ((this.dongSpaceCnt.guard - min) / (max - min));
       }
-
       const cal = width * ((avg - 0) / (max - min));
       //평균
       let result1 = Math.round(cal);
@@ -345,8 +365,8 @@ export default {
       result2 = result2 < 0 ? 0 : result2;
       document.querySelector(".chart-dong-" + type).style = "left: " + result2 + "px";
     },
-    getDongSpaceCnt(type) {
-      $axios
+    async getDongSpaceCnt(type) {
+      const d = await $axios
         .get("/space/count", {
           params: {
             id: this.dongId,
@@ -369,6 +389,14 @@ export default {
         .catch(() => {
           console.log("오류가 발생했습니다.");
         });
+    },
+    selectDong(val, val3) {
+      this.$emit("selectDongId", val3);
+      this.$emit("selectDong", val);
+      this.dong = val;
+      this.dongID = val3;
+      this.isDongSafety = true;
+      this.isRankSafety = false;
     },
   },
 };

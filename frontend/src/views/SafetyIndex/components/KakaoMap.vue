@@ -38,13 +38,24 @@ export default {
         this.removeCustom();
       }
     },
-    dongId: function (val) {
+    dongId: async function (val) {
       if (val === -1) {
-        this.removePolygon();
-        this.getSpaceList("cctv");
+        if (this.polygon != undefined) {
+          this.removePolygon();
+        }
+        if (this.isSpace) {
+          this.getSpaceList(this.space);
+        } else {
+          this.getSpaceList("cctv");
+        }
       } else {
         this.removeCustom();
-        this.overlayMarker(val);
+        const d = await this.overlayPolygon(val);
+        console.log(d);
+        if (this.isSpace) {
+          const d2 = await this.overlayMarker(val);
+          console.log(d2);
+        }
       }
     },
   },
@@ -68,16 +79,7 @@ export default {
       };
       this.map = new kakao.maps.Map(this.container, this.options);
 
-      // 일반 지도와 스카이뷰로 지도 타입을 전환할 수 있는 지도타입 컨트롤을 생성합니다
-      this.mapTypeControl = new kakao.maps.MapTypeControl();
-      this.map.addControl(this.mapTypeControl, kakao.maps.ControlPosition.TOPRIGHT);
-
-      // 지도 확대 축소를 제어할 수 있는  줌 컨트롤을 생성합니다
-      this.zoomControl = new kakao.maps.ZoomControl();
-      this.map.addControl(this.zoomControl, kakao.maps.ControlPosition.RIGHT);
-      //여기까지가 기본 지도 세팅 완료
-
-      if(!this.isSpace) { //안전지수 탭이면
+      if (!this.isSpace) { //안전지수 탭이면
         //행정동 마커 찍기
         this.getSpaceList("cctv");
       }
@@ -102,24 +104,33 @@ export default {
       this.removeCustom();
       data.forEach((item) => {
         const content = document.createElement("div");
-        content.style = "background-color:#6A7DAF; border: 1px solid #454D5E; border-radius: 16px; padding: 8px; font-size: 14px";
-        content.onclick = () => {
+        content.style = "background-color:#6A7DAF; border: 1px solid #454D5E; border-radius: 20px; padding: 8px 6px; font-size: 14px; display: flex; align-items: center";
+        content.onclick = async () => {
           this.$emit("selectDong", item.dongname);
           this.$emit("selectDongId", item.dongId);
 
           this.removeCustom();
           //행정동 다각형 그리기
-          this.overlayPolygon(item.dongId);
+          // await this.overlayPolygon(item.dongId);
+          // if (this.isSpace) {
+          //   await this.overlayMarker(item.dongId);
+          // }
         };
 
         if (this.isSpace) {
-          const span1 = document.createElement("span");
+          const span1 = document.createElement("p");
           span1.style = "background-color: #ADADAD; border-radius: 16px; padding: 2px 8px; margin-right: 4px";
-          span1.innerText = item.count;
+          let ic = "";
+          if (this.space === "cctv") ic = "📹";
+          else if (this.space === "bar") ic = "🍺";
+          else if (this.space === "police") ic = "🚨";
+          else if (this.space === "light") ic = "💡";
+          else ic = "🏠";
+          span1.innerText = ic + " " + item.count;
           content.appendChild(span1);
         }
 
-        const span2 = document.createElement("span");
+        const span2 = document.createElement("p");
         span2.innerText = item.dongname;
 
         content.appendChild(span2);
@@ -170,6 +181,7 @@ export default {
             fillOpacity: 0.3
           });
           this.polygon.setMap(this.map);
+          console.log("polygon");
         })
         .catch(() => {
           console.log("오류가 발생했습니다.");
@@ -189,7 +201,7 @@ export default {
         })
         .then((response) => {
           this.removeMarker();
-          const imageSrc = "https://t1.daumcdn.net/localimg/localimages/07/mapapidoc/marker_red.png";
+          const imageSrc = "https://ggomzirakimg.s3.ap-northeast-2.amazonaws.com/ando/ic-"+ this.space +".png";
           const imageSize = new kakao.maps.Size(30, 30);
           const imageOption = { offset: new kakao.maps.Point(27, 69) };
 
@@ -204,6 +216,7 @@ export default {
             this.markerList.push(marker);
             marker.setMap(this.map);
           });
+          console.log("marker");
         })
         .catch(() => {
           console.log("오류가 발생했습니다.");
