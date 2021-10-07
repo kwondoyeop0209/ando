@@ -56,10 +56,10 @@ build test11
 <br>
 
 ## 📊 서비스 구조도
-![service-architecture](https://i.imgur.com/5697uFZ.png)
+
 
 ## 💿 DB 모델링
-![ERD](https://i.imgur.com/L4UkXiS.png)
+
 ## 💻 개발환경
 - Java : jdk1.8 (1.8.0_192)
 - node.js : 14.17.3
