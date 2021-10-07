@@ -4,6 +4,7 @@ import Home from "../views/Home/Home.vue";
 import Crime from "../views/Crime/Crime.vue";
 import SafetyIndex from "../views/SafetyIndex/SafetyIndex.vue";
 
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -16,7 +17,8 @@ const routes = [
     path: "/crime",
     name: "Crime",
     component: Crime,
-  },{
+  },
+  {
     path: "/safety",
     name: "SafetyIndex",
     component: SafetyIndex,
