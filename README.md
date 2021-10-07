@@ -62,8 +62,6 @@ build test11
         <li>Vue2</li>
         <li>Vue CLI</li>
         <li>Vuex</li>
-        <li>BootStrap</li>
-        <li>Element Plus</li>
     </ul>
 </details>
 <details>
