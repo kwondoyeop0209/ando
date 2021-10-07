@@ -7,7 +7,7 @@
         </router-link>
       </div>
       <div style="flex: 1"></div>
-      <div style="margin-right: 24px">
+      <div>
         <router-link to="/crime" class="deco-none">
           구별 범죄 현황
         </router-link>
@@ -29,18 +29,20 @@ export default {
 
 <style scoped>
 .header {
-  min-width: 1500px;
+  min-width: 1480px;
   background-color: #454d5e;
   height: 59px;
   border-bottom: 1px solid #6d6d6d;
   font-size: 18px;
   color: white;
-  padding: 0 24px;
 }
 .blank {
   height: 100%;
   margin: 0 auto;
   display: flex;
   align-items: center;
+}
+.deco-none {
+  padding: 0 24px;
 }
 </style>
