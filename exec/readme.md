@@ -9,6 +9,7 @@
 - Node '14.17.4'
 - Npm '6.14.14'
 - Vue 2
+- Vue/cli 4.5.13
 - VsCode 1.60.2
 - Jenkins 2.303.1
 - Docker 20.10.8
