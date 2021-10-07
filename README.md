@@ -69,7 +69,6 @@ build test11
 - npm : 6.14.13
 - vue-cli : 4.5.13
 - IntelliJ : 2021.1.3
-- openvidu : 2.19.0
 - nginx :1.18.0 (Ubuntu)
 
 ## 💻 실행방법
