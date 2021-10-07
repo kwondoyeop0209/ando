@@ -1,28 +1,31 @@
 build test11
+
 ## 🎥 프로젝트 개요
+
 ### 진행 기간
+
 - 2021.08.23 ~ 2021.10.07
 
 ### 주제
+
 - 지역별(서울시) 범죄 분석과 공간 특성에 기반한 범죄 취약지 예측/안전지대 제안
 
 ### 목표
-1. 서울시 범죄 분석과 공간 특성에 기반한 범죄 안전지대 제안  
-2. 서울시 지역별 범죄 발생 요인 분석 후 안전지대 제안  
 
+1. 서울시 범죄 분석과 공간 특성에 기반한 범죄 안전지대 제안
+2. 서울시 지역별 범죄 발생 요인 분석 후 안전지대 제안
 
 ### 프로젝트 RULE
+
 1. JPA를 사용해서 DB와 백엔드를 연동한다.
 2. Jira를 사용하여 1주일 단위의 스프린트를 진행하고 프로젝트를 관리한다.
 3. 매일 오전, 오후 스크럼 미팅을 실시하고 Mattermost에 기록한다.
 4. 서비스 배포 환경으로는 아마존 EC2와 Docker 컨테이너를 사용한다.
 5. 정한 git commit 규칙을 준수하여 프로젝트 형상 관리를 한다.
 
-
 ### 와이어프레임
 
-
-
+![](/picture/UI.png)
 <br>
 
 ## 🍀 핵심기능
@@ -31,8 +34,8 @@ build test11
 - 공간 특성(CCTV, 유흥지, 유동인구 등)을 고려해서 범죄 취약지 예측
 - 지도로 안전지수 및 평가 지표 제공
 
-
 ## 📚 Tech Stack
+
 <details>
     <summary>Front</summary>
     <ul>
@@ -51,44 +54,48 @@ build test11
         <li>Swagger</li>
         <li>JPA</li>
         <li>docker</li>
+        <li>Jenkins</li>
     </ul>
 </details>
 <br>
 
 ## 📊 서비스 구조도
 
+![](picture/Architecture.png)
 
 ## 💿 DB 모델링
 
-## 💻 개발환경
-- Java : jdk1.8 (1.8.0_192)
-- node.js : 14.17.3
-- npm : 6.14.13
-- vue-cli : 4.5.13
-- IntelliJ : 2021.1.3
-- openvidu : 2.19.0
-- nginx :1.18.0 (Ubuntu)
+![erd](picture/erd.png)
 
-## 💻 실행방법
+## 💻 개발환경
+
+- JDK 1.8
+- nginx 1.21.3
+- Spring boot 2.5.5
+- gradle 7.2
+- MySQL 8.0.26
+- Intellij IDEA Ultimate 2020.3.1
+- Vue 2
+- VsCode 1.60.2
+- Jenkins 2.303.1
+- Docker 20.10.8
+
+## 💻 빌드 및 배포
+
 ### Frontend
-1. Install packages
+
 ```bash=
 cd frontend
-npm i
-```
-2. Run Server
-```bash=
-npm run server
-```
-### Backend
-#### Intellij 사용시
-```
-gradle란 clean > build > GroupCallApplication.java 실행 
+npm install
+run build
+docker build -t nginx:0.1 -f FrontDockerfile .
+docker run -d --name nginx -p 80:80 -p 443:443 nginx:0.1
 ```
 
-#### terminal/bash
-```bash= 
-# jar 파일 생성 경로 - /backend
-gradle clean build 
-# 실행 경로 - /backend/src/build/libs
-java -jar ssafy-fifth-web-common-project-1.0-SNAPSHOP.jar 
+### Backend
+
+```bash=
+cd backend
+docker build -t back:0.1 -f BackDockerfile .
+docker run -d --name back -p 8443:8443 back:0.1
+```
