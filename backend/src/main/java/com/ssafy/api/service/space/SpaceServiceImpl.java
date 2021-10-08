@@ -31,15 +31,15 @@ public class SpaceServiceImpl implements SpaceService {
     public CountByDongGetRes getSpaceCount(String type) {
         List<Dong> dongList = dongRepository.findAll();
         CountByDongGetRes countCountGetRes = new CountByDongGetRes();
-        if(type.equals("cctv"))
+        if (type.equals("cctv"))
             countCountGetRes.ofCCTV(dongList);
-        else if(type.equals("police"))
+        else if (type.equals("police"))
             countCountGetRes.ofPolice(dongList);
-        else if(type.equals("guard"))
+        else if (type.equals("guard"))
             countCountGetRes.ofGuard(dongList);
-        else if(type.equals("light"))
+        else if (type.equals("light"))
             countCountGetRes.ofLight(dongList);
-        else if(type.equals("bar"))
+        else if (type.equals("bar"))
             countCountGetRes.ofBar(dongList);
         return countCountGetRes;
     }
@@ -47,18 +47,24 @@ public class SpaceServiceImpl implements SpaceService {
     @Override
     public SpaceCorrelationGetRes getSpaceCorrelation(String type) throws NotFoundException {
         SpaceCorrelationGetRes res = new SpaceCorrelationGetRes();
-        if(type.equals("cctv"))
+        if (type.equals("cctv")) {
             res.setCountList(dongRepository.findCCTVGroupBySiGunGu_Id());
-        else if(type.equals("police"))
+            res.setArrestList(arrestRateRepository.findArrestCntByGu());
+        } else if (type.equals("police")) {
             res.setCountList(dongRepository.findPoliceGroupBySiGunGu_Id());
-        else if(type.equals("guard"))
+            res.setArrestList(arrestRateRepository.findArrestCntByGu());
+        } else if (type.equals("guard")){
             res.setCountList(dongRepository.findGuardGroupBySiGunGu_Id());
-        else if(type.equals("light"))
-            res.setCountList(dongRepository.findLightGroupBySiGunGu_Id());
-        else if(type.equals("bar"))
+            res.setArrestList(arrestRateRepository.findGenerationCntByGu());
+        }else if(type.equals("light")){
+              res.setCountList(dongRepository.findLightGroupBySiGunGu_Id());
+              res.setArrestList(arrestRateRepository.findGenerationCntByGu());
+        }else if(type.equals("bar")){
             res.setCountList(dongRepository.findBarGroupBySiGunGu_Id());
-        else throw new NotFoundException("type is wrong");
-        res.setArrestList(arrestRateRepository.findArrestCntByGu());
+            res.setArrestList(arrestRateRepository.findGenerationCntByGu());
+        }else throw new NotFoundException("type is wrong");
+
+        
         return res;
     }
 
