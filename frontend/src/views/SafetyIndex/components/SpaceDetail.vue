@@ -245,17 +245,12 @@ export default {
         },
         series: [
           {
-            name: '발생건수',
+            name: '갯수',
             type: 'scatter',
-            data: [], //발생건수 데이터들
+            data: [], //cnt 데이터들
             color: "rgba(223, 83, 83, .5)"
           },
-          {
-            name: '체포횟수',
-            type: 'scatter',
-            data: [],
-            color: "rgba(119, 152, 191, .5)"
-          },
+          
           
 
         ],
@@ -323,16 +318,21 @@ export default {
         .then((respons) => {
           this.crimeRelation.xAxis.categories = []
           this.crimeRelation.series[0].data = []
-          this.crimeRelation.series[1].data = []
+          //this.crimeRelation.series[1].data = []
           this.graphData = respons.data;
+          console.log(this.graphData);
 
           const graphValue = this.graphData.countList;
           const graphValue2 = this.graphData.arrestList;
           for(var i=0; i<graphValue.length; i++) {
-            this.crimeRelation.xAxis.categories.push(graphValue[i].gu) //구역들 x축으로
-            this.crimeRelation.series[0].data.push(graphValue[i].cnt *3) //발생건수
-            this.crimeRelation.series[1].data.push(graphValue2[i].cnt) //체포건수
+            this.crimeRelation.xAxis.categories.push(graphValue[i].cnt) 
+            this.crimeRelation.series[0].data.push(graphValue2[i].cnt)
+            //this.crimeRelation.series[1].data.push(graphValue2[i].cnt) //체포건수
           }
+           //this.crimeRelation.xAxis.categories.sort()
+           //this.crimeRelation.series[0].data.sort()
+           //console.log(this.crimeRelation.xAxis.categories)
+           //console.log(this.crimeRelation.series[0].data)
         })
         .catch((e) => {
           console.log('error : ', e)
