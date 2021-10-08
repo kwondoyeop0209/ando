@@ -152,8 +152,8 @@ export default {
         item.setMap(null);
       });
     },
-    overlayPolygon(val) {
-      $axios
+    async overlayPolygon(val) {
+      const d = await $axios
         .get("/main/polygon/" + val)
         .then((response) => {
           this.options = {
@@ -186,13 +186,14 @@ export default {
         .catch(() => {
           console.log("오류가 발생했습니다.");
         });
+      console.log(d);
     },
     removePolygon() {
       this.polygon.setMap(null);
       this.$emit("selectDongId", -1);
     },
-    overlayMarker(val) {
-      $axios
+    async overlayMarker(val) {
+      const d = await $axios
         .get("/space/detail", {
           params: {
             id: val,
@@ -221,6 +222,7 @@ export default {
         .catch(() => {
           console.log("오류가 발생했습니다.");
         });
+      console.log(d);
     },
     removeMarker() {
       this.markerList.forEach((item) => {
