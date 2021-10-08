@@ -22,7 +22,7 @@
       <div class="data-content">
         <p class="cnt">
           <span class="white-blue" style="font-size: 48px; font-weight: 700">
-            8,271,409건
+            9,037,385건
           </span>
           의<br />데이터 분석
         </p>
@@ -141,10 +141,10 @@ export default {
 <style scoped>
 .home {
   background-color: #454d5e;
-  min-width: 1500px;
+  min-width: 1480px;
 }
 .main {
-  width: 1500px;
+  width: 1480px;
   margin: 0 auto;
   position: relative;
   padding: 72px 0;

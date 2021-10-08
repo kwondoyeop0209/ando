@@ -90,7 +90,7 @@ export default {
   background-color: #454d5e;
 }
 .main {
-  min-width: 1500px;
+  min-width: 1480px;
   height: 100%;
   position: relative;
   background-color: #454d5e;
