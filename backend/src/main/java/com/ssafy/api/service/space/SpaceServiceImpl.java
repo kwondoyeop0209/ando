@@ -63,6 +63,8 @@ public class SpaceServiceImpl implements SpaceService {
             res.setCountList(dongRepository.findBarGroupBySiGunGu_Id());
             res.setArrestList(arrestRateRepository.findGenerationCntByGu());
         }else throw new NotFoundException("type is wrong");
+
+        
         return res;
     }
 
