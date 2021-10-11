@@ -206,6 +206,12 @@ export default {
         },
         colors: ["#6A7DAF"],
         xAxis: {
+          title: {
+            text: "구별 환경요소 갯수",
+            style: {
+              color: "#ffffff",
+            },
+          },
           categories: [],
           labels: {
             style: {
@@ -215,7 +221,7 @@ export default {
         },
         yAxis: {
           title: {
-            text: "건수",
+            text: "실제 체포건수",
             style: {
               color: "#ffffff",
             },
@@ -250,9 +256,6 @@ export default {
             data: [], //cnt 데이터들
             color: "rgba(223, 83, 83, .5)"
           },
-          
-          
-
         ],
       },
     }
@@ -316,23 +319,22 @@ export default {
       $axios
         .get("/space/graph?type=" + val)
         .then((respons) => {
-          this.crimeRelation.xAxis.categories = []
-          this.crimeRelation.series[0].data = []
-          //this.crimeRelation.series[1].data = []
+          this.crimeRelation.xAxis.categories = [] //x축 데이터
+          this.crimeRelation.series[0].data = [] //y축 데이터
+      
           this.graphData = respons.data;
           console.log(this.graphData);
 
           const graphValue = this.graphData.countList;
           const graphValue2 = this.graphData.arrestList;
+
           for(var i=0; i<graphValue.length; i++) {
-            this.crimeRelation.xAxis.categories.push(graphValue[i].cnt) 
-            this.crimeRelation.series[0].data.push(graphValue2[i].cnt)
-            //this.crimeRelation.series[1].data.push(graphValue2[i].cnt) //체포건수
+            this.crimeRelation.xAxis.categories.push(graphValue[i].cnt + "개 " + "("  +  graphValue[i].gu + ")") //x축에 환경요소 갯수
+            this.crimeRelation.series[0].data.push(graphValue2[i].cnt) //y축에 실제 체포건수
+            //this.crimeRelation.series[1].data.push(graphValue2[i].gu) // 구이름 그래프위에 표시
           }
-           //this.crimeRelation.xAxis.categories.sort()
-           //this.crimeRelation.series[0].data.sort()
-           //console.log(this.crimeRelation.xAxis.categories)
-           //console.log(this.crimeRelation.series[0].data)
+          console.log(this.crimeRelation.series[0].data)
+    
         })
         .catch((e) => {
           console.log('error : ', e)
