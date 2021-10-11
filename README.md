@@ -9,8 +9,8 @@
 
 ## 👨‍👩‍👧‍👦 팀원
  🧡 **권도엽** ([@kwondoyeop0209](https://github.com/kwondoyeop0209))  
- 💛 **박형민** ([@cofls](https://github.com/cofls))  
- 💚 **박채린** ([@npnppn](https://github.com/npnppn))  
+ 💛 **박형민** ([@npnppn](https://github.com/npnppn))  
+ 💚 **박채린** ([@cofls](https://github.com/cofls))  
  💙 **양혜선** ([@Yanghyesun](https://github.com/Yanghyesun))  
  💜 **정은진** ([@jejin009](https://github.com/jejin009))  
 
